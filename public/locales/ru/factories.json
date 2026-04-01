@@ -1,0 +1,20 @@
+{
+  "title": "ФАБРИКИ",
+  "subtitle": "Прямые производители",
+  "min_order": "Мин. заказ",
+  "verified": "Проверено",
+  "rating": "Рейтинг",
+  "categories": "Категории",
+  "categories_heading": "Категории",
+  "location": "Расположение",
+  "contact": "Связаться",
+  "website": "Сайт",
+  "chats_button": "ЧАТЫ",
+  "search_placeholder": "Искать",
+  "country": {
+    "china": "КИТАЙ",
+    "uzbekistan": "УЗБЕКИСТАН",
+    "russia": "РОССИЯ",
+    "kyrgyzstan": "КИРГИЗИЯ"
+  }
+}

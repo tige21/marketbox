@@ -1,0 +1,18 @@
+{
+  "title": "SEVIMLILAR",
+  "materials": "Dars materiallari",
+  "empty_title": "Sevimlilar yo'q",
+  "empty_description": "Yo'qotib qo'ymaslik uchun mahsulot va kurslarni sevimlilarga qo'shing",
+  "remove_aria": "Sevimlilardan olib tashlash",
+  "item_types": {
+    "course": "Kurs",
+    "factory": "Fabrika",
+    "wholesale": "Ulgurji",
+    "service": "Xizmat",
+    "cargo": "Kargo",
+    "job": "Ish",
+    "event": "Tadbir"
+  },
+  "loading": "Yuklanmoqda...",
+  "error": "Yuklashda xato"
+}

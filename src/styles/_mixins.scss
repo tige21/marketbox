@@ -1,0 +1,143 @@
+// _mixins.scss uses variables internally (mixin default params, bodies).
+// We explicitly @use variables here so this partial works correctly when
+// loaded by Sass as a module. The additionalData in vite.config.ts injects
+// @use "variables" into Vite's direct entry files; when _mixins.scss is
+// loaded as a @use-d partial, it gets its own scope and needs this import.
+@use 'variables' as *;
+
+@mixin glass-gradient-border($radius: $radius-card) {
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: $radius;
+    padding: 1px;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.55) 0%,
+      rgba(255, 255, 255, 0.04) 50%,
+      rgba(255, 255, 255, 0.50) 100%
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+}
+
+@mixin glass-surface($bg: $color-bg-glass, $blur: $blur-glass) {
+  position: relative;
+  background: $bg;
+  backdrop-filter: blur($blur);
+  -webkit-backdrop-filter: blur($blur);
+  border-radius: $radius-card;
+  box-shadow: $shadow-glass, $shadow-glass-inner;
+  @include glass-gradient-border($radius-card);
+}
+
+@mixin glass-card-overlay {
+  position: absolute;
+  bottom: $space-2;
+  left: $space-2;
+  right: $space-2;
+  height: 45px;
+  border-radius: $radius-card;
+  display: flex;
+  align-items: center;
+  padding: 0 $space-4;
+  gap: $space-3;
+
+  &::before, &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: $radius-card;
+    pointer-events: none;
+  }
+  &::before { background: $color-bg-glass-card; opacity: 0.67; }
+  &::after  { background: $color-bg-glass-card-burn; mix-blend-mode: color-burn; opacity: 0.67; }
+}
+
+@mixin glass-tab-bar {
+  background: $color-bg-glass-tab;
+  backdrop-filter: blur($blur-glass-lg);
+  -webkit-backdrop-filter: blur($blur-glass-lg);
+  border-radius: $radius-tab;
+  box-shadow: $shadow-glass-inner;
+  @include glass-gradient-border($radius-tab);
+}
+
+@mixin glass-hover {
+  &:hover:not(:disabled) {
+    background-color: rgba(255, 255, 255, 0.05);
+    transition: background-color $duration-fast $easing-standard;
+  }
+}
+
+@mixin glass-disabled {
+  &:disabled {
+    opacity: 0.4;
+    pointer-events: none;
+    filter: grayscale(30%);
+  }
+}
+
+@mixin focus-ring {
+  &:focus-visible {
+    outline: 2px solid $color-focus-ring;
+    outline-offset: 2px;
+    border-radius: inherit;
+  }
+}
+
+@mixin text-title {
+  font-family: $font-gilroy;
+  font-weight: $fw-bold;
+  color: $color-white;
+  line-height: $lh-tight;
+}
+
+@mixin text-body {
+  font-family: $font-gilroy;
+  font-weight: $fw-medium;
+  color: $color-white-80;
+  line-height: $lh-normal;
+}
+
+@mixin gpu-accelerated {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+}
+
+@mixin tap-feedback {
+  -webkit-tap-highlight-color: transparent;
+  transition: transform $duration-fast $easing-standard;
+  @include focus-ring;
+  &:active { transform: scale(0.97); }
+}
+
+@mixin image-cover {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@mixin truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

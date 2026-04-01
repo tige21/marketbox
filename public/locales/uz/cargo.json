@@ -1,0 +1,44 @@
+{
+  "title": "Kargo",
+  "subtitle": "Xitoydan yetkazib berish",
+  "filter": {
+    "all": "Hammasi",
+    "white": "Oq yo'l",
+    "black": "Qora yo'l",
+    "fulfillment": "Fulfillment"
+  },
+  "price_per_kg": "$/kg",
+  "delivery_days": "kun",
+  "verified": "Tasdiqlangan",
+  "call": "Qo'ng'iroq",
+  "telegram": "Telegram",
+  "rating": "Reyting",
+  "reviews": "sharh",
+  "main": {
+    "white_title": "Oq yo'l kargo",
+    "white_desc": "Xitoy, Rossiya va O'zbekistondagi ko'rgazmalar va tadbirlar – biznesingiz uchun dolzarb voqealarni kuzating.",
+    "logistics_title": "Kargo kompaniyalari",
+    "fulfillment_title": "Fulfillment",
+    "chats_button": "CHATLAR"
+  },
+  "list": {
+    "logistics_title": "LOGISTIKA",
+    "fulfillment_title": "FULFILLMENT",
+    "countries_label": "Ushbu mamlakatlar o'rtasida yuk tashish:",
+    "details_btn": "Batafsil ›"
+  },
+  "white_page": {
+    "title": "OQ YO'L",
+    "video_placeholder": "Video",
+    "materials_label": "Dars materiallari",
+    "company_name": "Wave Logistic",
+    "company_tagline": "Xitoydan logistika sohasida ishonchli sherigingiz",
+    "company_desc": "Biz Xitoydan O'zbekiston va Rossiyaga rasmiy ('oq') yuk tashishga ixtisoslashganmiz. To'liq bojxona rasmiylashtiruvi, yuk sug'urtasi va har bir mijoz uchun shaxsiy menejer.",
+    "team_title": "Jamoa",
+    "contacts_title": "Kontaktlar:",
+    "phone": "+7 999 999 99 99",
+    "email": "support@ppppp.com",
+    "website": "wave-logistic.ru",
+    "socials_title": "Ijtimoiy tarmoqlar:"
+  }
+}

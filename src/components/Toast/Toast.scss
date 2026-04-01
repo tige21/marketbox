@@ -1,0 +1,42 @@
+.toast-container {
+  position: fixed;
+  top: $space-4;
+  left: $space-4;
+  right: $space-4;
+  z-index: $z-toast;
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+  pointer-events: none;
+}
+
+.toast {
+  @include glass-surface;
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  padding: $space-3 $space-4;
+  pointer-events: all;
+
+  &--variant-success { border-color: rgba(107, 255, 184, 0.4); }
+  &--variant-error   { border-color: rgba(255, 107, 107, 0.4); }
+  &--variant-warning { border-color: rgba(255, 214, 107, 0.4); }
+  &--variant-info    { border-color: $color-border-glass; }
+
+  &__icon {
+    flex-shrink: 0;
+    font-size: $text-md;
+    font-weight: $fw-bold;
+  }
+
+  &--variant-success &__icon { color: $color-success; }
+  &--variant-error   &__icon { color: $color-error; }
+  &--variant-warning &__icon { color: $color-warning; }
+  &--variant-info    &__icon { color: $color-accent; }
+
+  &__message {
+    @include text-body;
+    font-size: $text-sm;
+    flex: 1;
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "title": "Hujjatlar",
+  "subtitle": "Shartnomalar, sertifikatlar va shablonlar",
+  "tab": {
+    "all": "Hammasi",
+    "contracts": "Shartnomalar",
+    "certificates": "Sertifikatlar",
+    "guides": "Qo'llanmalar",
+    "templates": "Shablonlar"
+  },
+  "category": {
+    "contracts": "Shartnoma",
+    "certificates": "Sertifikat",
+    "guides": "Qo'llanma",
+    "templates": "Shablon"
+  },
+  "action": {
+    "download": "Yuklab olish",
+    "view": "Ko'rish"
+  }
+}

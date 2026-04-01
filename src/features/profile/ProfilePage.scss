@@ -1,0 +1,127 @@
+.profile-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+
+  // ── Header ──────────────────────────────────────────────────
+
+  &__header {
+    padding: 38px $space-4 0;
+    text-align: center;
+  }
+
+  &__header-title {
+    font-family: $font-gilroy;
+    font-weight: $fw-bold;
+    font-size: 18px;
+    color: $color-white;
+    line-height: 32px;
+    letter-spacing: -0.36px;
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  // ── Content ─────────────────────────────────────────────────
+
+  &__content {
+    padding: 0 $space-4;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-bottom: $space-8;
+  }
+
+  // ── Avatar ──────────────────────────────────────────────────
+
+  &__avatar-wrap {
+    display: flex;
+    justify-content: center;
+    padding: 24px 0 8px;
+  }
+
+  &__avatar {
+    width: 107px !important;
+    height: 107px !important;
+    border-radius: $radius-full !important;
+  }
+
+  // ── Section ─────────────────────────────────────────────────
+
+  &__section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__section-label {
+    font-family: $font-gilroy;
+    font-size: 12px;
+    font-weight: $fw-regular;
+    color: #b5b5b5;
+    letter-spacing: 1.28px;
+    padding: 0 $space-1;
+  }
+
+  // ── Card ────────────────────────────────────────────────────
+
+  &__card {
+    border: 1px solid #313030;
+    border-radius: 17px;
+    overflow: hidden;
+    padding: 4px 0;
+  }
+
+  // ── Row ─────────────────────────────────────────────────────
+
+  &__row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 17px;
+    min-height: 60px;
+
+    &--interactive {
+      cursor: pointer;
+      @include tap-feedback;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.03);
+      }
+    }
+  }
+
+  &__row-icon {
+    width: 26px;
+    height: 26px;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
+
+  &__row-label {
+    flex: 1;
+    font-family: $font-gilroy;
+    font-size: 15px;
+    font-weight: 600;
+    color: $color-white;
+    line-height: 1.3;
+
+    &--link {
+      text-decoration: underline;
+    }
+  }
+
+  &__row-right {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    flex-shrink: 0;
+  }
+
+  &__row-value {
+    font-family: $font-gilroy;
+    font-size: 15px;
+    font-weight: 500;
+    color: #b5b5b5;
+    white-space: nowrap;
+  }
+}

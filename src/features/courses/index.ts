@@ -1,0 +1,5 @@
+export { CoursesPage } from './CoursesPage'
+export { CoursesCatalog } from './CoursesCatalog'
+export { MarketplaceCoursesPage } from './MarketplaceCoursesPage'
+export { CoursesChatsPage } from './CoursesChatsPage'
+export { CourseDetailPage } from './CourseDetailPage'

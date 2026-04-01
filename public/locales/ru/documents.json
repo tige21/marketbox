@@ -1,0 +1,21 @@
+{
+  "title": "Документы",
+  "subtitle": "Контракты, сертификаты и шаблоны",
+  "tab": {
+    "all": "Все",
+    "contracts": "Контракты",
+    "certificates": "Сертификаты",
+    "guides": "Гайды",
+    "templates": "Шаблоны"
+  },
+  "category": {
+    "contracts": "Контракт",
+    "certificates": "Сертификат",
+    "guides": "Гайд",
+    "templates": "Шаблон"
+  },
+  "action": {
+    "download": "Скачать",
+    "view": "Просмотр"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "title": "Yangiliklar",
+  "subtitle": "E-commerce bo'yicha dolzarb yangiliklar",
+  "read_more": "Batafsil",
+  "views": "ko'rishlar",
+  "category": {
+    "marketplace": "Marketplace",
+    "cargo": "Kargo",
+    "business": "Biznes",
+    "china": "Xitoy",
+    "general": "Umumiy"
+  }
+}

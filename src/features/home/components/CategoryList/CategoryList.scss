@@ -1,0 +1,14 @@
+.category-list {
+  padding: 0 $space-4;
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: $space-3;
+  }
+
+  &__skeleton {
+    height: 171px;
+    border-radius: $radius-card;
+  }
+}

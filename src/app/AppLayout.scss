@@ -1,0 +1,16 @@
+.app-layout {
+  min-height: 100dvh;
+  background: $color-bg-primary;
+  display: flex;
+  flex-direction: column;
+
+  &__main {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    // Account for fixed tab bar + Telegram safe area
+    padding-bottom: calc(#{$space-4} + 60px + var(--tg-safe-area-inset-bottom, 0px));
+  }
+}

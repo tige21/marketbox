@@ -1,0 +1,25 @@
+{
+  "title": "Kurslar",
+  "subtitle": "Marketpleyslarda savdo qilishni o'rganish",
+  "filter": {
+    "all": "Hammasi",
+    "ozon": "OZON",
+    "wildberries": "Wildberries",
+    "uzum": "Uzum Market"
+  },
+  "level": {
+    "beginner": "Boshlang'ich",
+    "intermediate": "O'rta",
+    "advanced": "Ilg'or"
+  },
+  "lessons": "dars",
+  "hours": "soat",
+  "rating": "Reyting",
+  "enrolled": "Yozildingiz",
+  "enroll": "Yozilish",
+  "price_free": "Bepul",
+  "author": "Muallif",
+  "what_learn": "Nima o'rganasiz",
+  "requirements": "Talablar",
+  "syllabus": "Kurs dasturi"
+}

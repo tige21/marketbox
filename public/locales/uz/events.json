@@ -1,0 +1,13 @@
+{
+  "title": "Tadbirlar",
+  "subtitle": "Ko'rgazmalar, konferensiyalar va vebinarlar",
+  "read_more": "Batafsil",
+  "free": "Bepul",
+  "online": "Onlayn",
+  "type": {
+    "exhibition": "Ko'rgazma",
+    "conference": "Konferensiya",
+    "webinar": "Vebinar",
+    "meetup": "Uchrashuv"
+  }
+}

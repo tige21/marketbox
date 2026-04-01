@@ -1,0 +1,69 @@
+.premium-gate {
+  position: fixed;
+  left: $space-4;
+  right: $space-4;
+  bottom: 50%;
+  transform: translateY(50%);
+  z-index: $z-modal;
+  @include glass-surface($blur: $blur-glass-lg);
+  padding: $space-8 $space-6;
+  text-align: center;
+  max-width: 400px;
+  margin: 0 auto;
+  box-shadow: $shadow-glass-elevated, $shadow-glow-premium;
+
+  &__backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: $z-overlay;
+  }
+
+  &__icon {
+    font-size: 56px;
+    margin-bottom: $space-4;
+    filter: drop-shadow(0 0 12px rgba(150, 138, 215, 0.4));
+  }
+
+  &__title {
+    @include text-title;
+    font-size: $text-xl;
+    margin-bottom: $space-2;
+  }
+
+  &__description {
+    @include text-body;
+    font-size: $text-base;
+    margin-bottom: $space-6;
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    gap: $space-3;
+  }
+
+  &__upgrade-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 52px;
+    padding: $space-4 $space-8;
+    background: $color-premium;
+    color: $color-white;
+    font-family: $font-gilroy;
+    font-weight: $fw-bold;
+    font-size: $text-md;
+    border-radius: $radius-md;
+    text-decoration: none;
+    box-shadow: $shadow-glow-premium;
+    @include tap-feedback;
+
+    &:hover {
+      background: lighten(#968ad7, 8%);
+    }
+  }
+}

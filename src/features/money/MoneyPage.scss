@@ -1,0 +1,691 @@
+.money-page {
+  min-height: 100dvh;
+  background: $color-bg-primary;
+
+  // ── Main view ────────────────────────────────────────────────
+
+  &__main-view {
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+  }
+
+  &__content {
+    padding: $space-4;
+    display: flex;
+    flex-direction: column;
+    gap: $space-4;
+    padding-bottom: calc($space-4 + 70px);
+  }
+
+  // ── Intro card ───────────────────────────────────────────────
+
+  &__intro-wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__intro-card {
+    background: #e5e5e5;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-bottom: none;
+    border-radius: 20px 20px 0 0;
+    padding: 16px 16px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  &__intro-card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  &__intro-title {
+    font-family: $font-gilroy;
+    font-weight: 800;
+    font-size: 20px;
+    color: #363636;
+    line-height: 21px;
+    margin: 0;
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__intro-heart-btn {
+    flex-shrink: 0;
+    width: 42px;
+    height: 42px;
+    border-radius: $radius-full;
+    background: #f5c842;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    @include tap-feedback;
+
+    svg path {
+      fill: $color-white;
+      stroke: none;
+    }
+  }
+
+  &__intro-thumbnail-wrap {
+    width: 100%;
+    aspect-ratio: 336 / 189;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  &__intro-thumbnail {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  &__intro-materials {
+    background: #171717;
+    border-radius: 0 0 11px 11px;
+    height: 68px;
+    display: flex;
+    align-items: center;
+    padding: 0 $space-4;
+  }
+
+  &__intro-materials-bar {
+    background: #1e1e1e;
+    border-radius: 11px;
+    height: 32px;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $space-2;
+    padding: 0 $space-3;
+
+    span {
+      font-family: $font-gilroy;
+      font-weight: 800;
+      font-size: 15px;
+      color: $color-white;
+      line-height: 1;
+    }
+  }
+
+  &__intro-materials-icon {
+    width: 21px;
+    height: 23px;
+    object-fit: contain;
+    flex-shrink: 0;
+    display: block;
+  }
+
+  // ── Referral card ────────────────────────────────────────────
+
+  &__referral-card {
+    background: #222;
+    border: 0.93px solid rgba(255, 255, 255, 0.6);
+    border-radius: 9px;
+    padding: 16px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &__referral-hint {
+    font-family: $font-gilroy;
+    font-size: 8px;
+    font-weight: $fw-regular;
+    color: $color-white;
+    opacity: 0.5;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  &__referral-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  &__referral-link-box {
+    flex: 1;
+    min-width: 0;
+    background: #222;
+    border: 0.93px solid rgba(255, 255, 255, 0.6);
+    border-radius: 9px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    overflow: hidden;
+  }
+
+  &__referral-link {
+    font-family: $font-gilroy;
+    font-size: 9px;
+    font-weight: $fw-regular;
+    color: $color-white;
+    line-height: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+  }
+
+  &__referral-copy-btn {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    background: $color-premium;
+    border: 0.93px solid rgba(255, 255, 255, 0.6);
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: $color-white;
+    @include tap-feedback;
+  }
+
+  // ── Stats card ───────────────────────────────────────────────
+
+  &__stats-card {
+    background: #222;
+    border: 0.93px solid rgba(255, 255, 255, 0.6);
+    border-radius: 9px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &__stats-title {
+    font-family: $font-gilroy;
+    font-size: 16px;
+    font-weight: $fw-regular;
+    color: $color-white;
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  &__stats-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  &__stats-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+  }
+
+  &__stats-label {
+    font-family: $font-gilroy;
+    font-size: 9px;
+    font-weight: $fw-regular;
+    color: $color-white;
+    opacity: 0.5;
+    line-height: 1;
+  }
+
+  &__stats-value {
+    font-family: $font-gilroy;
+    font-size: 9px;
+    font-weight: 600;
+    color: $color-white;
+    line-height: 1;
+    text-align: right;
+
+    &--green {
+      color: #42d000;
+    }
+
+    &--purple {
+      color: $color-premium;
+    }
+  }
+
+  &__stats-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+    margin: 0;
+  }
+
+  &__stats-status-title {
+    font-family: $font-gilroy;
+    font-size: 16px;
+    font-weight: $fw-regular;
+    color: $color-white;
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  &__status-badges {
+    display: flex;
+    gap: 6px;
+  }
+
+  &__status-badge {
+    height: 17px;
+    padding: 0 6px;
+    border-radius: 5px;
+    background: #474747;
+    font-family: $font-gilroy;
+    font-size: 9px;
+    font-weight: $fw-bold;
+    color: $color-white;
+    opacity: 0.5;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+
+    &--active {
+      background: $color-premium;
+      opacity: 1;
+      color: $color-white;
+    }
+  }
+
+  // ── Balance card ─────────────────────────────────────────────
+
+  &__balance-card {
+    background: #222;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 10px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    opacity: 0.5;
+  }
+
+  &__balance-label {
+    font-family: $font-gilroy;
+    font-size: 9px;
+    font-weight: $fw-regular;
+    color: $color-white;
+    opacity: 0.5;
+    line-height: 1;
+  }
+
+  &__balance-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  &__balance-amount {
+    font-family: $font-gilroy;
+    font-size: 44px;
+    font-weight: $fw-bold;
+    color: $color-white;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  &__withdraw-btn {
+    height: 36px;
+    padding: 0 20px;
+    background: $color-premium;
+    border: 0.75px solid rgba(255, 255, 255, 0.6);
+    border-radius: 8px;
+    color: $color-white;
+    font-family: $font-gilroy;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    flex-shrink: 0;
+    @include tap-feedback;
+  }
+
+  &__balance-divider {
+    width: 100%;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  &__balance-row {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__balance-row-label {
+    font-family: $font-gilroy;
+    font-size: 9px;
+    font-weight: $fw-regular;
+    color: $color-white;
+    opacity: 0.5;
+    line-height: 1;
+  }
+
+  &__balance-row-value {
+    font-family: $font-gilroy;
+    font-size: 9px;
+    font-weight: $fw-regular;
+    color: $color-white;
+    line-height: 1;
+    text-align: right;
+  }
+
+  // ── History row ──────────────────────────────────────────────
+
+  &__history-row {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    padding: 16px $space-4;
+    background: transparent;
+    border: 1px solid #313030;
+    border-radius: 16px;
+    cursor: pointer;
+    @include tap-feedback;
+    width: 100%;
+    text-align: left;
+  }
+
+  &__history-row-icon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    color: $color-white-60;
+  }
+
+  &__history-row-label {
+    flex: 1;
+    font-family: $font-gilroy;
+    font-size: 14px;
+    font-weight: 600;
+    color: $color-white;
+    line-height: 1;
+  }
+
+  &__history-row-chevron {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    color: $color-white-60;
+  }
+
+  // ── Withdraw view ────────────────────────────────────────────
+
+  &__withdraw-view {
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+  }
+
+  &__withdraw-content {
+    padding: $space-4;
+    display: flex;
+    flex-direction: column;
+    gap: $space-4;
+    padding-bottom: calc($space-4 + 70px);
+  }
+
+  // ── Form card ────────────────────────────────────────────────
+
+  &__form-card {
+    background: #222;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 10px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__field-label {
+    font-family: $font-gilroy;
+    font-size: 9px;
+    font-weight: $fw-regular;
+    color: $color-white;
+    line-height: 1;
+  }
+
+  &__input {
+    width: 100%;
+    height: 48px;
+    background: #222;
+    border: 0.93px solid rgba(255, 255, 255, 0.6);
+    border-radius: 9px;
+    padding: 0 $space-4;
+    font-family: $font-gilroy;
+    font-size: 13px;
+    font-weight: $fw-regular;
+    color: $color-white;
+    outline: none;
+    transition: border-color $duration-fast $easing-standard;
+    box-sizing: border-box;
+
+    &::placeholder {
+      color: $color-white-40;
+    }
+
+    &:focus {
+      border-color: $color-accent;
+    }
+
+    &[type='number'] {
+      -moz-appearance: textfield;
+      &::-webkit-inner-spin-button,
+      &::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+    }
+  }
+
+  // ── Method selector ──────────────────────────────────────────
+
+  &__methods {
+    display: flex;
+    gap: 8px;
+  }
+
+  &__method {
+    flex: 1;
+    height: 84px;
+    background: #222;
+    border: 0.93px solid rgba(255, 255, 255, 0.6);
+    border-radius: 9px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    cursor: pointer;
+    @include tap-feedback;
+    padding: 0;
+
+    &--active {
+      border-color: $color-premium;
+    }
+
+    &--disabled {
+      opacity: 0.4;
+      cursor: default;
+    }
+  }
+
+  &__method-emoji {
+    font-size: 28px;
+    line-height: 1;
+  }
+
+  &__method-icon-t {
+    width: 30px;
+    height: 30px;
+    border-radius: $radius-full;
+    background: #f5a623;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: $font-gilroy;
+    font-size: 16px;
+    font-weight: $fw-bold;
+    color: $color-white;
+  }
+
+  &__method-label {
+    font-family: $font-gilroy;
+    font-size: 9px;
+    font-weight: $fw-regular;
+    color: $color-white;
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  &__submit-btn {
+    width: 100%;
+    height: 48px;
+    border-radius: 9px;
+    border: none;
+    background: $color-premium;
+    color: $color-white;
+    font-family: $font-gilroy;
+    font-size: 14px;
+    font-weight: $fw-bold;
+    cursor: pointer;
+    @include tap-feedback;
+    transition: opacity $duration-fast $easing-standard;
+
+    &:disabled {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+  }
+
+  &__form-disclaimer {
+    font-family: $font-gilroy;
+    font-size: 9px;
+    font-weight: $fw-regular;
+    color: $color-white;
+    opacity: 0.5;
+    text-align: center;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  // ── History (withdraw view) ──────────────────────────────────
+
+  &__history-title-centered {
+    font-family: $font-gilroy;
+    font-weight: $fw-bold;
+    font-size: 16px;
+    color: $color-white;
+    margin: 8px 0 0;
+    line-height: 1;
+    text-align: center;
+  }
+
+  // ── Transaction card ─────────────────────────────────────────
+
+  &__tx-card {
+    background: #222;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 10px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  &__tx-card-date {
+    font-family: $font-gilroy;
+    font-size: 8px;
+    font-weight: $fw-regular;
+    color: $color-white;
+    opacity: 0.5;
+    line-height: 1;
+  }
+
+  &__tx-card-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  &__tx-card-desc {
+    font-family: $font-gilroy;
+    font-size: 14px;
+    font-weight: 600;
+    color: $color-white;
+    line-height: 1.2;
+  }
+
+  &__tx-card-amount {
+    font-family: $font-gilroy;
+    font-size: 14px;
+    font-weight: 600;
+    color: $color-success;
+    line-height: 1.2;
+    flex-shrink: 0;
+
+    &--debit {
+      color: #ff5050;
+    }
+  }
+
+  &__tx-card-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+    margin: 2px 0;
+  }
+
+  &__tx-card-status-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__tx-card-status-label {
+    font-family: $font-gilroy;
+    font-size: 8px;
+    font-weight: $fw-regular;
+    color: $color-white;
+    opacity: 0.5;
+    line-height: 1;
+  }
+
+  &__tx-card-status {
+    font-family: $font-gilroy;
+    font-size: 8px;
+    font-weight: $fw-regular;
+    line-height: 1;
+
+    &--completed {
+      color: $color-success;
+    }
+
+    &--pending {
+      color: $color-warning;
+    }
+
+    &--failed {
+      color: $color-error;
+    }
+  }
+
+  // ── Transaction skeleton / empty ─────────────────────────────
+
+  &__tx-empty {
+    padding: $space-8 0;
+  }
+}

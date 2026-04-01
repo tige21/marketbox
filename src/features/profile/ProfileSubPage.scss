@@ -1,0 +1,193 @@
+.profile-sub {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+
+  &__content {
+    padding: 0 $space-4;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-bottom: $space-8;
+  }
+
+  &__section-label {
+    font-family: $font-gilroy;
+    font-size: 12px;
+    font-weight: $fw-regular;
+    color: #b5b5b5;
+    letter-spacing: 1.28px;
+    text-align: center;
+    padding: 0 $space-1;
+  }
+
+  &__card {
+    border: 1px solid #313030;
+    border-radius: 17px;
+    overflow: hidden;
+    padding: 4px 0;
+  }
+
+  &__divider {
+    height: 1px;
+    background: #313030;
+    margin: 0 17px;
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 17px;
+    min-height: 60px;
+
+    &--interactive {
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform 0.12s ease;
+
+      &:active {
+        transform: scale(0.98);
+      }
+    }
+  }
+
+  &__row-icon {
+    width: 26px;
+    height: 26px;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
+
+  &__row-label {
+    flex: 1;
+    font-family: $font-gilroy;
+    font-size: 15px;
+    font-weight: 600;
+    color: $color-white;
+    line-height: 1.3;
+  }
+
+  &__row-right {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    flex-shrink: 0;
+  }
+
+  &__row-value {
+    font-family: $font-gilroy;
+    font-size: 15px;
+    font-weight: 500;
+    color: #b5b5b5;
+    white-space: nowrap;
+  }
+
+  // ── Payment accordion ──────────────────────────────────────────
+
+  &__accordion-body {
+    padding: 0 17px 17px;
+  }
+
+  &__cancel-btn {
+    background: #1e1e1e;
+    border: none;
+    border-radius: 10px;
+    height: 40px;
+    width: 100%;
+    cursor: pointer;
+    font-family: $font-gilroy;
+    font-weight: $fw-medium;
+    font-size: 14px;
+    color: $color-white;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.12s ease;
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+
+  // ── Report page ────────────────────────────────────────────────
+
+  &__report-text {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    font-family: $font-gilroy;
+    font-size: 15px;
+    color: $color-white;
+    line-height: 1.5;
+  }
+
+  &__report-list {
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    list-style: disc;
+  }
+
+  &__report-btn {
+    background: #e53935;
+    border-radius: 12px;
+    height: 54px;
+    width: 100%;
+    border: none;
+    cursor: pointer;
+    font-family: $font-gilroy;
+    font-weight: $fw-bold;
+    font-size: 17px;
+    color: $color-white;
+    margin-top: 16px;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.12s ease;
+
+    &:active {
+      transform: scale(0.97);
+    }
+  }
+
+  // ── Terms page ─────────────────────────────────────────────────
+
+  &__terms-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  &__terms-item {
+    background: #1e1e1e;
+    border-radius: 17px;
+    padding: 20px;
+    cursor: pointer;
+    font-family: $font-gilroy;
+    font-size: 15px;
+    font-weight: 600;
+    color: $color-white;
+    line-height: 1.3;
+    border: none;
+    text-align: left;
+    width: 100%;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.12s ease;
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+
+  // ── Rules page ─────────────────────────────────────────────────
+
+  &__rules-box {
+    border: 1px solid #313030;
+    border-radius: 17px;
+    padding: 20px;
+    font-family: $font-gilroy;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+}

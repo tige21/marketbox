@@ -1,0 +1,25 @@
+{
+  "title": "Курсы",
+  "subtitle": "Обучение торговле на маркетплейсах",
+  "filter": {
+    "all": "Все",
+    "ozon": "OZON",
+    "wildberries": "Wildberries",
+    "uzum": "Uzum Market"
+  },
+  "level": {
+    "beginner": "Начинающий",
+    "intermediate": "Средний",
+    "advanced": "Продвинутый"
+  },
+  "lessons": "уроков",
+  "hours": "ч.",
+  "rating": "Рейтинг",
+  "enrolled": "Вы записаны",
+  "enroll": "Записаться",
+  "price_free": "Бесплатно",
+  "author": "Автор",
+  "what_learn": "Что вы изучите",
+  "requirements": "Требования",
+  "syllabus": "Программа курса"
+}

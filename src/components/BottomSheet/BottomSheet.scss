@@ -1,0 +1,40 @@
+.bottom-sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: $z-modal;
+  @include glass-surface($blur: $blur-glass-lg);
+  border-radius: $radius-lg $radius-lg 0 0;
+  border-bottom: none;
+  border-left: none;
+  border-right: none;
+  padding-bottom: env(safe-area-inset-bottom, #{$space-4});
+
+  &__backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: $z-overlay;
+  }
+
+  &__handle {
+    width: 36px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: $radius-full;
+    margin: $space-3 auto $space-2;
+  }
+
+  &__title {
+    @include text-title;
+    font-size: $text-lg;
+    padding: 0 $space-6 $space-4;
+  }
+
+  &__content {
+    padding: 0 $space-4 $space-6;
+    overflow-y: auto;
+    max-height: 70dvh;
+  }
+}

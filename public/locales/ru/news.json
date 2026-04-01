@@ -1,0 +1,13 @@
+{
+  "title": "Новости",
+  "subtitle": "Актуальные новости e-commerce",
+  "read_more": "Подробнее",
+  "views": "просмотров",
+  "category": {
+    "marketplace": "Маркетплейс",
+    "cargo": "Карго",
+    "business": "Бизнес",
+    "china": "Китай",
+    "general": "Общее"
+  }
+}

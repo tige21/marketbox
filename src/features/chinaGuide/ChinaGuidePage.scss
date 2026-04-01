@@ -1,0 +1,99 @@
+.china-guide-page {
+  min-height: 100dvh;
+  background: $color-bg-primary;
+
+  &__content {
+    padding: $space-4;
+    display: flex;
+    flex-direction: column;
+    gap: $space-4;
+    padding-bottom: calc($space-4 + 70px);
+  }
+
+  // ── Category card ─────────────────────────────────────────────
+
+  &__card {
+    @include tap-feedback;
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 171px;
+    border-radius: $radius-card;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    overflow: hidden;
+    cursor: pointer;
+    background: transparent;
+    padding: 0;
+    flex-shrink: 0;
+  }
+
+  &__card-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+  }
+
+  &__card-bar {
+    position: absolute;
+    bottom: 9px;
+    left: 9px;
+    right: 9px;
+    min-height: 45px;
+    border-radius: $radius-card;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    background: rgba(0, 0, 0, 0.67);
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    gap: 10px;
+  }
+
+  &__card-bar-left {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  &__card-name {
+    font-family: $font-gilroy;
+    font-size: 14px;
+    font-weight: $fw-bold;
+    color: $color-white;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  &__card-bar-right {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__card-desc {
+    flex: 1;
+    min-width: 0;
+    font-family: $font-gilroy;
+    font-size: 10px;
+    font-weight: $fw-regular;
+    color: $color-white;
+    line-height: 1.4;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  &__card-chevron {
+    flex-shrink: 0;
+    color: $color-white;
+    display: flex;
+    align-items: center;
+  }
+}

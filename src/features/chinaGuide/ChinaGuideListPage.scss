@@ -1,0 +1,340 @@
+// ============================================================
+//  China Guide — ChinaGuideListPage.scss
+//  Block: cg-list
+// ============================================================
+
+.cg-list {
+  min-height: 100dvh;
+  background: $color-bg-primary;
+  display: flex;
+  flex-direction: column;
+
+  &__body {
+    flex: 1;
+    padding: $space-4;
+    padding-bottom: calc($space-4 + 80px);
+    display: flex;
+    flex-direction: column;
+    gap: $space-4;
+  }
+
+  // ── Premium badge ──────────────────────────────────────────
+
+  &__premium-badge {
+    position: absolute;
+    top: $space-2;
+    right: $space-2;
+    padding: 3px 8px;
+    background: linear-gradient(135deg, $color-premium, $color-accent);
+    border-radius: $radius-full;
+    font-family: $font-gilroy;
+    font-size: 9px;
+    font-weight: $fw-bold;
+    color: $color-white;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  // ── 2-column grid (markets / hotels / restaurants) ─────────
+
+  &__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: $space-3;
+  }
+
+  &__grid-card {
+    @include tap-feedback;
+    display: flex;
+    flex-direction: column;
+    background: #1a1a1a;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: $radius-card;
+    overflow: hidden;
+    cursor: pointer;
+    padding: 0;
+    text-align: left;
+  }
+
+  &__grid-card-img-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  &__grid-card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  &__grid-card-body {
+    padding: $space-2 $space-3 $space-3;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__grid-card-name {
+    font-family: $font-gilroy;
+    font-size: $text-base;
+    font-weight: $fw-bold;
+    color: $color-white;
+    margin: 0;
+    line-height: $lh-tight;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  &__grid-card-location {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: $color-white-60;
+  }
+
+  &__grid-card-city {
+    font-family: $font-gilroy;
+    font-size: $text-xs;
+    font-weight: $fw-regular;
+    color: $color-white-60;
+    @include truncate;
+  }
+
+  // ── Tours vertical list ────────────────────────────────────
+
+  &__tours-list {
+    display: flex;
+    flex-direction: column;
+    gap: $space-4;
+  }
+
+  &__tour-card {
+    @include tap-feedback;
+    background: #1a1a1a;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: $radius-card;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  &__tour-img-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  &__tour-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  &__tour-date-badge {
+    position: absolute;
+    top: $space-3;
+    left: $space-3;
+    padding: 5px 12px;
+    background: linear-gradient(135deg, $color-premium, $color-accent);
+    border-radius: $radius-full;
+    font-family: $font-gilroy;
+    font-size: $text-sm;
+    font-weight: $fw-bold;
+    color: $color-white;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    box-shadow: 0 2px 12px rgba(150, 138, 215, 0.5);
+  }
+
+  &__tour-body {
+    padding: $space-4;
+    display: flex;
+    flex-direction: column;
+    gap: $space-2;
+  }
+
+  &__tour-name {
+    font-family: $font-gilroy;
+    font-size: $text-md;
+    font-weight: $fw-bold;
+    color: $color-white;
+    margin: 0;
+    line-height: $lh-tight;
+  }
+
+  &__tour-desc {
+    font-family: $font-gilroy;
+    font-size: $text-sm;
+    font-weight: $fw-regular;
+    color: $color-white-60;
+    margin: 0;
+    line-height: $lh-normal;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  &__tour-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: $space-1;
+    gap: $space-3;
+  }
+
+  &__tour-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  &__tour-city {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-family: $font-gilroy;
+    font-size: $text-xs;
+    font-weight: $fw-regular;
+    color: $color-white-60;
+  }
+
+  &__tour-seats {
+    font-family: $font-gilroy;
+    font-size: $text-xs;
+    font-weight: $fw-medium;
+    color: $color-accent;
+  }
+
+  &__tour-btn {
+    @include tap-feedback;
+    flex-shrink: 0;
+    padding: 8px 20px;
+    background: linear-gradient(135deg, $color-premium, $color-accent);
+    border: none;
+    border-radius: $radius-full;
+    font-family: $font-gilroy;
+    font-size: $text-sm;
+    font-weight: $fw-bold;
+    color: $color-white;
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  // ── Translators 2-column grid ──────────────────────────────
+
+  &__trans-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: $space-3;
+  }
+
+  &__trans-card {
+    @include tap-feedback;
+    display: flex;
+    flex-direction: column;
+    background: #1e1e24;
+    border: 1px solid rgba(172, 157, 255, 0.15);
+    border-radius: $radius-card;
+    overflow: hidden;
+    cursor: pointer;
+    padding: 0;
+    text-align: left;
+    gap: 0;
+  }
+
+  &__trans-avatar-wrap {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.05);
+    flex-shrink: 0;
+  }
+
+  &__trans-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  &__trans-body {
+    padding: $space-3;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+  }
+
+  &__trans-name-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  &__trans-name {
+    font-family: $font-gilroy;
+    font-size: $text-base;
+    font-weight: $fw-bold;
+    color: $color-white;
+    line-height: $lh-tight;
+    @include truncate;
+  }
+
+  &__trans-age {
+    font-family: $font-gilroy;
+    font-size: $text-xs;
+    font-weight: $fw-regular;
+    color: $color-white-60;
+  }
+
+  &__trans-location {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-family: $font-gilroy;
+    font-size: $text-xs;
+    font-weight: $fw-regular;
+    color: $color-white-60;
+  }
+
+  &__trans-langs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px;
+    margin-top: 2px;
+  }
+
+  &__trans-lang-tag {
+    padding: 2px 6px;
+    background: rgba(172, 157, 255, 0.15);
+    border: 1px solid rgba(172, 157, 255, 0.25);
+    border-radius: $radius-sm;
+    font-family: $font-gilroy;
+    font-size: 9px;
+    font-weight: $fw-medium;
+    color: $color-accent;
+  }
+
+  &__trans-bio {
+    font-family: $font-gilroy;
+    font-size: 10px;
+    font-weight: $fw-regular;
+    color: $color-white-40;
+    margin: 4px 0 0;
+    line-height: $lh-normal;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}

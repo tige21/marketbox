@@ -1,0 +1,220 @@
+// ============================================================
+//  Factories — FactoriesMain  (block: factories-main)
+//  Factories — FactoryCountryPage  (block: factory-country)
+// ============================================================
+
+// --------------- FactoriesMain ---------------
+
+.factories-main {
+  min-height: 100dvh;
+  background: $color-bg-primary;
+  display: flex;
+  flex-direction: column;
+
+  &__body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: $space-4;
+    gap: $space-4;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: $space-3;
+  }
+
+  &__tile {
+    @include tap-feedback;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: $space-2;
+    height: 170px;
+    background: #171717;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: $radius-card;
+    cursor: pointer;
+    padding: $space-4;
+  }
+
+  &__tile-flag {
+    font-size: 64px;
+    line-height: 1;
+    // Prevent emoji from being clipped on some devices
+    display: block;
+  }
+
+  &__tile-name {
+    font-family: $font-gilroy;
+    font-weight: $fw-bold;
+    font-size: 15px;
+    color: $color-white;
+    text-transform: uppercase;
+    text-align: center;
+    letter-spacing: 0.04em;
+  }
+
+  &__chat-btn {
+    @include tap-feedback;
+    width: 100%;
+    height: 55px;
+    background: $color-premium;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 14px;
+    font-family: $font-gilroy;
+    font-weight: 800;
+    font-size: 24px;
+    color: $color-white;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    margin-top: $space-4;
+  }
+}
+
+// --------------- FactoryCountryPage ---------------
+
+.factory-country {
+  min-height: 100dvh;
+  background: $color-bg-primary;
+  display: flex;
+  flex-direction: column;
+
+  &__body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 0 $space-4 $space-6;
+    gap: $space-4;
+  }
+
+  &__subtitle {
+    font-family: $font-gilroy;
+    font-weight: 800;
+    font-size: $text-xl;
+    color: $color-white;
+    margin: 0;
+    padding-top: $space-3;
+  }
+
+  // Search field
+
+  &__search-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  &__search {
+    width: 100%;
+    height: 44px;
+    padding: 0 44px 0 $space-4;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: $radius-full;
+    font-family: $font-gilroy;
+    font-size: $text-base;
+    color: $color-white;
+    outline: none;
+    appearance: none;
+
+    &::placeholder {
+      color: $color-white-40;
+    }
+
+    &:focus {
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    // Hide native clear button in webkit
+    &::-webkit-search-cancel-button {
+      display: none;
+    }
+  }
+
+  &__search-icon {
+    @include flex-center;
+    position: absolute;
+    right: $space-4;
+    top: 50%;
+    transform: translateY(-50%);
+    color: $color-white-40;
+    pointer-events: none;
+    line-height: 0;
+  }
+
+  // Category list
+
+  &__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: $space-3;
+  }
+
+  &__item {
+    // list item wrapper — no extra styles needed
+  }
+
+  &__card {
+    @include tap-feedback;
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 180px;
+    border-radius: $radius-card;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    overflow: hidden;
+    cursor: pointer;
+    background: #171717;
+    padding: 0;
+  }
+
+  &__card-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  // Glass bar at bottom of each card
+
+  &__card-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 $space-4;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 0 0 $radius-card $radius-card;
+  }
+
+  &__card-name {
+    font-family: $font-gilroy;
+    font-weight: $fw-bold;
+    font-size: $text-md;
+    color: $color-white;
+    @include truncate;
+  }
+
+  &__card-chevron {
+    font-size: 18px;
+    color: $color-white;
+    flex-shrink: 0;
+    margin-left: $space-3;
+    line-height: 1;
+  }
+}

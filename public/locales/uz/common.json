@@ -1,0 +1,35 @@
+{
+  "tabs": {
+    "home": "Bosh sahifa",
+    "favorites": "Sevimlilar",
+    "profile": "Profil",
+    "money": "Mening pulim",
+    "nav_label": "Asosiy menyu"
+  },
+  "loading": "Yuklanmoqda...",
+  "error": {
+    "generic": "Xatolik yuz berdi",
+    "retry": "Qayta urinish",
+    "not_found": "Topilmadi",
+    "no_connection": "Ulanish yo'q"
+  },
+  "premium": {
+    "title": "Faqat Premium uchun",
+    "description": "Ushbu bo'limga kirish uchun obuna rasmiylashting",
+    "upgrade": "Premium olish",
+    "cancel": "Yopish"
+  },
+  "actions": {
+    "back": "Orqaga",
+    "close": "Yopish",
+    "save": "Saqlash",
+    "cancel": "Bekor qilish",
+    "confirm": "Tasdiqlash",
+    "search": "Qidirish"
+  },
+  "empty": {
+    "title": "Hech narsa topilmadi",
+    "description": "Qidiruv parametrlarini o'zgartirib ko'ring"
+  },
+  "offline": "Internet aloqasi yo'q"
+}

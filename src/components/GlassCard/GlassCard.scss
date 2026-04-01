@@ -1,0 +1,16 @@
+.glass-card {
+  @include glass-surface;
+  padding: $space-4;
+  position: relative;
+  overflow: hidden;
+
+  &--elevated {
+    box-shadow: $shadow-glass-elevated, $shadow-glass-inner;
+  }
+
+  &--interactive {
+    cursor: pointer;
+    @include tap-feedback;
+    @include glass-hover;
+  }
+}

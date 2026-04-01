@@ -1,0 +1,309 @@
+.exchange-page {
+  min-height: 100dvh;
+  background: $color-bg-primary;
+
+  &__content {
+    padding: $space-4 $space-4 $space-8;
+    display: flex;
+    flex-direction: column;
+    gap: $space-5;
+  }
+
+  &__updated-at {
+    font-family: $font-gilroy;
+    font-size: $text-xs;
+    color: $color-white-40;
+    text-align: right;
+    margin-top: -$space-2;
+  }
+
+  &__section-title {
+    font-family: $font-gilroy;
+    font-size: $text-md;
+    font-weight: $fw-medium;
+    color: $color-white;
+    margin: 0 0 $space-3;
+    line-height: 1.2;
+  }
+
+  // ─── Rates Card ──────────────────────────────────────────
+
+  &__rates-section {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__list {
+    @include glass-surface;
+    padding: $space-2 0;
+    overflow: hidden;
+  }
+
+  &__divider {
+    height: 1px;
+    background: $color-border-glass-subtle;
+    margin: 0 $space-4;
+  }
+
+  &__rate-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: $space-3 $space-4;
+    gap: $space-3;
+  }
+
+  &__rate-name {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    min-width: 0;
+  }
+
+  &__rate-flag {
+    width: 44px;
+    height: 44px;
+    border-radius: $radius-full;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+
+  &__rate-flag-emoji {
+    font-size: 28px;
+    line-height: 1;
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    @include flex-center;
+  }
+
+  &__rate-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  &__rate-currency {
+    font-family: $font-gilroy;
+    font-size: $text-base;
+    font-weight: $fw-medium;
+    color: $color-white;
+    line-height: 1.3;
+    @include truncate;
+  }
+
+  &__rate-code {
+    font-family: $font-gilroy;
+    font-size: $text-sm;
+    color: $color-white-60;
+    line-height: 1.2;
+  }
+
+  &__rate-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: $space-1;
+    flex-shrink: 0;
+  }
+
+  &__rate-value {
+    font-family: $font-gilroy;
+    font-size: $text-base;
+    font-weight: $fw-medium;
+    color: $color-white;
+    white-space: nowrap;
+  }
+
+  &__rate-change {
+    font-family: $font-gilroy;
+    font-size: $text-sm;
+    font-weight: $fw-medium;
+    padding: 2px 8px;
+    border-radius: $radius-full;
+    white-space: nowrap;
+
+    &--up {
+      color: #3dd598;
+      background: rgba(61, 213, 152, 0.12);
+    }
+
+    &--down {
+      color: #dc1010;
+      background: rgba(220, 16, 16, 0.12);
+    }
+  }
+
+  // ─── Converter ───────────────────────────────────────────
+
+  &__converter {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__converter-body {
+    @include glass-surface;
+    padding: $space-4;
+    display: flex;
+    flex-direction: column;
+    gap: $space-2;
+    position: relative;
+  }
+
+  &__converter-field {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__converter-row {
+    display: flex;
+    gap: $space-2;
+    align-items: stretch;
+  }
+
+  &__converter-select {
+    flex-shrink: 0;
+    width: 100px;
+    background: rgba(172, 157, 255, 0.12);
+    border: 1px solid $color-border-glass-subtle;
+    border-radius: $radius-md;
+    padding: $space-2 $space-2 $space-2 $space-3;
+    font-family: $font-gilroy;
+    font-size: $text-sm;
+    font-weight: $fw-bold;
+    color: $color-white;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 7L11 1' stroke='rgba(250,250,250,0.5)' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right $space-2 center;
+    padding-right: $space-6;
+    transition: border-color $duration-fast $easing-standard;
+
+    &:focus {
+      border-color: $color-accent;
+    }
+
+    option {
+      background: #1e1e2e;
+      color: $color-white;
+    }
+  }
+
+  &__converter-input {
+    flex: 1;
+    min-width: 0;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid $color-border-glass-subtle;
+    border-radius: $radius-md;
+    padding: $space-3 $space-4;
+    font-family: $font-gilroy;
+    font-size: $text-lg;
+    font-weight: $fw-bold;
+    color: $color-white;
+    text-align: right;
+    outline: none;
+    transition: border-color $duration-fast $easing-standard;
+
+    &::placeholder {
+      color: $color-white-40;
+      font-weight: $fw-regular;
+    }
+
+    &:focus {
+      border-color: $color-accent;
+      background: rgba(172, 157, 255, 0.08);
+    }
+
+    &--readonly {
+      color: $color-accent;
+      cursor: default;
+
+      &:focus {
+        border-color: $color-border-glass-subtle;
+        background: rgba(255, 255, 255, 0.06);
+      }
+    }
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    &[type='number'] {
+      -moz-appearance: textfield;
+    }
+  }
+
+  &__swap-btn {
+    align-self: center;
+    width: 36px;
+    height: 36px;
+    border-radius: $radius-full;
+    border: 1px solid $color-border-glass-subtle;
+    background: rgba(172, 157, 255, 0.15);
+    color: $color-accent;
+    font-size: $text-lg;
+    cursor: pointer;
+    @include flex-center;
+    @include tap-feedback;
+    flex-shrink: 0;
+  }
+
+  // ─── Channel CTA ─────────────────────────────────────────
+
+  &__channel-card {
+    @include glass-surface;
+    padding: $space-5 $space-4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $space-2;
+    text-align: center;
+  }
+
+  &__channel-title {
+    font-family: $font-gilroy;
+    font-size: 28px;
+    font-weight: $fw-bold;
+    color: $color-accent;
+    letter-spacing: 0.02em;
+    margin: 0;
+    line-height: 1.1;
+  }
+
+  &__channel-subtitle {
+    font-family: $font-gilroy;
+    font-size: $text-sm;
+    font-weight: $fw-bold;
+    color: $color-white;
+    margin: 0;
+  }
+
+  &__channel-desc {
+    font-family: $font-gilroy;
+    font-size: $text-sm;
+    color: $color-white-60;
+    margin: $space-2 0 $space-3;
+    line-height: $lh-normal;
+  }
+
+  &__channel-btn {
+    width: 100%;
+    padding: $space-3 $space-4;
+    border-radius: $radius-full;
+    border: none;
+    background: $color-accent;
+    color: $color-white;
+    font-family: $font-gilroy;
+    font-size: $text-base;
+    font-weight: $fw-bold;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    @include tap-feedback;
+  }
+}

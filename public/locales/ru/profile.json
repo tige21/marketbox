@@ -1,0 +1,19 @@
+{
+  "title": "Профиль",
+  "settings": {
+    "name": "Имя фамилия",
+    "language": "Язык",
+    "payment": "Способ оплаты",
+    "public_info": "Публичная информация",
+    "leave_review": "Оставить отзыв",
+    "terms": "Правила и условия"
+  },
+  "language_values": {
+    "ru": "Русский",
+    "uz": "O'zbekcha"
+  },
+  "section_account": "Аккаунт",
+  "section_other": "Другое",
+  "loading": "Загрузка профиля...",
+  "error": "Ошибка загрузки профиля"
+}

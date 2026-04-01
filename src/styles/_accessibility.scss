@@ -1,0 +1,42 @@
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media (prefers-contrast: more) {
+  .glass-surface, [class*="glass"] {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(0, 0, 0, 0.92);
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    color: #fafafa;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  [class*="glass"] {
+    backdrop-filter: none;
+    background: rgba(20, 20, 20, 0.95);
+  }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.low-performance-mode [class*="glass"] {
+  backdrop-filter: none;
+  background: rgba(20, 20, 20, 0.93);
+}

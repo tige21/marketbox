@@ -1,0 +1,19 @@
+{
+  "title": "Profil",
+  "settings": {
+    "name": "Ism familiya",
+    "language": "Til",
+    "payment": "To'lov usuli",
+    "public_info": "Ommaviy ma'lumot",
+    "leave_review": "Fikr qoldirish",
+    "terms": "Qoidalar va shartlar"
+  },
+  "language_values": {
+    "ru": "Русский",
+    "uz": "O'zbekcha"
+  },
+  "section_account": "Hisob",
+  "section_other": "Boshqa",
+  "loading": "Profil yuklanmoqda...",
+  "error": "Profilni yuklashda xato"
+}

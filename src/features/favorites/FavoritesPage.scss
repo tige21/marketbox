@@ -1,0 +1,146 @@
+.favorites-page {
+  min-height: 100dvh;
+  background: $color-bg-primary;
+
+  // ── Title ───────────────────────────────────────────────────
+
+  &__title {
+    font-family: $font-gilroy;
+    font-weight: $fw-bold;
+    font-size: 33px;
+    color: $color-white;
+    line-height: 1;
+    margin: 0;
+    text-align: center;
+    padding: 30px $space-4 0;
+    text-transform: uppercase;
+  }
+
+  // ── Content ─────────────────────────────────────────────────
+
+  &__content {
+    padding: $space-4;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-bottom: calc($space-4 + 70px);
+  }
+
+  // ── Card wrapper ────────────────────────────────────────────
+
+  &__card-wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__card {
+    background: #e5e5e5;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-bottom: none;
+    border-radius: 20px 20px 0 0;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  &__card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  &__card-title {
+    font-family: $font-gilroy;
+    font-weight: 800;
+    font-size: 20px;
+    color: #363636;
+    line-height: 21px;
+    margin: 0;
+    flex: 1;
+    min-width: 0;
+    white-space: pre-line;
+  }
+
+  &__card-heart {
+    flex-shrink: 0;
+    width: 42px;
+    height: 42px;
+    border-radius: $radius-full;
+    background: #f5c842;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    @include tap-feedback;
+
+    svg path {
+      fill: $color-white;
+      stroke: none;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+  }
+
+  &__card-thumbnail-wrap {
+    width: 100%;
+    aspect-ratio: 336 / 189;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  &__card-thumbnail {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  &__card-materials {
+    background: #171717;
+    border-radius: 0 0 11px 11px;
+    height: 68px;
+    display: flex;
+    align-items: center;
+    padding: 0 $space-4;
+  }
+
+  &__card-materials-bar {
+    background: #1e1e1e;
+    border-radius: 11px;
+    height: 32px;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $space-2;
+    padding: 0 $space-3;
+
+    span {
+      font-family: $font-gilroy;
+      font-weight: 800;
+      font-size: 15px;
+      color: $color-white;
+      line-height: 1;
+    }
+  }
+
+  &__card-materials-icon {
+    width: 21px;
+    height: 23px;
+    object-fit: contain;
+    flex-shrink: 0;
+    display: block;
+  }
+
+  // ── Empty state ─────────────────────────────────────────────
+
+  &__empty {
+    margin-top: $space-12;
+  }
+}

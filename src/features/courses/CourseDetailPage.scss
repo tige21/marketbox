@@ -1,0 +1,82 @@
+.course-detail {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+
+  &__content {
+    padding: $space-4;
+    display: flex;
+    flex-direction: column;
+    gap: $space-5;
+    padding-bottom: $space-8;
+  }
+
+  &__player {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #1a1a1a;
+    border-radius: $radius-card;
+    overflow: hidden;
+    position: relative;
+    @include glass-gradient-border($radius-card);
+  }
+
+  &__player-inner {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__play-icon {
+    opacity: 0.85;
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    gap: $space-3;
+  }
+
+  &__title {
+    font-family: $font-gilroy;
+    font-weight: $fw-bold;
+    font-size: $text-xl;
+    color: $color-white;
+    line-height: $lh-tight;
+    margin: 0;
+  }
+
+  &__description {
+    font-family: $font-gilroy;
+    font-weight: $fw-medium;
+    font-size: $text-base;
+    color: $color-white-80;
+    line-height: $lh-normal;
+    margin: 0;
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+  }
+
+  &__marketplace {
+    font-family: $font-gilroy;
+    font-weight: $fw-bold;
+    font-size: $text-sm;
+    color: $color-accent;
+    text-transform: uppercase;
+    background: rgba(172, 157, 255, 0.15);
+    border-radius: $radius-sm;
+    padding: 2px $space-2;
+  }
+
+  &__duration {
+    font-family: $font-gilroy;
+    font-size: $text-sm;
+    color: $color-white-60;
+  }
+}

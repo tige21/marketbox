@@ -1,0 +1,39 @@
+{
+  "greeting": "Xush kelibsiz",
+  "greeting_name": "Xush kelibsiz, {{name}}!",
+  "greetingDefault": "Xush kelibsiz!",
+  "subtitle": "Sizning marketpleys hamkoringiz",
+  "quick_actions": "Tezkor harakatlar",
+  "quick_news": "Yangiliklar",
+  "quick_exchange": "Almashtirish",
+  "quick_refer": "Do'st taklif qilish",
+  "go_to_profile": "Profilga o'tish",
+  "section_title_categories": "Barcha kategoriyalar",
+  "premium_badge": "Premium",
+  "see_all": "Hammasini ko'rish",
+  "quickActions": {
+    "label": "Tezkor harakatlar"
+  },
+  "quick": {
+    "courses": "Kurslar",
+    "cargo": "Kargo",
+    "exchange": "Almashtirish",
+    "jobs": "Ish"
+  },
+  "categories": {
+    "title": "Barcha toifalar",
+    "error": "Yuklash xatosi",
+    "errorDescription": "Toifalarni yuklab bo'lmadi",
+    "courses": "Kurslar",
+    "cargo": "Kargo",
+    "factories": "Fabrikalar",
+    "wholesale": "Ulgurji sotuvchilar",
+    "china_guide": "Xitoy bo'yicha qo'llanma",
+    "jobs": "Ish",
+    "design_services": "Dizayn",
+    "documents": "Hujjatlar",
+    "exchange": "Valyuta almashinuvi",
+    "events": "Tadbirlar",
+    "news": "Yangiliklar"
+  }
+}

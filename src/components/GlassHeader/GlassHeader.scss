@@ -1,0 +1,69 @@
+.glass-header {
+  position: relative;
+  z-index: $z-header;
+  padding: $space-4 $space-4 $space-3;
+
+  &__inner {
+    display: grid;
+    grid-template-columns: 56px 1fr 56px;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  &__left {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  &__center {
+    text-align: center;
+    min-width: 0;
+  }
+
+  &__right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  &__title {
+    font-family: $font-gilroy;
+    font-weight: $fw-bold;
+    font-size: 30px;
+    color: $color-white;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    line-height: 1;
+    @include truncate;
+
+    &--medium {
+      font-size: 18px;
+      text-transform: none;
+      letter-spacing: -0.36px;
+    }
+  }
+
+  &__back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 28px;
+    border-radius: 1000px;
+    background: rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    cursor: pointer;
+    position: relative;
+    @include tap-feedback;
+    @include glass-gradient-border(1000px);
+
+    svg {
+      width: 18px;
+      height: 18px;
+      color: $color-white;
+      flex-shrink: 0;
+    }
+  }
+}

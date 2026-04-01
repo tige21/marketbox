@@ -1,0 +1,474 @@
+// ============================================================
+//  China Guide — ChinaGuideDetailPage.scss
+//  Block: cg-detail
+// ============================================================
+
+.cg-detail {
+  min-height: 100dvh;
+  background: $color-bg-primary;
+  display: flex;
+  flex-direction: column;
+
+  // ── Skeleton placeholder ───────────────────────────────────
+
+  &__skeleton {
+    flex: 1;
+    margin: $space-4;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: $radius-card;
+    min-height: 300px;
+  }
+
+  // ── Hero image area ────────────────────────────────────────
+
+  &__hero {
+    position: relative;
+    width: 100%;
+    height: 45vh;
+    min-height: 220px;
+    max-height: 340px;
+    flex-shrink: 0;
+    overflow: hidden;
+    background: #1a1a1a;
+  }
+
+  &__hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  &__hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.3) 0%,
+      rgba(0, 0, 0, 0.1) 30%,
+      rgba(0, 0, 0, 0.6) 70%,
+      rgba(0, 0, 0, 0.88) 100%
+    );
+    pointer-events: none;
+  }
+
+  &__hero-back {
+    @include tap-feedback;
+    position: absolute;
+    top: $space-4;
+    left: $space-4;
+    width: 36px;
+    height: 36px;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 2;
+  }
+
+  &__hero-info {
+    position: absolute;
+    bottom: $space-4;
+    left: $space-4;
+    right: $space-4;
+    display: flex;
+    flex-direction: column;
+    gap: $space-1;
+    z-index: 1;
+  }
+
+  &__hero-name {
+    font-family: $font-gilroy;
+    font-size: $text-xl;
+    font-weight: 800;
+    color: $color-white;
+    margin: 0;
+    line-height: $lh-tight;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+  }
+
+  &__hero-location {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-family: $font-gilroy;
+    font-size: $text-sm;
+    font-weight: $fw-regular;
+    color: $color-white-80;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+  }
+
+  // ── Tour date badge in hero ────────────────────────────────
+
+  &__tour-date-badge {
+    align-self: flex-start;
+    padding: 4px 12px;
+    background: linear-gradient(135deg, $color-premium, $color-accent);
+    border-radius: $radius-full;
+    font-family: $font-gilroy;
+    font-size: $text-sm;
+    font-weight: $fw-bold;
+    color: $color-white;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    box-shadow: 0 2px 12px rgba(150, 138, 215, 0.5);
+  }
+
+  // ── Premium badge ──────────────────────────────────────────
+
+  &__premium-badge {
+    align-self: flex-start;
+    padding: 3px 10px;
+    background: linear-gradient(135deg, $color-premium, $color-accent);
+    border-radius: $radius-full;
+    font-family: $font-gilroy;
+    font-size: 10px;
+    font-weight: $fw-bold;
+    color: $color-white;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  // ── Scrollable content body ────────────────────────────────
+
+  &__body {
+    flex: 1;
+    padding: $space-5 $space-4;
+    display: flex;
+    flex-direction: column;
+    gap: $space-5;
+    padding-bottom: calc($space-8 + 80px);
+  }
+
+  // ── Generic section ────────────────────────────────────────
+
+  &__section {
+    display: flex;
+    flex-direction: column;
+    gap: $space-3;
+  }
+
+  &__section-title {
+    font-family: $font-gilroy;
+    font-size: $text-base;
+    font-weight: $fw-bold;
+    color: $color-white;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  &__section-text {
+    font-family: $font-gilroy;
+    font-size: $text-base;
+    font-weight: $fw-regular;
+    color: $color-white-80;
+    margin: 0;
+    line-height: $lh-normal;
+  }
+
+  &__divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  // ── Info key-value rows ────────────────────────────────────
+
+  &__info-rows {
+    background: #1a1a1a;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: $radius-card;
+    overflow: hidden;
+  }
+
+  &__info-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: $space-3 $space-4;
+    gap: $space-3;
+
+    & + & {
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+  }
+
+  &__info-label {
+    font-family: $font-gilroy;
+    font-size: $text-sm;
+    font-weight: $fw-regular;
+    color: $color-white-60;
+  }
+
+  &__info-value {
+    font-family: $font-gilroy;
+    font-size: $text-sm;
+    font-weight: $fw-medium;
+    color: $color-white;
+    text-align: right;
+  }
+
+  // ── Contact pills ──────────────────────────────────────────
+
+  &__contact-row {
+    display: flex;
+    flex-direction: column;
+    gap: $space-2;
+  }
+
+  &__contact-pill {
+    @include tap-feedback;
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    padding: $space-3 $space-4;
+    border-radius: 14px;
+    cursor: pointer;
+    font-family: $font-gilroy;
+    font-size: $text-base;
+    font-weight: $fw-medium;
+    color: $color-white;
+
+    &--phone {
+      background: rgba(107, 255, 184, 0.1);
+      border: 1px solid rgba(107, 255, 184, 0.25);
+
+      svg { color: $color-success; }
+    }
+
+    &--wechat {
+      background: rgba(39, 174, 96, 0.1);
+      border: 1px solid rgba(39, 174, 96, 0.25);
+
+      svg { color: #27ae60; }
+    }
+  }
+
+  // ── Map navigation buttons ─────────────────────────────────
+
+  &__map-btns {
+    display: flex;
+    gap: $space-3;
+  }
+
+  &__map-btn {
+    @include tap-feedback;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $space-2;
+    padding: $space-3 $space-4;
+    border-radius: 14px;
+    cursor: pointer;
+    font-family: $font-gilroy;
+    font-size: $text-base;
+    font-weight: $fw-bold;
+    color: $color-white;
+
+    &--baidu {
+      background: rgba(224, 32, 32, 0.15);
+      border: 1px solid rgba(224, 32, 32, 0.35);
+
+      svg { color: #e02020; }
+    }
+
+    &--apple {
+      background: rgba(0, 122, 255, 0.15);
+      border: 1px solid rgba(0, 122, 255, 0.35);
+
+      svg { color: #007aff; }
+    }
+  }
+
+  // ── Participate button (tours) ─────────────────────────────
+
+  &__participate-btn {
+    @include tap-feedback;
+    width: 100%;
+    padding: $space-4;
+    background: linear-gradient(135deg, $color-premium, $color-accent);
+    border: none;
+    border-radius: $radius-card;
+    font-family: $font-gilroy;
+    font-size: $text-md;
+    font-weight: $fw-bold;
+    color: $color-white;
+    cursor: pointer;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    box-shadow: $shadow-glow-accent;
+  }
+
+  // ── Translator hero ────────────────────────────────────────
+
+  &__trans-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $space-3;
+    padding-top: $space-4;
+  }
+
+  &__trans-avatar-wrap {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid rgba(172, 157, 255, 0.4);
+    flex-shrink: 0;
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  &__trans-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  &__trans-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $space-2;
+    justify-content: center;
+  }
+
+  &__trans-city-badge {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 12px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: $radius-full;
+    font-family: $font-gilroy;
+    font-size: $text-sm;
+    font-weight: $fw-regular;
+    color: $color-white-80;
+  }
+
+  &__trans-origin-badge {
+    padding: 4px 12px;
+    background: rgba(172, 157, 255, 0.1);
+    border: 1px solid rgba(172, 157, 255, 0.2);
+    border-radius: $radius-full;
+    font-family: $font-gilroy;
+    font-size: $text-sm;
+    font-weight: $fw-regular;
+    color: $color-accent;
+  }
+
+  // ── Translator identity ────────────────────────────────────
+
+  &__trans-identity {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $space-1;
+  }
+
+  &__trans-name-row {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+  }
+
+  &__trans-name {
+    font-family: $font-gilroy;
+    font-size: $text-xl;
+    font-weight: 800;
+    color: $color-white;
+    margin: 0;
+    text-align: center;
+  }
+
+  &__trans-age {
+    font-family: $font-gilroy;
+    font-size: $text-base;
+    font-weight: $fw-regular;
+    color: $color-white-60;
+    margin: 0;
+  }
+
+  // ── Can help list ──────────────────────────────────────────
+
+  &__help-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: $space-2;
+  }
+
+  &__help-item {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    font-family: $font-gilroy;
+    font-size: $text-base;
+    font-weight: $fw-regular;
+    color: $color-white-80;
+    line-height: $lh-normal;
+  }
+
+  &__help-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: $color-accent;
+    flex-shrink: 0;
+  }
+
+  // ── Language tags ──────────────────────────────────────────
+
+  &__lang-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $space-2;
+  }
+
+  &__lang-tag {
+    padding: 5px 14px;
+    background: rgba(172, 157, 255, 0.15);
+    border: 1px solid rgba(172, 157, 255, 0.3);
+    border-radius: $radius-full;
+    font-family: $font-gilroy;
+    font-size: $text-sm;
+    font-weight: $fw-medium;
+    color: $color-accent;
+  }
+
+  // ── Translator footer ──────────────────────────────────────
+
+  &__trans-footer {
+    padding-top: $space-2;
+  }
+
+  &__contact-btn {
+    @include tap-feedback;
+    width: 100%;
+    padding: $space-4;
+    background: transparent;
+    border: 2px solid rgba(172, 157, 255, 0.5);
+    border-radius: $radius-card;
+    font-family: $font-gilroy;
+    font-size: $text-md;
+    font-weight: $fw-bold;
+    color: $color-accent;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    transition: background 0.15s ease, border-color 0.15s ease;
+
+    &:active {
+      background: rgba(172, 157, 255, 0.1);
+      border-color: rgba(172, 157, 255, 0.8);
+    }
+  }
+}

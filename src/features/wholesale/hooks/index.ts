@@ -1,0 +1,1 @@
+export { useWholesale } from './useWholesale'

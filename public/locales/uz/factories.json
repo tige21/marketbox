@@ -1,0 +1,20 @@
+{
+  "title": "FABRIKALAR",
+  "subtitle": "To'g'ridan-to'g'ri ishlab chiqaruvchilar",
+  "min_order": "Min. buyurtma",
+  "verified": "Tasdiqlangan",
+  "rating": "Reyting",
+  "categories": "Kategoriyalar",
+  "categories_heading": "Kategoriyalar",
+  "location": "Joylashuv",
+  "contact": "Bog'lanish",
+  "website": "Sayt",
+  "chats_button": "CHATLAR",
+  "search_placeholder": "Qidirish",
+  "country": {
+    "china": "XITOY",
+    "uzbekistan": "O'ZBEKISTON",
+    "russia": "ROSSIYA",
+    "kyrgyzstan": "QIRGʻIZISTON"
+  }
+}

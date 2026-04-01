@@ -1,0 +1,42 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px $space-2;
+  border-radius: $radius-sm;
+  font-size: $text-xs;
+  font-weight: $fw-bold;
+  font-family: $font-gilroy;
+  line-height: 1.4;
+  white-space: nowrap;
+
+  &--variant-default {
+    background: rgba(255, 255, 255, 0.1);
+    color: $color-white-80;
+  }
+
+  &--variant-premium {
+    background: $color-premium;
+    color: $color-white;
+    box-shadow: $shadow-glow-premium;
+  }
+
+  &--variant-success {
+    background: rgba(107, 255, 184, 0.15);
+    color: $color-success;
+  }
+
+  &--variant-error {
+    background: rgba(255, 107, 107, 0.15);
+    color: $color-error;
+  }
+
+  &--variant-warning {
+    background: rgba(255, 214, 107, 0.15);
+    color: $color-warning;
+  }
+
+  &--variant-accent {
+    background: rgba(172, 157, 255, 0.2);
+    color: $color-accent;
+  }
+}

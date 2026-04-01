@@ -1,0 +1,22 @@
+{
+  "title": "VALYUTA ALMASHINUVI",
+  "subtitle": "Bugungi joriy kurslar",
+  "table": {
+    "currency": "Valyuta",
+    "buy": "Sotib olish",
+    "sell": "Sotish"
+  },
+  "converter": {
+    "title": "Valyuta konverteri",
+    "from_label": "Berasiz",
+    "to_label": "Olasiz",
+    "amount_placeholder": "0"
+  },
+  "channel": {
+    "title": "Telegram da joriy kurslar",
+    "description": "Har kuni yangi valyuta kurslari uchun kanalimizga obuna bo'ling",
+    "subscribe": "Kanalga obuna bo'lish"
+  },
+  "updated": "Yangilandi",
+  "cbr_rate": "MBR"
+}

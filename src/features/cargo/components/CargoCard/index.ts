@@ -1,0 +1,1 @@
+export { CargoCard } from './CargoCard'

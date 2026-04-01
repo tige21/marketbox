@@ -1,0 +1,48 @@
+{
+  "title": "Карго",
+  "subtitle": "Доставка из Китая",
+  "filter": {
+    "all": "Все",
+    "white": "По белому",
+    "black": "По чёрному",
+    "fulfillment": "Фулфилмент"
+  },
+  "price_per_kg": "$/кг",
+  "delivery_days": "дней",
+  "verified": "Проверено",
+  "call": "Позвонить",
+  "telegram": "Telegram",
+  "rating": "Рейтинг",
+  "reviews": "отзывов",
+  "main": {
+    "white_title": "Карго по Белому",
+    "white_desc": "Выставки и мероприятия в Китае, России и Узбекистоне – следите за актуальными событиями для вашего бизнеса.",
+    "logistics_title": "Карго компании",
+    "fulfillment_title": "Фулфилмент",
+    "chats_button": "ЧАТЫ"
+  },
+  "list": {
+    "logistics_title": "ЛОГИСТИКА",
+    "fulfillment_title": "ФУЛФИЛМЕНТ",
+    "countries_label": "Грузоперевозки между этих стран:",
+    "details_btn": "Подробное ›"
+  },
+  "detail": {
+    "about": "О компании",
+    "contacts": "Контакты"
+  },
+  "white_page": {
+    "title": "ПО БЕЛОМУ",
+    "video_placeholder": "Видео",
+    "materials_label": "Материалы к уроку",
+    "company_name": "Wave Logistic",
+    "company_tagline": "Ваш надежный партнер в сфере логистики из Китая",
+    "company_desc": "Мы специализируемся на официальных («белых») грузоперевозках из Китая в Узбекистан и Россию. Полное таможенное оформление, страхование груза и персональный менеджер для каждого клиента.",
+    "team_title": "Команда",
+    "contacts_title": "Контакты:",
+    "phone": "+7 999 999 99 99",
+    "email": "support@ppppp.com",
+    "website": "wave-logistic.ru",
+    "socials_title": "Социальные сети:"
+  }
+}

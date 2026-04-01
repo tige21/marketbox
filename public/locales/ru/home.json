@@ -1,0 +1,39 @@
+{
+  "greeting": "Добро пожаловать",
+  "greeting_name": "Добро пожаловать, {{name}}!",
+  "greetingDefault": "Добро пожаловать!",
+  "subtitle": "Ваш маркетплейс-партнёр",
+  "quick_actions": "Быстрые действия",
+  "quick_news": "Новости",
+  "quick_exchange": "Обмен",
+  "quick_refer": "Пригласи Друга",
+  "go_to_profile": "Перейти в профиль",
+  "section_title_categories": "Все категории",
+  "premium_badge": "Premium",
+  "see_all": "Смотреть всё",
+  "quickActions": {
+    "label": "Быстрые действия"
+  },
+  "quick": {
+    "courses": "Курсы",
+    "cargo": "Карго",
+    "exchange": "Обмен",
+    "jobs": "Работа"
+  },
+  "categories": {
+    "title": "Все категории",
+    "error": "Ошибка загрузки",
+    "errorDescription": "Не удалось загрузить категории",
+    "courses": "Курсы",
+    "cargo": "Карго",
+    "factories": "Фабрики",
+    "wholesale": "Оптовики",
+    "china_guide": "Гид по Китаю",
+    "jobs": "Работа",
+    "design_services": "Дизайн",
+    "documents": "Документы",
+    "exchange": "Обмен валют",
+    "events": "Мероприятия",
+    "news": "Новости"
+  }
+}

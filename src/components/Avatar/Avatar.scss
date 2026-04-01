@@ -1,0 +1,27 @@
+.avatar {
+  border-radius: $radius-full;
+  overflow: hidden;
+  flex-shrink: 0;
+  @include glass-surface;
+  @include flex-center;
+
+  &--size-xs { width: 24px; height: 24px; }
+  &--size-sm { width: 32px; height: 32px; }
+  &--size-md { width: 40px; height: 40px; }
+  &--size-lg { width: 56px; height: 56px; }
+  &--size-xl { width: 80px; height: 80px; }
+
+  &__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__initials {
+    font-family: $font-gilroy;
+    font-weight: $fw-bold;
+    color: $color-accent;
+    font-size: $text-sm;
+    user-select: none;
+  }
+}

@@ -1,0 +1,16 @@
+.wholesale-page {
+  min-height: 100%;
+  background: $color-bg-primary;
+
+  &__content {
+    padding: $space-4;
+    display: flex;
+    flex-direction: column;
+    gap: $space-3;
+    padding-bottom: calc($space-4 + 70px);
+  }
+
+  &__skeleton {
+    border-radius: $radius-card;
+  }
+}
