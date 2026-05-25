@@ -1,5 +1,7 @@
 {
   "title": "Profil",
+  "header_title": "MENING PROFILIM",
+  "edit": "Tahrirlash",
   "settings": {
     "name": "Ism familiya",
     "language": "Til",
@@ -12,8 +14,89 @@
     "ru": "Русский",
     "uz": "O'zbekcha"
   },
-  "section_account": "Hisob",
+  "section_account": "MENING HISOBIM",
+  "section_information": "Ma'lumot",
   "section_other": "Boshqa",
+  "rows": {
+    "name_lastname": "Ism va familiya",
+    "first_name": "Ism",
+    "last_name": "Familiya",
+    "payment_info": "To'lov ma'lumoti",
+    "subscription": "Obuna",
+    "subscription_until": "{{date}} gacha",
+    "support": "Qo'llab-quvvatlash xizmati",
+    "rules": "Jamiyat qoidalari",
+    "faq": "Savol - Javob",
+    "report": "Buzilish haqida xabar berish",
+    "terms": "Oferta va siyosatlar",
+    "linked_card": "Bog'langan karta",
+    "manage_subscription": "Obunani boshqarish",
+    "cancel_subscription": "Obunani bekor qilish"
+  },
+  "pages": {
+    "edit_title": "Ism va familiya",
+    "faq_title": "Savol - Javob",
+    "language_title": "Til",
+    "payment_title": "To'lov ma'lumoti",
+    "report_title": "Shikoyat berish",
+    "report_submit": "Buzilish haqida xabar berish",
+    "rules_title": "Jamiyat qoidalari",
+    "terms_title": "Oferta va siyosat"
+  },
+  "report": {
+    "intro": "Buzilish haqida ariza topshirish uchun:",
+    "step_screenshot": "Jamiyat qoidalari buzilganligi haqidagi ekran suratini yoki videoni oling;",
+    "step_nickname": "Qoidabuzarning taxallusini nusxalang;",
+    "step_submit": "Quyidagi tugma orqali barcha ma'lumotlarni yuboring."
+    ,
+    "outro": "Qo'llab-quvvatlash xizmati so'rovingizni diqqat bilan ko'rib chiqadi va albatta yordam beradi."
+  },
+  "terms_items": {
+    "privacy": "Maxfiylik siyosati",
+    "personal_data": "Shaxsiy ma'lumotlarni qayta ishlashga rozilik"
+  },
+  "faq": {
+    "subtitle": "Javobni ko'rish uchun savolni bosing",
+    "items": [
+      {
+        "q": "MarketBox nima?",
+        "a": "MarketBox — marketpleyslar (OZON, Wildberries, Uzum) va Xitoy bilan savdo qiladigan tadbirkorlar uchun platforma. Bu yerda kurslar, dolzarb yangiliklar, Xitoy bozorlari bo'yicha qo'llanma, fabrikalar, valyuta ayirboshlash va Cargo logistika — bir ilovada."
+      },
+      {
+        "q": "Premium obuna nimani beradi?",
+        "a": "Premium video darslar va materiallarga to'liq ruxsat, Xitoy va fabrikalar bo'yicha kengaytirilgan qo'llanmani, Qo'llab-quvvatlash xizmatida ustuvorlik va referal dasturidagi bonuslarni ochadi."
+      },
+      {
+        "q": "Do'stni qanday taklif qilish va daromad olish?",
+        "a": "«Mening pulim» bo'limiga kiring — u yerda shaxsiy referal havolangiz. Uni baham ko'ring: Premium uchun to'lagan har bir do'st uchun siz umrbod foiz olasiz. Statistika ham shu yerda."
+      },
+      {
+        "q": "Qo'llab-quvvatlash xizmati bilan qanday bog'lanish?",
+        "a": "Profil → Ma'lumot → Qo'llab-quvvatlash xizmatini oching. Bu Telegram-botimizga (@cashyou_help) olib boradi — yozing, ish vaqtida javob beramiz."
+      },
+      {
+        "q": "Ilova tilini qanday o'zgartirish?",
+        "a": "Profil → Mening hisobim → Til. Ruscha va O'zbekcha mavjud. Barcha materiallar va interfeys avtomatik almashinadi."
+      },
+      {
+        "q": "Darslarimni qayerdan ko'rishim mumkin?",
+        "a": "Bosh sahifadagi «Kurslar» bo'limi — barcha yo'nalishlar (OZON, Wildberries, Uzum, Dropshipping, Xitoy bilan biznes). Kurs ichida «Dars materiallari»ni bosing — pleyer ochiladi."
+      },
+      {
+        "q": "«Valyuta ayirboshlash» bo'limi qanday ishlaydi?",
+        "a": "Asosiy valyutalar bo'yicha kurslar har kuni yangilanadi (USD, EUR, RUB, CNY, KGS, TRY, UZS). O'rnatilgan konvertor orqali summani tezda hisoblashingiz mumkin. Haqiqiy ayirboshlash — bo'lim pastidagi Telegram-kanalimiz orqali."
+      },
+      {
+        "q": "Obunani bekor qilish mumkinmi?",
+        "a": "Ha, istalgan vaqtda obunadan chiqishingiz mumkin. Telegram-botga o'ting, «Obuna» → «Obunani boshqarish» → «Obunani bekor qilish»ni tanlang. E'tibor: bekor qilingach, foydalanish 6 oyga cheklanadi."
+      },
+      {
+        "q": "Javob topa olmasam — nima qilay?",
+        "a": "Bizga to'g'ridan-to'g'ri Qo'llab-quvvatlash xizmatiga yozing: @cashyou_help. Tushuntirib beramiz yoki savolni jamoaga uzatamiz."
+      }
+    ]
+  },
+  "rules_text": "Jamiyat qoidalari\n\nMuhim qoidalar\nIstalgan vaqtda obunadan chiqishingiz mumkin.\nBuning uchun telegram-botga o'ting, menyudan «Obuna» — «Obunani boshqarish» bandini tanlang va «Obunani bekor qilish» tugmasini bosing.\n*obuna to'xtatilganda, foydalanish 6 oyga cheklanadi, shu muddatdan so'ng sizni yana ko'rishdan xursand bo'lamiz.\n\nMuloqot qoidalari\n🚩 Toksiksiz muloqot\n✅ Mumkin:\n• Konstruktiv muhokamalar\n• Boshqa a'zolarni qo'llab-quvvatlash\n• Hurmat bilan muloqot\n• Halol fikr-mulohaza\n\n❌ Mumkin emas:\n• Shaxsga o'tish, haqorat\n• So'kinish\n• Toksiklik va provokatsiya\n• Siyosat va 18+ kontent\n\n📲 Reklama, lidogeneratsiya, targ'ibot\n✅ Tavsiya etiladi:\n• #tanishuv orqali o'zi haqida aytish\n\n❌ Taqiqlanadi:\n• So'rovsiz xizmatlarni taklif qilish\n• Shaxsiy xabarlarda offerlar yuborish\n\n🔐 Ma'lumotlar maxfiyligi\n✅ Mumkin:\n• O'z nomingizdan ochiq muloqot qilish\n\n❌ Mumkin emas:\n• Shaxsiy ma'lumotlarni yig'ish\n• A'zolarni olib ketish\n\nQoidalarni bajarmaslik oqibatlari:\n1-buzish → Ogohlantirish\n2-buzish → 3-7 kunlik cheklov\n3 va undan ortiq → 1 oylik bloklash\nFirib/spam → Doimiy ban\n\nBarcha savollar bo'yicha: https://t.me/cashyou_help",
   "loading": "Profil yuklanmoqda...",
   "error": "Profilni yuklashda xato"
 }

@@ -35,3 +35,7 @@ coverage/
 
 # misc
 *.local
+
+# tsc -b emit artifacts (Vite reads vite.config.ts directly)
+vite.config.js
+vite.config.d.ts

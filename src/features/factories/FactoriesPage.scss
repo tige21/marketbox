@@ -1,53 +1,67 @@
 // ============================================================
 //  Factories — FactoriesMain  (block: factories-main)
 //  Factories — FactoryCountryPage  (block: factory-country)
+//  Factories — FactoryDetailPage  (block: factory-detail)
 // ============================================================
 
 // --------------- FactoriesMain ---------------
 
 .factories-main {
-  min-height: 100dvh;
+  width: 100%;
+  min-height: 100%;
   background: $color-bg-primary;
   display: flex;
   flex-direction: column;
 
   &__body {
     flex: 1;
+    width: 100%;
     display: flex;
     flex-direction: column;
-    padding: $space-4;
+    padding: 0 20px $space-6;
     gap: $space-4;
   }
 
   &__grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: $space-3;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    width: 100%;
   }
 
   &__tile {
     @include tap-feedback;
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: $space-2;
-    height: 170px;
+    justify-content: flex-end;
+    width: 100%;
+    aspect-ratio: 1 / 1;
     background: #171717;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: $radius-card;
+    border: none;
+    border-radius: 20px;
     cursor: pointer;
-    padding: $space-4;
+    padding: 0 12px 18px;
+    overflow: hidden;
+    @include glass-gradient-border(20px);
+
+    &::before { z-index: 2; }
   }
 
   &__tile-flag {
-    font-size: 64px;
-    line-height: 1;
-    // Prevent emoji from being clipped on some devices
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     display: block;
+    pointer-events: none;
   }
 
   &__tile-name {
+    position: relative;
+    z-index: 1;
     font-family: $font-gilroy;
     font-weight: $fw-bold;
     font-size: 15px;
@@ -55,14 +69,16 @@
     text-transform: uppercase;
     text-align: center;
     letter-spacing: 0.04em;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.55);
   }
 
   &__chat-btn {
     @include tap-feedback;
+    position: relative;
     width: 100%;
     height: 55px;
     background: $color-premium;
-    border: 1px solid rgba(255, 255, 255, 0.6);
+    border: none;
     border-radius: 14px;
     font-family: $font-gilroy;
     font-weight: 800;
@@ -72,22 +88,25 @@
     letter-spacing: 0.06em;
     cursor: pointer;
     margin-top: $space-4;
+    @include glass-gradient-border(14px);
   }
 }
 
 // --------------- FactoryCountryPage ---------------
 
 .factory-country {
-  min-height: 100dvh;
+  width: 100%;
+  min-height: 100%;
   background: $color-bg-primary;
   display: flex;
   flex-direction: column;
 
   &__body {
     flex: 1;
+    width: 100%;
     display: flex;
     flex-direction: column;
-    padding: 0 $space-4 $space-6;
+    padding: 0 20px $space-6;
     gap: $space-4;
   }
 
@@ -100,21 +119,26 @@
     padding-top: $space-3;
   }
 
-  // Search field
+  // Search field (wrap holds the glass border; input is transparent inside)
 
   &__search-wrap {
     position: relative;
-    display: flex;
-    align-items: center;
+    width: 100%;
+    height: 44px;
+    border-radius: 999px;
+    background: rgba(23, 23, 23, 0.5);
+    @include glass-gradient-border(999px);
   }
 
   &__search {
+    position: absolute;
+    inset: 0;
     width: 100%;
-    height: 44px;
-    padding: 0 44px 0 $space-4;
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: $radius-full;
+    height: 100%;
+    padding: 0 20px 0 46px;
+    background: transparent;
+    border: none;
+    border-radius: 999px;
     font-family: $font-gilroy;
     font-size: $text-base;
     color: $color-white;
@@ -125,11 +149,6 @@
       color: $color-white-40;
     }
 
-    &:focus {
-      border-color: rgba(255, 255, 255, 0.25);
-    }
-
-    // Hide native clear button in webkit
     &::-webkit-search-cancel-button {
       display: none;
     }
@@ -138,12 +157,15 @@
   &__search-icon {
     @include flex-center;
     position: absolute;
-    right: $space-4;
+    left: 14px;
     top: 50%;
     transform: translateY(-50%);
-    color: $color-white-40;
+    width: 20px;
+    height: 20px;
+    color: $color-white;
     pointer-events: none;
     line-height: 0;
+    z-index: 1;
   }
 
   // Category list
@@ -155,10 +177,12 @@
     display: flex;
     flex-direction: column;
     gap: $space-3;
+    width: 100%;
   }
 
   &__item {
     // list item wrapper — no extra styles needed
+    width: 100%;
   }
 
   &__card {
@@ -167,12 +191,15 @@
     display: block;
     width: 100%;
     height: 180px;
-    border-radius: $radius-card;
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    border: none;
     overflow: hidden;
     cursor: pointer;
     background: #171717;
     padding: 0;
+    @include glass-gradient-border(20px);
+
+    &::before { z-index: 2; }
   }
 
   &__card-img {
@@ -199,7 +226,8 @@
     background: rgba(0, 0, 0, 0.6);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    border-radius: 0 0 $radius-card $radius-card;
+    border-radius: 0 0 20px 20px;
+    z-index: 1;
   }
 
   &__card-name {
@@ -216,5 +244,491 @@
     flex-shrink: 0;
     margin-left: $space-3;
     line-height: 1;
+  }
+}
+
+// --------------- FactoryDetailPage ---------------
+
+.factory-detail {
+  width: 100%;
+  min-height: 100%;
+  background: $color-bg-primary;
+  padding: 0 20px calc(24px + 100px);
+  position: relative;
+
+  &__back {
+    position: absolute;
+    top: 16px;
+    left: 20px;
+    width: 34px;
+    height: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    z-index: 3;
+    -webkit-tap-highlight-color: transparent;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    &:active { transform: scale(0.96); }
+  }
+
+  &__title {
+    margin: 0;
+    padding-top: 19px;
+    font-family: $font-travels;
+    font-weight: 800;
+    font-size: 22px;
+    line-height: 1.05;
+    color: $color-white;
+    text-transform: uppercase;
+    text-align: center;
+    letter-spacing: 0.02em;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-top: 24px;
+  }
+
+  &__hero {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 20px;
+    overflow: hidden;
+    background: #171717;
+    @include glass-gradient-border(20px);
+  }
+
+  &__hero-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  &__info-card {
+    position: relative;
+    background: #171717;
+    border-radius: 20px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    @include glass-gradient-border(20px);
+  }
+
+  &__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 4px;
+  }
+
+  &__badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: rgba(150, 138, 215, 0.3);
+    color: $color-white;
+    font-family: $font-gilroy;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  &__meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin: 4px 0;
+  }
+
+  &__meta-label {
+    font-family: $font-gilroy;
+    font-weight: 500;
+    font-size: 13px;
+    color: $color-white;
+    opacity: 0.6;
+  }
+
+  &__meta-value {
+    font-family: $font-gilroy;
+    font-weight: 600;
+    font-size: 13px;
+    color: $color-white;
+    text-align: right;
+  }
+
+  &__description {
+    margin: 8px 0 0;
+    font-family: $font-gilroy;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.5;
+    color: $color-white;
+  }
+
+  &__contact-btn {
+    position: relative;
+    width: 100%;
+    height: 50px;
+    background: #968ad7;
+    border: none;
+    border-radius: 12px;
+    font-family: $font-gilroy;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 1;
+    color: $color-white;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform $duration-fast $easing-standard, filter $duration-fast $easing-standard;
+    @include glass-gradient-border(12px);
+
+    &:hover { filter: brightness(1.05); }
+    &:active { transform: scale(0.98); }
+  }
+}
+
+
+// --------------- FactorySectionPage (companies) ---------------
+
+.factory-section {
+  width: 100%;
+  min-height: 100%;
+  background: $color-bg-primary;
+  display: flex;
+  flex-direction: column;
+
+  &__body {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 0 20px $space-6;
+    gap: $space-4;
+  }
+
+  &__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: $space-3;
+    width: 100%;
+  }
+
+  &__item {
+    width: 100%;
+  }
+
+  // Horizontal company card — square photo on the left, info on the right.
+  // WeChat aside was dropped: the QR is shown on the company detail page.
+  &__card {
+    position: relative;
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    column-gap: 14px;
+    align-items: center;
+    width: 100%;
+    min-height: 134px;
+    padding: 12px 16px 12px 12px;
+    border-radius: 20px;
+    background: #171717;
+    @include glass-gradient-border(20px);
+
+    &::before { z-index: 2; pointer-events: none; }
+  }
+
+  &__card-thumb {
+    width: 110px;
+    height: 110px;
+    border-radius: 14px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  &__card-thumb-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  &__card-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+    align-self: center;
+  }
+
+  &__card-name {
+    margin: 0;
+    font-family: $font-gilroy;
+    font-weight: 800;
+    font-size: 14px;
+    line-height: 1.15;
+    color: $color-white;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  &__card-subtitle {
+    font-family: $font-gilroy;
+    font-weight: 700;
+    font-size: 9px;
+    line-height: 1.15;
+    color: $color-white;
+    opacity: 0.7;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__card-cta {
+    @include tap-feedback;
+    @include focus-ring;
+    margin-top: 6px;
+    align-self: flex-start;
+    height: 23px;
+    padding: 0 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: $color-premium;
+    color: $color-white;
+    border: none;
+    border-radius: 999px;
+    font-family: $font-gilroy;
+    font-weight: 700;
+    font-size: 11px;
+    line-height: 1;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+
+    svg {
+      width: 8px;
+      height: 8px;
+      flex-shrink: 0;
+    }
+  }
+
+}
+
+
+// --------------- FactoryCompanyDetailPage ---------------
+
+.factory-company-detail {
+  position: relative;
+  width: 100%;
+  min-height: 100%;
+  background: $color-bg-primary;
+  padding: 0 20px calc($space-8 + 90px);
+
+  &__back {
+    position: absolute;
+    top: 16px;
+    left: 20px;
+    width: 48px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    overflow: hidden;
+    z-index: 2;
+    @include glass-gradient-border(14px);
+
+    &::before { z-index: 2; }
+    &:active { transform: scale(0.94); }
+
+    img {
+      display: block;
+      width: 48px;
+      height: 28px;
+      pointer-events: none;
+    }
+  }
+
+  &__title {
+    margin: 0 0 20px;
+    padding: 19px 60px 0;
+    text-align: center;
+    font-family: $font-travels;
+    font-weight: 800;
+    font-size: 22px;
+    line-height: 1.15;
+    color: $color-white;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+  }
+
+  &__body {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  // Hero image — rounded corners, no outer frame/glow.
+  &__image {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    border-radius: 20px;
+    object-fit: cover;
+    background: rgba(255, 255, 255, 0.04);
+    display: block;
+  }
+
+  // ── Description card ────────────────────────────────────────
+  &__description-card {
+    background: #1a1a1a;
+    border-radius: 20px;
+    padding: 18px;
+  }
+
+  &__description {
+    margin: 0;
+    font-family: $font-gilroy;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.5;
+    color: rgba(250, 250, 250, 0.85);
+    white-space: pre-line;
+
+    &--placeholder { color: rgba(255, 255, 255, 0.35); }
+  }
+
+  // ── Contact card ────────────────────────────────────────────
+  &__contact-card {
+    background: #1a1a1a;
+    border-radius: 20px;
+    padding: 18px 18px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__contact-title {
+    margin: 0 0 8px;
+    font-family: $font-gilroy;
+    font-weight: 800;
+    font-size: 14px;
+    line-height: 1.2;
+    color: $color-white;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  &__contact-divider {
+    height: 1px;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.08);
+    margin-bottom: 4px;
+  }
+
+  &__contact-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 4px;
+    color: $color-white;
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+
+    &:last-child { border-bottom: 0; }
+    &:active { opacity: 0.8; }
+  }
+
+  &__contact-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    color: rgba(250, 250, 250, 0.85);
+    flex-shrink: 0;
+  }
+
+  &__contact-text {
+    font-family: $font-gilroy;
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 1.3;
+    color: $color-white;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  // ── QR card — no outer frame (cards are standalone screens in the
+  //    design; the dashed look only goes around the QR placeholder).
+  &__qr-card {
+    padding: 18px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  &__qr-frame {
+    width: 160px;
+    height: 160px;
+    border: 1.5px dashed rgba(255, 255, 255, 0.18);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    color: rgba(255, 255, 255, 0.18); // placeholder icon color
+  }
+
+  &__qr {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  &__qr-placeholder {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+  }
+
+  &__qr-label {
+    font-family: $font-gilroy;
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 1;
+    color: rgba(250, 250, 250, 0.6);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-top: 2px;
   }
 }

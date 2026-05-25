@@ -1,13 +1,20 @@
 .glass-header {
   position: relative;
   z-index: $z-header;
-  padding: $space-4 $space-4 $space-3;
+  // Tighter top inset — Telegram Mini App renders below the TG header,
+  // no extra status-bar padding needed. Was 44px historically (matches
+  // iOS standard navbar), now 16px for a more compact look.
+  padding: 16px 20px $space-3;
 
   &__inner {
     display: grid;
-    grid-template-columns: 56px 1fr 56px;
+    grid-template-columns: 52px 1fr 52px;
     align-items: center;
-    min-height: 44px;
+    // Was 44px; that pushed the back button 8px below the padding edge,
+    // so GlassHeader pages had a different visible top inset than
+    // standalone-BackButton pages. Drop to back-button height (28px) so
+    // back button sits exactly at padding-top across all screens.
+    min-height: 28px;
   }
 
   &__left {
@@ -30,17 +37,31 @@
   &__title {
     font-family: $font-gilroy;
     font-weight: $fw-bold;
-    font-size: 30px;
+    font-size: 18px;
     color: $color-white;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.04em;
     line-height: 1;
     @include truncate;
 
     &--medium {
-      font-size: 18px;
+      font-family: $font-manrope;
+      font-weight: 400;
+      font-size: 17px;
       text-transform: none;
-      letter-spacing: -0.36px;
+      letter-spacing: 0;
+      color: $color-white;
+      line-height: 1;
+    }
+
+    &--bold {
+      font-family: $font-travels;
+      font-weight: 800;
+      font-size: 18px;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      color: $color-white;
+      line-height: 1;
     }
   }
 
@@ -50,20 +71,27 @@
     justify-content: center;
     width: 48px;
     height: 28px;
-    border-radius: 1000px;
-    background: rgba(255, 255, 255, 0.18);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    padding: 0;
+    border: none;
+    background: none;
     cursor: pointer;
     position: relative;
-    @include tap-feedback;
-    @include glass-gradient-border(1000px);
+    overflow: hidden;
+    border-radius: 14px;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform $duration-fast $easing-standard;
+    @include glass-gradient-border(14px);
+    @include focus-ring;
 
-    svg {
-      width: 18px;
-      height: 18px;
-      color: $color-white;
-      flex-shrink: 0;
+    &::before { z-index: 2; }
+
+    &:active { transform: scale(0.94); }
+
+    img {
+      display: block;
+      width: 48px;
+      height: 28px;
+      pointer-events: none;
     }
   }
 }

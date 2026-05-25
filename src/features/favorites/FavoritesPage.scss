@@ -1,29 +1,79 @@
 .favorites-page {
-  min-height: 100dvh;
+  width: 100%;
+  min-height: 100%;
   background: $color-bg-primary;
+  padding: 24px 20px 0;
+  position: relative;
+  overflow: hidden;
+  // Block the OS-level overscroll/glow so our pull indicator owns the
+  // top edge unambiguously.
+  overscroll-behavior-y: contain;
+
+  // ── Pull-to-refresh indicator ───────────────────────────────
+  // Sits at the very top, height grows with the pull. Inner spinner
+  // fades in with progress and rotates while refreshing.
+  &__pull-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 5;
+    transition: height 0.25s ease;
+  }
+
+  &__pull-spinner {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 2.5px solid rgba(255, 255, 255, 0.18);
+    border-top-color: $color-white;
+    transition: opacity 0.15s ease, transform 0.05s linear;
+    will-change: transform, opacity;
+
+    &--spinning {
+      animation: favorites-page-spin 0.7s linear infinite;
+    }
+  }
+
+  &__inner {
+    will-change: transform;
+  }
+}
+
+@keyframes favorites-page-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.favorites-page {
 
   // ── Title ───────────────────────────────────────────────────
 
   &__title {
     font-family: $font-gilroy;
-    font-weight: $fw-bold;
-    font-size: 33px;
+    font-weight: 800;
+    font-size: 22px;
     color: $color-white;
     line-height: 1;
     margin: 0;
     text-align: center;
-    padding: 30px $space-4 0;
     text-transform: uppercase;
+    letter-spacing: 0.01em;
   }
 
   // ── Content ─────────────────────────────────────────────────
 
   &__content {
-    padding: $space-4;
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    padding-bottom: calc($space-4 + 70px);
+    gap: 22px;
+    padding-top: 28px;
+    padding-bottom: calc(24px + 90px); // tab bar breathing room
   }
 
   // ── Card wrapper ────────────────────────────────────────────
@@ -31,65 +81,71 @@
   &__card-wrapper {
     display: flex;
     flex-direction: column;
+    width: 100%;
+    position: relative;
   }
 
+  // Card body — light gray, fixed geometry matching Figma (376×274)
   &__card {
+    position: relative;
+    width: 100%;
+    height: 274px;
     background: #e5e5e5;
     border: 1px solid rgba(255, 255, 255, 0.6);
     border-bottom: none;
     border-radius: 20px 20px 0 0;
-    padding: 16px;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
-    gap: 12px;
-  }
-
-  &__card-top {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 12px;
   }
 
   &__card-title {
+    flex-shrink: 0;
+    padding: 11px 72px 0 22px;
     font-family: $font-gilroy;
     font-weight: 800;
     font-size: 20px;
     color: #363636;
     line-height: 21px;
     margin: 0;
-    flex: 1;
-    min-width: 0;
     white-space: pre-line;
+    letter-spacing: 0.01em;
   }
 
   &__card-heart {
-    flex-shrink: 0;
+    position: absolute;
+    top: 11px;
+    right: 14px;
     width: 42px;
     height: 42px;
     border-radius: $radius-full;
-    background: #f5c842;
+    background: #363636;
     border: none;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    padding: 0;
+    z-index: 2;
     @include tap-feedback;
-
-    svg path {
-      fill: $color-white;
-      stroke: none;
-    }
 
     &:disabled {
       opacity: 0.5;
       pointer-events: none;
     }
+
+    svg {
+      display: block;
+      width: 20px;
+      height: 18px;
+    }
   }
 
+  // Lesson thumbnail: fixed 189px tall, flush with card sides under the title
   &__card-thumbnail-wrap {
-    width: 100%;
-    aspect-ratio: 336 / 189;
+    flex: 1;
+    margin: 11px 20px 15px;
+    min-height: 0;
     border-radius: 10px;
     overflow: hidden;
   }
@@ -101,13 +157,14 @@
     display: block;
   }
 
+  // Footer bar — dark, attached under card
   &__card-materials {
     background: #171717;
     border-radius: 0 0 11px 11px;
     height: 68px;
     display: flex;
     align-items: center;
-    padding: 0 $space-4;
+    padding: 0 14px;
   }
 
   &__card-materials-bar {
@@ -118,24 +175,21 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: $space-2;
-    padding: 0 $space-3;
+    gap: 8px;
+
+    svg {
+      flex-shrink: 0;
+      display: block;
+    }
 
     span {
       font-family: $font-gilroy;
       font-weight: 800;
-      font-size: 15px;
+      font-size: 10.688px;
       color: $color-white;
       line-height: 1;
+      letter-spacing: 0.02em;
     }
-  }
-
-  &__card-materials-icon {
-    width: 21px;
-    height: 23px;
-    object-fit: contain;
-    flex-shrink: 0;
-    display: block;
   }
 
   // ── Empty state ─────────────────────────────────────────────

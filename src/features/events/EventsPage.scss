@@ -1,207 +1,293 @@
 .events-page {
-  min-height: 100dvh;
+  width: 100%;
+  min-height: 100%;
   background: $color-bg-primary;
+  padding: 16px 20px 0;
+  position: relative;
+
+  &__back {
+    position: absolute;
+    top: 16px;
+    left: 20px;
+    width: 48px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    border-radius: 14px;
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform $duration-fast $easing-standard;
+    @include glass-gradient-border(14px);
+    @include focus-ring;
+
+    &::before { z-index: 2; }
+    &:active { transform: scale(0.94); }
+
+    img {
+      display: block;
+      width: 48px;
+      height: 28px;
+      pointer-events: none;
+    }
+  }
+
+  &__title {
+    // Padding-top 49.5px from page container top = 49.5 - 52 (padding-top already) ≈ -2.5px
+    // Spec: padding-top 49.5px from page top. Page top currently has 52px -> adjust via margin-top.
+    margin: -2.5px 0 28px;
+    text-align: center;
+    font-family: $font-travels;
+    font-weight: 800;
+    font-size: 15.108px;
+    line-height: 1.15;
+    color: $color-white;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__title-line {
+    display: block;
+
+    &--primary {
+      font-weight: 900;
+    }
+
+    &--secondary {
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+  }
 
   &__content {
-    padding: $space-4 $space-4 $space-6;
     display: flex;
     flex-direction: column;
-    gap: $space-4;
+    gap: 32px;
+    padding-bottom: $space-8;
   }
 
-  // ─── Event Card ────────────────────────────────────────────
+  &__item {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
 
   &__card {
-    @include glass-surface;
-    padding: 0;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    cursor: pointer;
-    @include tap-feedback;
-
-    &:hover {
-      background: rgba(255, 255, 255, 0.06);
-    }
-
-    &--featured {
-      border-color: rgba(172, 157, 255, 0.4);
-      box-shadow: $shadow-glow-accent, $shadow-glass-inner;
-    }
-
-    &--premium {
-      border-color: rgba(150, 138, 215, 0.4);
-      box-shadow: $shadow-glow-premium, $shadow-glass-inner;
-    }
-  }
-
-  &__card-image-wrap {
     position: relative;
     width: 100%;
-    height: 200px;
+    height: 243px;
+    border-radius: 20px;
     overflow: hidden;
-    flex-shrink: 0;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform $duration-fast $easing-standard;
+    @include glass-gradient-border(20px);
+    @include focus-ring;
+
+    &::before { z-index: 3; }
+    &:active { transform: scale(0.98); }
   }
 
   &__card-image {
-    @include image-cover;
-    transition: transform $duration-slow $easing-standard;
-
-    .events-page__card:active & {
-      transform: scale(1.03);
-    }
-  }
-
-  &__card-badges {
     position: absolute;
-    top: $space-3;
-    left: $space-3;
-    display: flex;
-    gap: $space-2;
-    flex-wrap: wrap;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
+  // Both badges now sit inside the glass-bar as part of the meta row,
+  // so they no longer float over the photo — they're anchored to the band.
   &__type-badge {
-    padding: $space-1 $space-3;
-    border-radius: $radius-full;
-    background: rgba(23, 23, 23, 0.65);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(172, 157, 255, 0.35);
+    height: 16px;
+    padding: 0 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: $color-premium;
+    border-radius: 5.244px;
     font-family: $font-gilroy;
-    font-size: $text-xs;
-    font-weight: $fw-bold;
-    color: $color-accent;
+    font-weight: 700;
+    font-size: 10.487px;
+    line-height: 1;
+    color: $color-white;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
-    line-height: $lh-tight;
-  }
-
-  &__online-badge {
-    padding: $space-1 $space-3;
-    border-radius: $radius-full;
-    background: rgba(107, 255, 184, 0.15);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(107, 255, 184, 0.35);
-    font-family: $font-gilroy;
-    font-size: $text-xs;
-    font-weight: $fw-bold;
-    color: $color-success;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    line-height: $lh-tight;
+    white-space: nowrap;
+    letter-spacing: 0.02em;
   }
 
   &__date-badge {
+    height: 16px;
+    padding: 0 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: $color-premium;
+    border-radius: 5.244px;
+    font-family: $font-gilroy;
+    font-weight: 700;
+    font-size: 10.487px;
+    line-height: 1;
+    color: $color-white;
+    white-space: nowrap;
+    letter-spacing: 0.02em;
+
+    img {
+      width: 11px;
+      height: 11px;
+      object-fit: contain;
+    }
+  }
+
+  &__glass-bar {
     position: absolute;
-    bottom: $space-3;
-    right: $space-3;
-    padding: $space-1 $space-3;
-    border-radius: $radius-full;
-    background: rgba(23, 23, 23, 0.75);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 12px 20px 14px;
+    border-radius: 20px;
+    background: rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    font-family: $font-gilroy;
-    font-size: $text-xs;
-    font-weight: $fw-bold;
-    color: $color-white-80;
-    line-height: $lh-tight;
-  }
-
-  &__card-body {
-    padding: $space-4;
+    z-index: 1;
     display: flex;
     flex-direction: column;
-    gap: $space-2;
-    flex: 1;
+    gap: 10px;
+    @include glass-gradient-border(20px);
   }
 
-  &__card-title {
-    @include text-title;
-    font-size: $text-md;
-    margin: 0;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    line-height: $lh-tight;
-  }
-
-  &__card-location {
+  &__glass-meta {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    gap: $space-1;
-    font-family: $font-gilroy;
-    font-size: $text-sm;
-    color: $color-white-60;
-    line-height: $lh-tight;
-    @include truncate;
+    gap: 8px;
   }
 
-  &__card-description {
-    @include text-body;
-    font-size: $text-sm;
+  &__glass-text {
     margin: 0;
+    font-family: $font-gilroy;
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 1.25;
+    color: $color-white;
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    line-height: $lh-normal;
-    flex: 1;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
   }
-
-  &__card-footer {
-    @include flex-between;
-    gap: $space-3;
-    margin-top: $space-1;
-  }
-
-  &__card-price {
-    font-family: $font-gilroy;
-    font-size: $text-base;
-    font-weight: $fw-bold;
-    color: $color-accent;
-    line-height: $lh-tight;
-
-    &--free {
-      color: $color-success;
-    }
-  }
-
-  &__read-more-btn {
-    flex-shrink: 0;
-    padding: $space-2 $space-4;
-    border-radius: $radius-md;
-    border: none;
-    background: $color-premium;
-    color: $color-white;
-    font-family: $font-gilroy;
-    font-size: $text-sm;
-    font-weight: $fw-bold;
-    cursor: pointer;
-    @include tap-feedback;
-    pointer-events: none; // Tap handled by card
-    transition: background $duration-fast $easing-standard;
-
-    .events-page__card:active & {
-      background: $color-accent;
-    }
-  }
-
-  // ─── Skeleton ──────────────────────────────────────────────
 
   &__card-skeleton {
-    @include glass-surface;
-    padding: 0;
-    overflow: hidden;
+    width: 100%;
+    height: 311px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.04);
+    animation: events-skeleton 1.2s ease-in-out infinite alternate;
   }
+}
 
-  &__skeleton-body {
-    padding: $space-4;
+@keyframes events-skeleton {
+  from { opacity: 0.5; }
+  to { opacity: 0.85; }
+}
+
+
+// --------------- EventDetail (/events/:id) ---------------
+
+.event-detail {
+  width: 100%;
+  min-height: 100%;
+  background: $color-bg-primary;
+  padding: 0 20px calc(24px + 90px);
+  position: relative;
+
+  &__body {
     display: flex;
     flex-direction: column;
-    gap: $space-3;
+    gap: 16px;
+    padding-top: 70px;
   }
+
+  &__image {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  &__date {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    align-self: flex-start;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(150, 138, 215, 0.18);
+    font-family: $font-gilroy;
+    font-weight: 600;
+    font-size: 13px;
+    color: $color-white;
+
+    img { width: 14px; height: 14px; }
+  }
+
+  &__title {
+    margin: 0;
+    font-family: $font-travels;
+    font-weight: 800;
+    font-size: 26px;
+    line-height: 1.1;
+    color: $color-white;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+  }
+
+  &__description {
+    margin: 0;
+    font-family: $font-gilroy;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.5;
+    color: rgba(250, 250, 250, 0.85);
+    white-space: pre-line;
+  }
+
+  &__cta {
+    @include tap-feedback;
+    margin-top: 8px;
+    width: 100%;
+    height: 50px;
+    background: $color-premium;
+    border: none;
+    border-radius: 14px;
+    font-family: $font-gilroy;
+    font-weight: 700;
+    font-size: 16px;
+    color: $color-white;
+    cursor: pointer;
+    @include glass-gradient-border(14px);
+  }
+}
+
+
+.events-page__details-btn {
+  margin: 12px 5px 0;
+  width: calc(100% - 10px);
+  height: 40px;
+  background: transparent;
+  color: $color-white;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 10px;
+  font-family: $font-gilroy;
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }

@@ -1,219 +1,57 @@
 .marketplace-courses {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+  width: 100%;
+  min-height: 100%;
+  background: $color-bg-primary;
+  padding: 0 20px;
+  position: relative;
 
-  &__content {
-    padding: $space-4;
-    display: flex;
-    flex-direction: column;
-    gap: $space-5;
-    padding-bottom: $space-8;
-  }
-
-  &__lesson-wrapper {
-    display: flex;
-    flex-direction: column;
-  }
-
-  &__card {
-    position: relative;
-    background: rgba(229, 229, 229, 1);
-    border-radius: $radius-card $radius-card 0 0;
-    width: 100%;
-    padding: $space-4;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    gap: $space-3;
-    text-align: left;
-    @include tap-feedback;
-
-    &--skeleton {
-      height: 220px;
-      background: rgba(229, 229, 229, 0.2);
-      animation: pulse 1.4s ease-in-out infinite;
-    }
-  }
-
-  &__card-top {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: $space-3;
-  }
-
-  &__lesson-info {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    flex: 1;
-    min-width: 0;
-  }
-
-  &__lesson-number {
-    font-family: $font-gilroy;
-    font-weight: $fw-bold;
-    font-size: $text-sm;
-    color: #363636;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-  }
-
-  &__lesson-title {
-    font-family: $font-gilroy;
-    font-weight: 800;
-    font-size: $text-xl;
-    color: #363636;
-    line-height: $lh-tight;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    margin: 0;
-  }
-
-  &__card-actions {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: $space-2;
-    flex-shrink: 0;
-  }
-
-  &__heart-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: $space-1;
-    display: flex;
+  &__back {
+    position: absolute;
+    top: 16px;
+    left: 20px;
+    width: 48px;
+    height: 28px;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    @include tap-feedback;
-
-    svg path {
-      stroke: #363636;
-    }
-  }
-
-  &__avatar {
-    width: 42px;
-    height: 42px;
-    border-radius: $radius-full;
-    background: $color-accent;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    text-decoration: none;
+    border-radius: 14px;
     overflow: hidden;
-    flex-shrink: 0;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform $duration-fast $easing-standard;
+    @include glass-gradient-border(14px);
+    @include focus-ring;
+
+    &::before { z-index: 2; }
+    &:active { transform: scale(0.94); }
 
     img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    span {
-      font-family: $font-gilroy;
-      font-weight: $fw-bold;
-      font-size: $text-md;
-      color: $color-white;
-      text-transform: uppercase;
+      display: block;
+      width: 48px;
+      height: 28px;
+      pointer-events: none;
     }
   }
 
-  &__thumbnail-wrap {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    border-radius: 10px;
-    overflow: hidden;
+  &__title {
+    margin: 0;
+    padding-top: 19px;
+    text-align: center;
+    font-family: $font-travels;
+    font-weight: 800;
+    font-size: 18px;
+    line-height: 1.05;
+    color: $color-white;
+    letter-spacing: 0;
+    text-transform: uppercase;
   }
 
-  &__thumbnail {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 10px;
-    display: block;
-  }
-
-  &__thumbnail-placeholder {
-    width: 100%;
-    height: 100%;
-    background: #c8c8c8;
-    border-radius: 10px;
-  }
-
-  &__locked-overlay {
-    position: absolute;
-    inset: 0;
-    border-radius: 10px;
-    background: rgba(0, 0, 0, 0.55);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
+  &__content {
+    margin-top: 28px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: $space-2;
-  }
-
-  &__locked-text {
-    font-family: $font-gilroy;
-    font-weight: $fw-bold;
-    font-size: $text-md;
-    color: $color-white;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-  }
-
-  &__locked-date {
-    font-family: $font-gilroy;
-    font-weight: $fw-bold;
-    font-size: $text-sm;
-    color: #000;
-    background: #f7fb4b;
-    border-radius: 5px;
-    padding: 2px $space-2;
-  }
-
-  &__materials {
-    background: #171717;
-    border-radius: 0 0 11px 11px;
-    height: 68px;
-    display: flex;
-    align-items: center;
-    padding: 0 $space-4;
-  }
-
-  &__materials-bar {
-    background: #1e1e1e;
-    border-radius: 11px;
-    height: 32px;
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: $space-2;
-    padding: 0 $space-3;
-
-    span {
-      font-family: $font-gilroy;
-      font-weight: 800;
-      font-size: 15px;
-      color: $color-white;
-      line-height: 1;
-    }
-  }
-
-  &__materials-icon {
-    width: 21px;
-    height: 23px;
-    object-fit: contain;
-    flex-shrink: 0;
-    display: block;
+    gap: 25px;
+    padding-bottom: calc(24px + 90px);
   }
 
   &__empty {
@@ -228,9 +66,74 @@
       color: $color-white-60;
     }
   }
-}
 
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+  // ── Module tile (Course → Module list view) ─────────────────
+  &__module-tile {
+    @include tap-feedback;
+    position: relative;
+    width: 100%;
+    height: 150px;
+    background: #171717;
+    border: none;
+    border-radius: 20px;
+    overflow: hidden;
+    cursor: pointer;
+    padding: 0;
+    display: block;
+    text-align: left;
+    @include glass-gradient-border(20px);
+
+    &::before { z-index: 2; }
+  }
+
+  &__module-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  &__module-bar {
+    position: absolute;
+    bottom: 9px;
+    left: 9.5px;
+    right: 9.5px;
+    min-height: 45px;
+    border-radius: 14px;
+    background: linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65));
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 4px;
+    padding: 8px 16px;
+    overflow: hidden;
+    z-index: 3;
+  }
+
+  &__module-title {
+    font-family: $font-gilroy;
+    font-weight: 800;
+    font-size: 16px;
+    color: $color-white;
+    line-height: 1.1;
+  }
+
+  &__module-subtitle {
+    font-family: $font-gilroy;
+    font-weight: 500;
+    font-size: 11px;
+    line-height: 1.3;
+    color: rgba(255, 255, 255, 0.75);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
 }

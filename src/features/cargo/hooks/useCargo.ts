@@ -1,25 +1,40 @@
 import { useQuery } from '@tanstack/react-query'
 import { cargoApi } from '@/api/endpoints'
-import type { CargoType } from '@/api/types'
+import { useLang } from '@/api/locale'
+import type { BackendCargo, BackendCargoInfo } from '@/api/types'
 
-export function useCargo(type?: CargoType) {
+const STALE = 5 * 60 * 1000
+
+export function useCargo() {
+  const lang = useLang()
   return useQuery({
-    queryKey: ['cargo', type ?? 'all'],
-    queryFn: async () => {
-      const response = await cargoApi.getList(type ? { type } : undefined)
-      return response.data.data
-    },
-    staleTime: 5 * 60 * 1000,
+    queryKey: ['cargo', 'list', lang],
+    queryFn: () => cargoApi.getList({ lang }).then((r) => r.data),
+    select: (r): BackendCargo[] => r.data,
+    staleTime: STALE,
   })
 }
 
-export function useCargoDetail(id: string) {
+export function useCargoDetail(id: number | string | undefined) {
+  const lang = useLang()
   return useQuery({
-    queryKey: ['cargo', id],
-    queryFn: async () => {
-      const response = await cargoApi.getById(id)
-      return response.data.data
-    },
-    enabled: !!id,
+    queryKey: ['cargo', 'detail', id, lang],
+    queryFn: () =>
+      cargoApi.getById(id as number, { lang }).then((r) => r.data),
+    select: (r): BackendCargo => r.data,
+    enabled: id != null,
+    staleTime: STALE,
+  })
+}
+
+export function useCargoInfo(id: number | string | undefined) {
+  const lang = useLang()
+  return useQuery({
+    queryKey: ['cargo', 'info', id, lang],
+    queryFn: () =>
+      cargoApi.getInfo(id as number, { lang }).then((r) => r.data),
+    select: (r): BackendCargoInfo => r.data,
+    enabled: id != null,
+    staleTime: STALE,
   })
 }

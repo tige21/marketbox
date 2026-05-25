@@ -1,5 +1,8 @@
 export { CoursesPage } from './CoursesPage'
 export { CoursesCatalog } from './CoursesCatalog'
 export { MarketplaceCoursesPage } from './MarketplaceCoursesPage'
+export { ModuleLessonsPage } from './ModuleLessonsPage'
 export { CoursesChatsPage } from './CoursesChatsPage'
 export { CourseDetailPage } from './CourseDetailPage'
+export { LessonDetailPage } from './LessonDetailPage'
+export { LessonPreviewPage } from './LessonPreviewPage'

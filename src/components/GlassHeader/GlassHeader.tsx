@@ -1,6 +1,7 @@
 import { type ReactNode } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { bem, cn } from '@/utils/cn'
+import { triggerHaptic } from '@/utils'
 import './GlassHeader.scss'
 
 export interface GlassHeaderProps {
@@ -9,16 +10,8 @@ export interface GlassHeaderProps {
   left?: ReactNode
   right?: ReactNode
   className?: string
-  /** 'large' (default) = 30px uppercase; 'medium' = 18px mixed-case */
-  size?: 'large' | 'medium'
-}
-
-function ChevronLeftIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-    </svg>
-  )
+  /** 'large' (default) = 30px uppercase; 'medium' = 22px mixed-case; 'bold' = 22px uppercase bold */
+  size?: 'large' | 'medium' | 'bold'
 }
 
 const b = 'glass-header'
@@ -26,13 +19,23 @@ const b = 'glass-header'
 export function GlassHeader({ title, showBack, left, right, className, size = 'large' }: GlassHeaderProps) {
   const navigate = useNavigate()
 
+  function handleBack() {
+    triggerHaptic('tap')
+    if (window.history.state?.idx > 0) {
+      navigate(-1)
+    } else {
+      navigate('/')
+    }
+  }
+
   const leftContent = left ?? (showBack ? (
     <button
+      type="button"
       className={bem(b, 'back')}
-      onClick={() => navigate(-1)}
+      onClick={handleBack}
       aria-label="Назад"
     >
-      <ChevronLeftIcon />
+      <img src="/app/images/profile/back-btn.svg" alt="" aria-hidden="true" />
     </button>
   ) : null)
 
@@ -41,7 +44,15 @@ export function GlassHeader({ title, showBack, left, right, className, size = 'l
       <div className={bem(b, 'inner')}>
         <div className={bem(b, 'left')}>{leftContent}</div>
         <div className={bem(b, 'center')}>
-          <h1 className={cn(bem(b, 'title'), size === 'medium' && bem(b, 'title') + '--medium')}>{title}</h1>
+          <h1
+            className={cn(
+              bem(b, 'title'),
+              size === 'medium' && `${bem(b, 'title')}--medium`,
+              size === 'bold' && `${bem(b, 'title')}--bold`,
+            )}
+          >
+            {title}
+          </h1>
         </div>
         <div className={bem(b, 'right')}>{right}</div>
       </div>

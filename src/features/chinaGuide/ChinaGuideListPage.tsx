@@ -1,13 +1,48 @@
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { GlassHeader } from '@/components/GlassHeader'
 import { SkeletonCard } from '@/components/Skeleton'
 import { EmptyState } from '@/components/EmptyState'
+import { BackButton } from '@/components/BackButton'
+import { BackendImage } from '@/components/BackendImage'
+import { ChevronRightIcon } from '@/components/Icons'
 import { bem } from '@/utils/cn'
 import { triggerHaptic } from '@/utils/telegram'
+import { useHaptic } from '@/hooks'
 import { useChinaGuideList } from './hooks'
 import type { ChinaGuideType, ChinaGuideItem } from '@/api/types'
 import './ChinaGuideListPage.scss'
+import './ChinaGuideToursPage.scss'
+import './ChinaGuideMarketsPage.scss'
+import './ChinaGuideTranslatorsPage.scss'
+import './ChinaGuideHotelsPage.scss'
+
+function formatTourDate(raw: string | undefined, months: string[]): string {
+  if (!raw) return ''
+  // Accept already-formatted label like "15 МАЯ"
+  if (!/^\d{4}-\d{2}-\d{2}/.test(raw)) return raw
+  try {
+    const d = new Date(raw)
+    const day = d.getDate()
+    const month = months[d.getMonth()] ?? ''
+    return `${day} ${month}`.trim()
+  } catch {
+    return raw
+  }
+}
+
+// Format like "30 апреля" — lowercase month, no year.
+function formatHotelDate(raw: string | undefined, monthsLong: string[]): string {
+  if (!raw) return ''
+  if (!/^\d{4}-\d{2}-\d{2}/.test(raw)) return raw
+  try {
+    const d = new Date(raw)
+    const day = d.getDate()
+    const month = monthsLong[d.getMonth()] ?? ''
+    return `${day} ${month}`.trim()
+  } catch {
+    return raw
+  }
+}
 
 interface ChinaGuideListPageProps {
   type: ChinaGuideType
@@ -24,182 +59,388 @@ const TITLE_KEYS: Record<ChinaGuideType, string> = {
   translators: 'chinaGuide:list.translators_title',
 }
 
-// ── Grid layout types ─────────────────────────────────────────
-const GRID_TYPES: ChinaGuideType[] = ['markets', 'hotels', 'restaurants']
-
-// ── Location pin icon ─────────────────────────────────────────
-function PinIcon() {
+function ListCard({
+  item,
+  onPress,
+}: {
+  item: ChinaGuideItem
+  onPress: () => void
+}) {
+  const { t } = useTranslation('common')
+  const title = (item.name || '').replace(/\n/g, ' ')
+  const secondary = item.shortDesc || item.city
   return (
-    <svg width="10" height="12" viewBox="0 0 10 12" fill="none" aria-hidden="true">
-      <path
-        d="M5 0C2.79 0 1 1.79 1 4c0 3 4 8 4 8s4-5 4-8c0-2.21-1.79-4-4-4zm0 5.5A1.5 1.5 0 1 1 5 2.5a1.5 1.5 0 0 1 0 3z"
-        fill="currentColor"
-      />
-    </svg>
-  )
-}
-
-// ── Verified check icon ───────────────────────────────────────
-function VerifiedIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-      <circle cx="7" cy="7" r="7" fill="#ac9dff" />
-      <path d="M4 7l2 2 4-4" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
-}
-
-// ── Grid card (markets / hotels / restaurants) ────────────────
-function GridCard({ item, onPress }: { item: ChinaGuideItem; onPress: () => void }) {
-  return (
-    <button
-      type="button"
-      className={bem(b, 'grid-card')}
+    <article
+      className={bem(b, 'card')}
       onClick={onPress}
-      aria-label={item.name}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => e.key === 'Enter' && onPress()}
+      aria-label={title}
     >
-      <div className={bem(b, 'grid-card-img-wrap')}>
-        <img
-          className={bem(b, 'grid-card-img')}
-          src={item.imageUrl}
-          alt=""
-          loading="lazy"
-          decoding="async"
-        />
-        {item.isPremium && (
-          <span className={bem(b, 'premium-badge')}>PREMIUM</span>
-        )}
-      </div>
-      <div className={bem(b, 'grid-card-body')}>
-        <p className={bem(b, 'grid-card-name')}>{item.name}</p>
-        <div className={bem(b, 'grid-card-location')}>
-          <PinIcon />
-          <span className={bem(b, 'grid-card-city')}>{item.city}</span>
-        </div>
-      </div>
-    </button>
-  )
-}
-
-// ── Tour card ─────────────────────────────────────────────────
-function TourCard({ item, onPress, participateLabel }: { item: ChinaGuideItem; onPress: () => void; participateLabel: string }) {
-  return (
-    <article className={bem(b, 'tour-card')} onClick={onPress} role="button" tabIndex={0}
-      onKeyDown={e => e.key === 'Enter' && onPress()}>
-      <div className={bem(b, 'tour-img-wrap')}>
-        <img
-          className={bem(b, 'tour-img')}
-          src={item.imageUrl}
-          alt=""
-          loading="lazy"
-          decoding="async"
-        />
-        {item.tourDate && (
-          <span className={bem(b, 'tour-date-badge')}>{item.tourDate}</span>
-        )}
-      </div>
-      <div className={bem(b, 'tour-body')}>
-        <p className={bem(b, 'tour-name')}>{item.name}</p>
-        <p className={bem(b, 'tour-desc')}>{item.description}</p>
-        <div className={bem(b, 'tour-footer')}>
-          <div className={bem(b, 'tour-meta')}>
-            <span className={bem(b, 'tour-city')}>
-              <PinIcon />
-              {item.city}
-            </span>
-            {item.maxParticipants && (
-              <span className={bem(b, 'tour-seats')}>{item.maxParticipants} чел.</span>
-            )}
-          </div>
-          <button
-            type="button"
-            className={bem(b, 'tour-btn')}
-            onClick={e => { e.stopPropagation(); onPress() }}
-          >
-            {participateLabel}
-          </button>
-        </div>
+      <BackendImage
+        className={bem(b, 'card-image')}
+        src={item.imageUrl}
+        alt=""
+      />
+      <div className={bem(b, 'card-bar')}>
+        <span className={bem(b, 'card-name')}>{title}</span>
+        {secondary && <span className={bem(b, 'card-desc')}>{secondary}</span>}
+        <button
+          type="button"
+          className={bem(b, 'card-details-btn')}
+          onClick={(e) => { e.stopPropagation(); onPress() }}
+        >
+          {t('actions.details', { defaultValue: 'Подробнее' })}
+          <ChevronRightIcon />
+        </button>
       </div>
     </article>
   )
 }
 
-// ── Translator card ───────────────────────────────────────────
-function TranslatorCard({ item, onPress }: { item: ChinaGuideItem; onPress: () => void }) {
+// Pull "Country, City" from a full backend address like
+//   "Китай, г. Гуанчжоу, р-н Юэсю, ул. Хэнфулу, 155"
+// or "Китай, провинция Гуандун, город Гуанчжоу, ...".
+// Returns the original string if it can't find a city marker.
+function shortAddress(full: string | undefined, fallback: string): string {
+  if (!full) return fallback
+  const parts = full.split(',').map((s) => s.trim()).filter(Boolean)
+  if (parts.length === 0) return fallback
+  const country = parts[0] ?? fallback
+  const cityPart = parts.slice(1).find((p) => /^(г\.|город|шаҳар|sh\.)/i.test(p))
+  if (cityPart) {
+    const cityName = cityPart.replace(/^(г\.\s*|город\s+|шаҳар\s+|sh\.\s*)/i, '')
+    return `${country}, ${cityName}`
+  }
+  return parts.length > 1 ? `${country}, ${parts[1]}` : country
+}
+
+// ── Market grid card (Figma 1048:12030) ──────────────────────
+function MarketCard({
+  item,
+  onPress,
+}: {
+  item: ChinaGuideItem
+  onPress: () => void
+}) {
+  const { t } = useTranslation(['chinaGuide', 'common'])
+  const title = (item.name || '').replace(/\n/g, ' ')
+  const location = shortAddress(item.address, item.city || t('country_fallback'))
   return (
-    <button
-      type="button"
-      className={bem(b, 'trans-card')}
+    <article
+      className={bem('cg-markets', 'tile')}
       onClick={onPress}
-      aria-label={item.name}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => e.key === 'Enter' && onPress()}
+      aria-label={title}
     >
-      <div className={bem(b, 'trans-avatar-wrap')}>
+      <BackendImage
+        className={bem('cg-markets', 'tile-image')}
+        src={item.imageUrl}
+        alt=""
+      />
+      <h3 className={bem('cg-markets', 'tile-name')}>{title}</h3>
+      <div className={bem('cg-markets', 'tile-location')}>
         <img
-          className={bem(b, 'trans-avatar')}
-          src={item.imageUrl}
+          src="/app/images/china-guide/location.svg"
           alt=""
-          loading="lazy"
-          decoding="async"
+          aria-hidden="true"
+          className={bem('cg-markets', 'tile-location-icon')}
         />
+        <span>{location}</span>
       </div>
-      <div className={bem(b, 'trans-body')}>
-        <div className={bem(b, 'trans-name-row')}>
-          <span className={bem(b, 'trans-name')}>{item.name}</span>
-          {item.isVerified && <VerifiedIcon />}
-        </div>
-        {item.age !== undefined && (
-          <span className={bem(b, 'trans-age')}>{item.age} лет</span>
-        )}
-        <div className={bem(b, 'trans-location')}>
-          <PinIcon />
-          <span>{item.city}</span>
-        </div>
-        {item.languages && item.languages.length > 0 && (
-          <div className={bem(b, 'trans-langs')}>
-            {item.languages.slice(0, 2).map(lang => (
-              <span key={lang} className={bem(b, 'trans-lang-tag')}>{lang}</span>
-            ))}
-          </div>
-        )}
-        {item.aboutMe && (
-          <p className={bem(b, 'trans-bio')}>{item.aboutMe}</p>
-        )}
-      </div>
-    </button>
+      <button
+        type="button"
+        className={bem('cg-markets', 'details-btn')}
+        onClick={(e) => { e.stopPropagation(); onPress() }}
+      >
+        {t('common:actions.details', { defaultValue: 'Подробнее' })}
+      </button>
+    </article>
   )
 }
 
-// ── Main component ────────────────────────────────────────────
+// ── Tour card (News-style) ────────────────────────────────────
+function TourCard({
+  item,
+  onOpen,
+}: {
+  item: ChinaGuideItem
+  onOpen: () => void
+}) {
+  const { i18n, t } = useTranslation(['chinaGuide', 'common'])
+  const isUz = i18n.language === 'uz'
+  const title = (isUz && item.nameUz ? item.nameUz : item.name).replace(/\n/g, ' ')
+  const months = t('months_short', { returnObjects: true }) as string[]
+  const badge = formatTourDate(item.tourDate, months)
+
+  const handleCardClick = () => {
+    triggerHaptic('tap')
+    onOpen()
+  }
+
+  return (
+    <article className={bem('cg-tours', 'item')}>
+      <div
+        className={bem('cg-tours', 'card')}
+        onClick={handleCardClick}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => e.key === 'Enter' && handleCardClick()}
+        aria-label={title}
+      >
+        <BackendImage
+          src={item.imageUrl}
+          alt=""
+          className={bem('cg-tours', 'card-image')}
+        />
+        {badge && (
+          <div className={bem('cg-tours', 'date-badge')}>
+            <img src="/app/images/news/calendar.svg" alt="" aria-hidden="true" />
+            <span>{badge}</span>
+          </div>
+        )}
+        <div className={bem('cg-tours', 'glass-bar')}>
+          <p className={bem('cg-tours', 'glass-text')}>{title}</p>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        className={bem('cg-tours', 'details-btn')}
+        onClick={(e) => { e.stopPropagation(); onOpen() }}
+      >
+        {t('common:actions.details', { defaultValue: 'Подробнее' })}
+      </button>
+    </article>
+  )
+}
+
+// ── Hotel card ────────────────────────────────────────────────
+function HotelCard({
+  item,
+  onPress,
+}: {
+  item: ChinaGuideItem
+  onPress: () => void
+}) {
+  const { i18n, t } = useTranslation(['chinaGuide', 'common'])
+  const isUz = i18n.language === 'uz'
+  const title = (isUz && item.nameUz ? item.nameUz : item.name).replace(/\n/g, ' ')
+  const description = isUz && item.descriptionUz ? item.descriptionUz : item.description
+  const monthsLong = t('months_long', { returnObjects: true, defaultValue: [] }) as string[]
+  const dateLabel = formatHotelDate(item.tourDate, monthsLong)
+  const externalUrl = item.externalUrl
+
+  const handleArrow = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (!externalUrl) {
+      onPress()
+      return
+    }
+    triggerHaptic('tap')
+    window.open(externalUrl, '_blank', 'noopener,noreferrer')
+  }
+
+  return (
+    <article
+      className={bem('cg-hotels', 'card')}
+      onClick={onPress}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => e.key === 'Enter' && onPress()}
+      aria-label={title}
+    >
+      <div className={bem('cg-hotels', 'image-wrap')}>
+        <BackendImage
+          src={item.imageUrl}
+          alt=""
+          className={bem('cg-hotels', 'image')}
+        />
+      </div>
+
+      <div className={bem('cg-hotels', 'body')}>
+        <div className={bem('cg-hotels', 'header-row')}>
+          <h3 className={bem('cg-hotels', 'name')}>{title}</h3>
+          {dateLabel && (
+            <span className={bem('cg-hotels', 'date-badge')}>
+              <img src="/app/images/news/calendar.svg" alt="" aria-hidden="true" />
+              <span>{dateLabel}</span>
+            </span>
+          )}
+        </div>
+
+        {description && (
+          <p className={bem('cg-hotels', 'description')}>{description}</p>
+        )}
+
+        {externalUrl && (
+          <button
+            type="button"
+            className={bem('cg-hotels', 'arrow-btn')}
+            onClick={handleArrow}
+            aria-label={t('common:actions.open_link', { defaultValue: 'Открыть' })}
+          >
+            <ChevronRightIcon />
+          </button>
+        )}
+
+        <div className={bem('cg-hotels', 'divider')} />
+
+        {item.address && (
+          <div className={bem('cg-hotels', 'address-row')}>
+            <img src="/app/images/china-guide/location.svg" alt="" aria-hidden="true" />
+            <span>{item.address}</span>
+          </div>
+        )}
+
+        <button
+          type="button"
+          className={bem('cg-hotels', 'details-btn')}
+          onClick={(e) => { e.stopPropagation(); onPress() }}
+        >
+          {t('common:actions.details', { defaultValue: 'Подробнее' })}
+        </button>
+      </div>
+    </article>
+  )
+}
+
+// ── Translator card (Figma 1048:12367) ────────────────────────
+function TranslatorCard({
+  item,
+  onPress,
+}: {
+  item: ChinaGuideItem
+  onPress: () => void
+}) {
+  const { i18n, t } = useTranslation(['chinaGuide', 'common'])
+  const isUz = i18n.language === 'uz'
+  const name = isUz && item.nameUz ? item.nameUz : item.name
+  const ageLabel = item.age ? `${item.age} ${t('age_suffix')}` : ''
+  const location = shortAddress(item.address, item.city || t('country_fallback'))
+  const origin = item.origin || ''
+  // Pair languages ("A - B", next line "C - D") to match Figma layout.
+  const langPairs: string[] = []
+  if (item.languages && item.languages.length) {
+    for (let i = 0; i < item.languages.length; i += 2) {
+      const pair = item.languages.slice(i, i + 2).join(' - ')
+      if (pair) langPairs.push(pair)
+    }
+  }
+  const description = isUz && item.descriptionUz ? item.descriptionUz : item.description
+
+  return (
+    <article
+      className={bem('cg-translators', 'tile')}
+      onClick={onPress}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => e.key === 'Enter' && onPress()}
+      aria-label={name}
+    >
+      <div className={bem('cg-translators', 'photo-wrap')}>
+        <BackendImage
+          src={item.imageUrl}
+          alt=""
+          className={bem('cg-translators', 'photo')}
+        />
+      </div>
+
+      <div className={bem('cg-translators', 'info')}>
+        <div className={bem('cg-translators', 'name-row')}>
+          <h3 className={bem('cg-translators', 'name')}>{name}</h3>
+          {item.isVerified && (
+            <img
+              src="/app/images/china-guide/verified-purple.svg"
+              alt=""
+              aria-hidden="true"
+              className={bem('cg-translators', 'verified')}
+            />
+          )}
+          {ageLabel && (
+            <span className={bem('cg-translators', 'age')}>{ageLabel}</span>
+          )}
+        </div>
+
+        <div className={bem('cg-translators', 'row')}>
+          <img src="/app/images/documents/location.svg" alt="" aria-hidden="true" />
+          <span>{location}</span>
+        </div>
+
+        {origin && (
+          <div className={bem('cg-translators', 'row')}>
+            <img src="/app/images/documents/website.svg" alt="" aria-hidden="true" />
+            <span>{origin}</span>
+          </div>
+        )}
+
+        {langPairs.length > 0 && (
+          <div
+            className={`${bem('cg-translators', 'row')} ${bem('cg-translators', 'languages')}`}
+          >
+            <img src="/app/images/documents/display.svg" alt="" aria-hidden="true" />
+            <span className={bem('cg-translators', 'languages-text')}>
+              {langPairs.map((line, idx) => (
+                <span key={idx}>{line}</span>
+              ))}
+            </span>
+          </div>
+        )}
+      </div>
+
+      {description && (
+        <p className={bem('cg-translators', 'desc')}>{description}</p>
+      )}
+
+      <button
+        type="button"
+        className={bem('cg-translators', 'details-btn')}
+        onClick={(e) => { e.stopPropagation(); onPress() }}
+      >
+        {t('common:actions.details', { defaultValue: 'Подробнее' })}
+      </button>
+    </article>
+  )
+}
+
 export function ChinaGuideListPage({ type }: ChinaGuideListPageProps) {
   const { t } = useTranslation(['chinaGuide', 'common'])
   const navigate = useNavigate()
   const { data: items, isLoading, error } = useChinaGuideList(type)
 
   const title = t(TITLE_KEYS[type])
-  const isGrid = GRID_TYPES.includes(type)
   const isTours = type === 'tours'
   const isTranslators = type === 'translators'
+  const isHotels = type === 'hotels'
+  const isGrid = type === 'markets' || type === 'restaurants'
+  const rootClass = isTours
+    ? 'cg-tours'
+    : isTranslators
+      ? 'cg-translators'
+      : isHotels
+        ? 'cg-hotels'
+        : isGrid
+          ? 'cg-markets'
+          : b
 
   function handleItemPress(item: ChinaGuideItem) {
     triggerHaptic('tap')
     navigate(`/china-guide/${type}/${item.id}`)
   }
 
-  if (error) {
-    return (
-      <div className={b}>
-        <GlassHeader showBack title={title} />
-        <EmptyState icon="😞" title={t('common:error.generic')} />
-      </div>
-    )
-  }
-
   return (
-    <div className={b}>
-      <GlassHeader showBack title={title} />
+    <div className={rootClass}>
+      <BackButton block={rootClass} to="/china-guide" ariaLabel={t('common:actions.back')} />
 
-      <div className={bem(b, 'body')}>
-        {isLoading ? (
+      <h1 className={bem(rootClass, 'title')}>{title}</h1>
+
+      <div className={bem(rootClass, 'content')}>
+        {error ? (
+          <EmptyState icon="😞" title={t('common:error.generic')} />
+        ) : isLoading ? (
           <>
             <SkeletonCard />
             <SkeletonCard />
@@ -207,30 +448,47 @@ export function ChinaGuideListPage({ type }: ChinaGuideListPageProps) {
           </>
         ) : !items?.length ? (
           <EmptyState icon="🏮" title={t('chinaGuide:empty')} />
-        ) : isGrid ? (
-          <div className={bem(b, 'grid')}>
-            {items.map(item => (
-              <GridCard key={item.id} item={item} onPress={() => handleItemPress(item)} />
-            ))}
-          </div>
         ) : isTours ? (
-          <div className={bem(b, 'tours-list')}>
-            {items.map(item => (
-              <TourCard
-                key={item.id}
-                item={item}
-                onPress={() => handleItemPress(item)}
-                participateLabel={t('chinaGuide:list.participate_btn')}
-              />
-            ))}
-          </div>
+          items.map(item => (
+            <TourCard
+              key={item.id}
+              item={item}
+              onOpen={() => handleItemPress(item)}
+            />
+          ))
         ) : isTranslators ? (
-          <div className={bem(b, 'trans-grid')}>
-            {items.map(item => (
-              <TranslatorCard key={item.id} item={item} onPress={() => handleItemPress(item)} />
-            ))}
-          </div>
-        ) : null}
+          items.map(item => (
+            <TranslatorCard
+              key={item.id}
+              item={item}
+              onPress={() => handleItemPress(item)}
+            />
+          ))
+        ) : isHotels ? (
+          items.map(item => (
+            <HotelCard
+              key={item.id}
+              item={item}
+              onPress={() => handleItemPress(item)}
+            />
+          ))
+        ) : isGrid ? (
+          items.map(item => (
+            <MarketCard
+              key={item.id}
+              item={item}
+              onPress={() => handleItemPress(item)}
+            />
+          ))
+        ) : (
+          items.map(item => (
+            <ListCard
+              key={item.id}
+              item={item}
+              onPress={() => handleItemPress(item)}
+            />
+          ))
+        )}
       </div>
     </div>
   )

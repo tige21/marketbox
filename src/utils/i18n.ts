@@ -11,6 +11,8 @@ const ALL_NAMESPACES = [
   'wholesale',
   'chinaGuide',
   'documents',
+  'designServices',
+  'jobs',
   'exchange',
   'events',
   'news',
@@ -29,7 +31,7 @@ i18n
     defaultNS: 'common',
     ns: ALL_NAMESPACES,
     backend: {
-      loadPath: '/locales/{{lng}}/{{ns}}.json',
+      loadPath: '/app/locales/{{lng}}/{{ns}}.json',
     },
     interpolation: {
       escapeValue: false,
@@ -38,5 +40,12 @@ i18n
       useSuspense: true,
     },
   })
+
+i18n.on('languageChanged', (lng) => {
+  try {
+    localStorage.setItem('i18nextLng', lng)
+    document.documentElement.lang = lng
+  } catch { /* storage may be unavailable */ }
+})
 
 export default i18n

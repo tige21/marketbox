@@ -1,25 +1,26 @@
 import { Fragment, useState, useMemo } from 'react'
-import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { GlassHeader } from '@/components/GlassHeader'
 import { EmptyState } from '@/components/EmptyState'
-import { exchangeApi } from '@/api/endpoints'
 import type { ExchangeRate } from '@/api/types'
 import { bem } from '@/utils/cn'
 import { useHaptic } from '@/hooks/useHaptic'
+import { useExchangeRates } from './hooks'
 import './ExchangePage.scss'
 
 const b = 'exchange-page'
 
-const CURRENCY_META: Record<string, { flag: string; name: string; flagImg: string; symbol: string }> = {
-  UZS: { flag: '🇺🇿', name: 'Узбекский сум', flagImg: '/images/exchange/flag-uzs.png', symbol: 'сум' },
-  USD: { flag: '🇺🇸', name: 'Доллар США', flagImg: '/images/exchange/flag-usd.png', symbol: '$' },
-  EUR: { flag: '🇪🇺', name: 'Евро', flagImg: '', symbol: '€' },
-  RUB: { flag: '🇷🇺', name: 'Российский рубль', flagImg: '/images/exchange/flag-rub.png', symbol: '₽' },
-  CNY: { flag: '🇨🇳', name: 'Китайский юань', flagImg: '/images/exchange/flag-cny.png', symbol: '¥' },
-  KZT: { flag: '🇰🇿', name: 'Казахстанский тенге', flagImg: '', symbol: '₸' },
-  TRY: { flag: '🇹🇷', name: 'Турецкая лира', flagImg: '/images/exchange/flag-try.png', symbol: '₺' },
-  KGS: { flag: '🇰🇬', name: 'Киргизский сом', flagImg: '/images/exchange/flag-kgs.png', symbol: 'с' },
+// Currency labels are resolved via i18n (`exchange.currencies.<code>`).
+// Visual meta (flag, symbol, local flag asset) stays static.
+const CURRENCY_META: Record<string, { flag: string; flagImg: string; symbol: string }> = {
+  UZS: { flag: '🇺🇿', flagImg: '/app/images/exchange/flag-uzs.png', symbol: 'сум' },
+  USD: { flag: '🇺🇸', flagImg: '/app/images/exchange/flag-usd.png', symbol: '$' },
+  EUR: { flag: '🇪🇺', flagImg: '', symbol: '€' },
+  RUB: { flag: '🇷🇺', flagImg: '/app/images/exchange/flag-rub.png', symbol: '₽' },
+  CNY: { flag: '🇨🇳', flagImg: '/app/images/exchange/flag-cny.png', symbol: '¥' },
+  KZT: { flag: '🇰🇿', flagImg: '', symbol: '₸' },
+  TRY: { flag: '🇹🇷', flagImg: '/app/images/exchange/flag-try.png', symbol: '₺' },
+  KGS: { flag: '🇰🇬', flagImg: '/app/images/exchange/flag-kgs.png', symbol: 'с' },
 }
 
 function formatRate(rate: number): string {
@@ -43,13 +44,14 @@ interface RatesCardProps {
 }
 
 function RatesCard({ rates }: RatesCardProps) {
+  const { t } = useTranslation('exchange')
   return (
     <div className={bem(b, 'rates-section')}>
-      <h2 className={bem(b, 'section-title')}>Курсы Валют</h2>
+      <h2 className={bem(b, 'section-title')}>{t('section_rates')}</h2>
       <div className={bem(b, 'list')}>
         {rates.map((rate, i) => {
           const meta = CURRENCY_META[rate.code]
-          const isUp = rate.change === undefined || rate.change >= 0
+          const currencyLabel = t(`currencies.${rate.code}`, { defaultValue: rate.currency })
           return (
             <Fragment key={rate.code}>
               {i > 0 && <div className={bem(b, 'divider')} />}
@@ -61,17 +63,12 @@ function RatesCard({ rates }: RatesCardProps) {
                     <span className={bem(b, 'rate-flag-emoji')}>{meta?.flag ?? '💱'}</span>
                   )}
                   <div className={bem(b, 'rate-info')}>
-                    <span className={bem(b, 'rate-currency')}>{meta?.name ?? rate.currency}</span>
+                    <span className={bem(b, 'rate-currency')}>{currencyLabel}</span>
                     <span className={bem(b, 'rate-code')}>{rate.code}</span>
                   </div>
                 </div>
                 <div className={bem(b, 'rate-right')}>
                   <span className={bem(b, 'rate-value')}>{formatRate(rate.buyRate)}</span>
-                  {rate.change !== undefined && (
-                    <span className={bem(b, 'rate-change', { up: isUp, down: !isUp })}>
-                      {isUp ? '+' : ''}{rate.change}%
-                    </span>
-                  )}
                 </div>
               </div>
             </Fragment>
@@ -163,7 +160,7 @@ function Converter({ rates }: ConverterProps) {
           type="button"
           className={bem(b, 'swap-btn')}
           onClick={handleSwap}
-          aria-label="Поменять валюты местами"
+          aria-label={t('swap_aria')}
         >
           ⇅
         </button>
@@ -200,6 +197,7 @@ function Converter({ rates }: ConverterProps) {
 // ─── Channel CTA ─────────────────────────────────────────────
 
 function ChannelCta() {
+  const { t } = useTranslation('exchange')
   const haptic = useHaptic()
 
   const handleSubscribe = () => {
@@ -209,18 +207,15 @@ function ChannelCta() {
 
   return (
     <div className={bem(b, 'channel-card')}>
-      <p className={bem(b, 'channel-title')}>ОБМЕН ВАЛЮТА</p>
-      <p className={bem(b, 'channel-subtitle')}>Ваш надежный партнер</p>
-      <p className={bem(b, 'channel-desc')}>
-        Курсы носят информационный характер и могут незначительно отличаться в момент обмена.
-        Для получения точного курса и проведения обмена свяжитесь с нами напрямую.
-      </p>
+      <p className={bem(b, 'channel-title')}>{t('channel_title')}</p>
+      <p className={bem(b, 'channel-subtitle')}>{t('channel_subtitle')}</p>
+      <p className={bem(b, 'channel-desc')}>{t('channel_description')}</p>
       <button
         type="button"
         className={bem(b, 'channel-btn')}
         onClick={handleSubscribe}
       >
-        TELEGRAM
+        {t('channel_telegram')}
       </button>
     </div>
   )
@@ -261,15 +256,9 @@ function ExchangeSkeleton() {
 export function ExchangePage() {
   const { t } = useTranslation('exchange')
 
-  const { data, isLoading, error } = useQuery({
-    queryKey: ['exchange', 'rates'],
-    queryFn: () => exchangeApi.getRates().then((res) => res.data),
-    staleTime: 5 * 60 * 1000,
-    refetchInterval: 10 * 60 * 1000,
-  })
+  const { data, isLoading, error } = useExchangeRates()
 
-  const rates: ExchangeRate[] = data?.data?.rates ?? []
-  const updatedAt = data?.data?.updatedAt
+  const rates: ExchangeRate[] = data?.rates ?? []
 
   if (error) {
     return (
@@ -293,11 +282,6 @@ export function ExchangePage() {
           <EmptyState icon="💱" title={t('common:empty.title')} />
         ) : (
           <>
-            {updatedAt && (
-              <p className={bem(b, 'updated-at')}>
-                {t('updated')}: {formatTime(updatedAt)}
-              </p>
-            )}
             <RatesCard rates={rates} />
             <Converter rates={rates} />
             <ChannelCta />

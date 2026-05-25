@@ -1,16 +1,25 @@
 .premium-gate {
-  position: fixed;
-  left: $space-4;
-  right: $space-4;
-  bottom: 50%;
-  transform: translateY(50%);
-  z-index: $z-modal;
+  position: relative;
+  width: calc(100% - #{$space-4} * 2);
+  max-width: 400px;
   @include glass-surface($blur: $blur-glass-lg);
   padding: $space-8 $space-6;
   text-align: center;
-  max-width: 400px;
-  margin: 0 auto;
   box-shadow: $shadow-glass-elevated, $shadow-glow-premium;
+
+  &__wrap {
+    position: fixed;
+    inset: 0;
+    z-index: $z-modal;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none; // backdrop blocks clicks; wrapper passes through
+  }
+
+  &__wrap > * {
+    pointer-events: auto;
+  }
 
   &__backdrop {
     position: fixed;

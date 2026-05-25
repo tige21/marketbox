@@ -21,5 +21,26 @@
   "author": "Muallif",
   "what_learn": "Nima o'rganasiz",
   "requirements": "Talablar",
-  "syllabus": "Kurs dasturi"
+  "syllabus": "Kurs dasturi",
+  "lesson_number": "{{number}}-dars",
+  "lesson_materials": "Dars materiallari",
+  "lessons_coming_soon": "Kurslar tez orada paydo bo'ladi",
+  "lessons_load_error": "Darslarni yuklab bo'lmadi",
+  "title_uppercase": "KURSLAR",
+  "chats_title": "CHATLAR",
+  "course_title": "KURS",
+  "marketplaces": {
+    "ozon": "OZON",
+    "wildberries": "WILDBERRIES",
+    "uzum": "UZUM MARKET",
+    "dropshipping": "DROPSHIPPING",
+    "china": "XITOY BIZNESI"
+  },
+  "chat_labels": {
+    "ozon": "OZON",
+    "wildberries": "Wildberries",
+    "uzum": "Uzum Market",
+    "dropshipping": "Dropshipping",
+    "china": "Xitoy biznesi"
+  }
 }

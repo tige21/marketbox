@@ -1,32 +1,30 @@
 import { bem } from '@/utils/cn'
-import type { WholesaleSeller } from '@/api/types'
+import { BackendImage } from '@/components/BackendImage'
+import { pickLocale, pickLocaleStr, useLang } from '@/api/locale'
+import type { BackendSeller } from '@/api/types'
 import './MarketCard.scss'
 
 const b = 'market-card'
 
 interface MarketCardProps {
-  seller: WholesaleSeller
+  seller: BackendSeller
   onClick?: () => void
-}
-
-function LocationIcon() {
-  return (
-    <svg width="8" height="10" viewBox="0 0 8 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path
-        d="M4 0C1.79 0 0 1.79 0 4C0 7 4 10 4 10C4 10 8 7 8 4C8 1.79 6.21 0 4 0ZM4 5.5C3.17 5.5 2.5 4.83 2.5 4C2.5 3.17 3.17 2.5 4 2.5C4.83 2.5 5.5 3.17 5.5 4C5.5 4.83 4.83 5.5 4 5.5Z"
-        fill="currentColor"
-      />
-    </svg>
-  )
 }
 
 function ChevronRightIcon() {
   return (
-    <svg width="7" height="12" viewBox="0 0 7 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg
+      width="10"
+      height="18"
+      viewBox="0 0 10 18"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
       <path
-        d="M1 1L6 6L1 11"
-        stroke="currentColor"
-        strokeWidth="1.5"
+        d="M1.5 1.5L8 9L1.5 16.5"
+        stroke="#FFFFFF"
+        strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
@@ -35,23 +33,30 @@ function ChevronRightIcon() {
 }
 
 export function MarketCard({ seller, onClick }: MarketCardProps) {
+  const lang = useLang()
+  const name = pickLocaleStr(seller.title, lang)
+  const address = pickLocaleStr(seller.address, lang)
+  const image = pickLocale(seller.image, lang)
+
   return (
-    <button type="button" className={b} onClick={onClick} aria-label={seller.name}>
-      <img
+    <button type="button" className={b} onClick={onClick} aria-label={name}>
+      <BackendImage
+        src={image}
+        alt={name}
         className={bem(b, 'image')}
-        src={seller.imageUrl}
-        alt={seller.name}
-        loading="lazy"
       />
       <div className={bem(b, 'info-bar')}>
         <div className={bem(b, 'info-content')}>
-          <span className={bem(b, 'name')}>{seller.name}</span>
-          <div className={bem(b, 'address-row')}>
-            <span className={bem(b, 'location-icon')}>
-              <LocationIcon />
-            </span>
-            <span className={bem(b, 'address')}>{seller.address}</span>
-          </div>
+          <span className={bem(b, 'name')}>{name}</span>
+          <span className={bem(b, 'address-row')}>
+            <img
+              className={bem(b, 'location-icon')}
+              src="/app/images/wholesale/location.svg"
+              alt=""
+              aria-hidden="true"
+            />
+            <span className={bem(b, 'address')}>{address}</span>
+          </span>
         </div>
         <span className={bem(b, 'chevron')}>
           <ChevronRightIcon />

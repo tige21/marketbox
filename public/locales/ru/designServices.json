@@ -1,0 +1,20 @@
+{
+  "tabs": {
+    "webdesign": "Веб Дизайн",
+    "infograph": "Инфограф",
+    "photographer": "Фотограф"
+  },
+  "roles": {
+    "webdesign": "Веб Дизайн",
+    "infograph": "Дизайн Карточек",
+    "photographer": "Фотограф"
+  },
+  "aria": {
+    "verified": "Проверено",
+    "specialization": "Специализация",
+    "contact": "Получить контакт — {{name}}"
+  },
+  "age_suffix": "лет",
+  "experience_label": "Опыт {{years}}",
+  "contact_btn": "Получить Контакт"
+}

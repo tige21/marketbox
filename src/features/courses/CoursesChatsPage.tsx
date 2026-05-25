@@ -1,82 +1,78 @@
-import { GlassHeader } from '@/components/GlassHeader'
+import { useTranslation } from 'react-i18next'
 import { bem } from '@/utils/cn'
+import { triggerHaptic } from '@/utils'
+import { Skeleton } from '@/components'
+import { BackButton } from '@/components/BackButton'
+import { ChevronRightIcon } from '@/components/Icons'
+import { EmptyState } from '@/components/EmptyState'
+import { pickLocaleStr, useLang } from '@/api/locale'
+import { useCourses } from './hooks'
 import './CoursesChatsPage.scss'
 
 const b = 'courses-chats'
 
-function MessageIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path
-        d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z"
-        stroke="white"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  )
-}
-
-function ChevronRightIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path
-        d="M9 18L15 12L9 6"
-        stroke="white"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  )
-}
-
-interface ChatChannel {
-  id: string
-  name: string
-  link?: string
-}
-
-const CHANNELS: ChatChannel[] = [
-  { id: 'ozon', name: 'OZON' },
-  { id: 'wildberries', name: 'Wildberries' },
-  { id: 'uzum', name: 'Uzum Market' },
-  { id: 'dropshipping', name: 'Dropshipping' },
-  { id: 'china', name: 'Бизнес с Китаем' },
-]
-
 export function CoursesChatsPage() {
-  const handleChannelClick = (channel: ChatChannel) => {
-    if (channel.link) {
-      window.open(channel.link, '_blank', 'noopener,noreferrer')
-    }
+  const { t } = useTranslation(['courses', 'common'])
+  const lang = useLang()
+  const { data: courses = [], isLoading, error } = useCourses()
+
+  const chats = courses.filter((c) => !!c.chat_url)
+
+  const openChat = (url: string) => {
+    triggerHaptic('tap')
+    const tg = (window as unknown as {
+      Telegram?: { WebApp?: { openTelegramLink?: (u: string) => void } }
+    }).Telegram?.WebApp
+    if (tg?.openTelegramLink) tg.openTelegramLink(url)
+    else window.open(url, '_blank', 'noopener,noreferrer')
   }
 
   return (
     <div className={b}>
-      <GlassHeader showBack title="ЧАТЫ" />
-      <div className={bem(b, 'content')}>
+      <BackButton block={b} to="/courses" />
+
+      <h1 className={bem(b, 'title')}>{t('chats_title')}</h1>
+
+      {error ? (
+        <EmptyState icon="💬" title={t('common:error.generic')} />
+      ) : isLoading ? (
         <ul className={bem(b, 'list')} role="list">
-          {CHANNELS.map(channel => (
-            <li key={channel.id}>
-              <button
-                className={bem(b, 'row')}
-                onClick={() => handleChannelClick(channel)}
-                aria-label={channel.name}
-              >
-                <span className={bem(b, 'row-icon')}>
-                  <MessageIcon />
-                </span>
-                <span className={bem(b, 'row-name')}>{channel.name}</span>
-                <span className={bem(b, 'row-chevron')}>
-                  <ChevronRightIcon />
-                </span>
-              </button>
+          {Array.from({ length: 5 }).map((_, i) => (
+            <li key={i} className={bem(b, 'item')}>
+              <Skeleton variant="rect" height={49} borderRadius={20} width="100%" />
             </li>
           ))}
         </ul>
-      </div>
+      ) : chats.length === 0 ? (
+        <EmptyState icon="💬" title={t('common:empty.title')} />
+      ) : (
+        <ul className={bem(b, 'list')} role="list">
+          {chats.map((course) => {
+            const name = pickLocaleStr(course.title, lang)
+            return (
+              <li key={course.id} className={bem(b, 'item')}>
+                <button
+                  type="button"
+                  className={bem(b, 'row')}
+                  onClick={() => openChat(course.chat_url!)}
+                  aria-label={name}
+                >
+                  <img
+                    className={bem(b, 'row-icon')}
+                    src="/app/images/cargo/chat-icon.svg"
+                    alt=""
+                    aria-hidden="true"
+                  />
+                  <span className={bem(b, 'row-name')}>{name}</span>
+                  <span className={bem(b, 'row-chevron')} aria-hidden="true">
+                    <ChevronRightIcon width={10} height={18} />
+                  </span>
+                </button>
+              </li>
+            )
+          })}
+        </ul>
+      )}
     </div>
   )
 }

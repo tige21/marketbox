@@ -27,10 +27,19 @@
     "countries_label": "Ushbu mamlakatlar o'rtasida yuk tashish:",
     "details_btn": "Batafsil ›"
   },
+  "detail": {
+    "about": "Kompaniya haqida",
+    "contacts": "Kontaktlar",
+    "page_title": "KARGO",
+    "contact_get_title": "ALOQAGA CHIQISH",
+    "description_placeholder": "Tavsif bu yerda bo'ladi."
+  },
   "white_page": {
     "title": "OQ YO'L",
     "video_placeholder": "Video",
+    "video_lesson_title": "{{n}}-Video dars\nNomlari",
     "materials_label": "Dars materiallari",
+    "team_exp_years": "Tajriba: {{n}} yil",
     "company_name": "Wave Logistic",
     "company_tagline": "Xitoydan logistika sohasida ishonchli sherigingiz",
     "company_desc": "Biz Xitoydan O'zbekiston va Rossiyaga rasmiy ('oq') yuk tashishga ixtisoslashganmiz. To'liq bojxona rasmiylashtiruvi, yuk sug'urtasi va har bir mijoz uchun shaxsiy menejer.",

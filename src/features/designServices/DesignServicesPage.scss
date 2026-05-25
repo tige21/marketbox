@@ -1,44 +1,126 @@
-.design-services-page {
-  min-height: 100dvh;
-  background: $color-bg-primary;
+// ============================================================
+//  DesignServicesPage — /design-services
+//  Pixel-perfect per Figma node 1048:12488 — "Дизайн"
+//  Mirrors JobsPage layout; tabs show single-line labels.
+// ============================================================
 
-  &__content {
-    padding: $space-4;
-    display: flex;
-    flex-direction: column;
-    gap: $space-4;
-    padding-bottom: calc($space-4 + 70px);
+.design-services-page {
+  position: relative;
+  width: 100%;
+  min-height: 100%;
+  background: $color-bg-primary;
+  padding: 0 20px 120px;
+
+  // ── Back button (top:52 left:25) ──────────────────────────
+  &__back {
+    position: absolute;
+    top: 16px;
+    left: 20px;
+    width: 48px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    border-radius: 14px;
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform $duration-fast $easing-standard;
+    z-index: 2;
+    @include glass-gradient-border(14px);
+    @include focus-ring;
+
+    &::before { z-index: 2; }
+    &:active { transform: scale(0.94); }
+
+    img {
+      display: block;
+      width: 48px;
+      height: 28px;
+      pointer-events: none;
+    }
   }
 
-  // ── Filter pill tab bar ──────────────────────────────────────
-  &__filter-bar {
+  // ── Title — centered, uppercase, tracks active tab ────────
+  &__title {
+    position: relative;
+    margin: 0;
+    padding: 58px 60px 0;
+    text-align: center;
+    font-family: $font-travels;
+    font-weight: 800;
+    font-size: 16px;
+    line-height: 1.15;
+    color: $color-white;
+    text-transform: uppercase;
+    letter-spacing: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  // ── Tab bar (pill, 30px below title) ──────────────────────
+  //  Outer pill owns the glass border so it stays anchored to
+  //  the visible viewport; inner track scrolls horizontally.
+  &__tab-bar {
+    position: relative;
+    width: 100%;
+    max-width: 382px;
+    height: 56px;
+    margin: 30px auto 24px;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 128px;
+    overflow: hidden;
+    @include glass-gradient-border(128px);
+  }
+
+  &__tab-bar-track {
+    width: 100%;
+    height: 100%;
+    padding: 3px;
     display: flex;
     align-items: center;
-    padding: 3px;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.04);
-    border-radius: $radius-tab;
-    height: 56px;
+    gap: 2px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    scroll-behavior: smooth;
+    scroll-snap-type: x proximity;
+    border-radius: 128px;
+
+    &::-webkit-scrollbar { display: none; }
   }
 
-  &__filter-tab {
-    flex: 1;
+  &__tab {
+    flex: 1 0 auto;
     height: 40px;
-    padding: 0 $space-3;
-    border: none;
+    min-width: 0;
+    padding: 0 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: transparent;
     color: $color-white;
-    font-family: $font-gilroy;
-    font-size: $text-md;
-    font-weight: $fw-bold;
-    border-radius: $radius-tab;
+    font-family: $font-manrope;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1;
+    border: none;
+    border-radius: 128px;
     cursor: pointer;
     text-align: center;
     white-space: nowrap;
+    scroll-snap-align: center;
     transition:
       background $duration-fast $easing-standard,
       height $duration-fast $easing-standard;
     @include tap-feedback;
+
+    span {
+      display: block;
+      line-height: 1;
+    }
 
     &--active {
       background: $color-premium;
@@ -46,70 +128,61 @@
     }
   }
 
-  // ── 2-column grid ────────────────────────────────────────────
+  // ── 2-column grid ─────────────────────────────────────────
   &__grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: $space-3;
+    gap: 14px;
   }
 
   &__skeleton {
-    border-radius: $radius-card;
+    border-radius: 20px;
   }
 }
 
-// ── Design card ───────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════
+//  Design card — auto height, bg #171717, rounded 20, glass border
+// ═══════════════════════════════════════════════════════════════
 .design-card {
+  position: relative;
+  width: 100%;
   background: #171717;
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  border-radius: $radius-card;
+  border-radius: 20px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  padding: 10px 10px 12px;
+  @include glass-gradient-border(20px);
 
-  // ── Photo ─────────────────────────────────────────────────
+  // ── Photo (163.08 × 157.8, full width) ─────────────────────
   &__photo-wrap {
-    margin: 9px 9px 0;
-    border-radius: $radius-card;
-    border: 1px solid rgba(255, 255, 255, 0.6);
+    position: relative;
+    width: 100%;
+    aspect-ratio: 163.081 / 157.804;
+    border-radius: 20px;
     overflow: hidden;
-    aspect-ratio: 163 / 158;
     flex-shrink: 0;
+    @include glass-gradient-border(20px);
   }
 
   &__photo {
+    display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    display: block;
+    border-radius: 20px;
   }
 
-  &__photo-placeholder {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(172, 157, 255, 0.15);
-  }
-
-  &__photo-initial {
-    font-family: $font-gilroy;
-    font-size: $text-2xl;
-    font-weight: $fw-bold;
-    color: $color-accent;
-  }
-
-  // ── Info section ──────────────────────────────────────────
+  // ── Info block (name, age, meta rows) ──────────────────────
   &__info {
-    padding: 10px 9px 12px;
+    padding: 13px 0 0;
     display: flex;
     flex-direction: column;
     gap: 4px;
-    flex: 1;
   }
 
   &__name-row {
+    position: relative;
     display: flex;
     align-items: center;
     gap: 4px;
@@ -117,96 +190,106 @@
 
   &__name {
     font-family: $font-gilroy;
-    font-size: $text-sm;
     font-weight: $fw-medium;
+    font-size: 12px;
+    line-height: 17px;
     color: $color-white;
-    line-height: $lh-tight;
-    flex: 1;
-    min-width: 0;
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
+    min-width: 0;
+    flex: 1;
   }
 
   &__verified {
+    position: absolute;
+    right: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 14px;
+    height: 14px;
     flex-shrink: 0;
-    display: flex;
-    align-items: center;
+    pointer-events: none;
   }
 
   &__age {
     font-family: $font-gilroy;
-    font-size: $text-xs;
     font-weight: $fw-medium;
-    color: $color-white-60;
-    line-height: $lh-tight;
+    font-size: 10px;
+    line-height: 17px;
+    color: $color-white;
+    opacity: 0.6;
   }
 
-  // ── Meta rows ─────────────────────────────────────────────
   &__meta-row {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 8px;
     min-width: 0;
+    padding-top: 3px;
   }
 
   &__meta-icon {
     flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    color: $color-white-60;
+    width: 10px;
+    height: 10px;
+    display: block;
+    opacity: 0.6;
 
     &--dim {
       opacity: 0.5;
+      width: 12px;
+      height: 12px;
     }
   }
 
   &__meta-text {
     font-family: $font-gilroy;
-    font-size: $text-xs;
     font-weight: $fw-medium;
-    color: $color-white-60;
-    line-height: $lh-tight;
+    font-size: 10px;
+    line-height: 1.2;
+    color: $color-white;
+    opacity: 0.6;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-
-    &--dim {
-      opacity: 0.5;
-    }
   }
 
-  // ── Description ───────────────────────────────────────────
+  // ── Description (3-line clamp, normal flow) ────────────────
   &__description {
+    margin: 10px 0 0;
     font-family: $font-gilroy;
-    font-size: 11px;
     font-weight: $fw-medium;
+    font-size: 11.04px;
+    line-height: 15.5px;
     color: $color-white;
-    line-height: 1.5;
+    overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
-    overflow: hidden;
-    margin-top: 4px;
-    flex: 1;
   }
 
-  // ── Contact button ─────────────────────────────────────────
-  &__contact-btn {
+  // ── "Подробнее" outline button — pinned to bottom of the card so
+  //    rows of cards keep the CTA on a single y-coord regardless of
+  //    description length.
+  &__details-btn {
+    margin: auto 5px 0;
+    width: calc(100% - 10px);
+    height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100%;
-    height: 40px;
-    margin-top: $space-2;
-    background: $color-premium;
+    padding: 10px 16px;
+    background: transparent;
     color: $color-white;
-    border: none;
+    border: 1px solid rgba(255, 255, 255, 0.18);
     border-radius: 10px;
     font-family: $font-gilroy;
-    font-size: $text-sm;
     font-weight: $fw-bold;
+    font-size: 12px;
+    line-height: 1;
     cursor: pointer;
-    @include tap-feedback;
+    -webkit-tap-highlight-color: transparent;
+    @include focus-ring;
   }
 }

@@ -1,13 +1,17 @@
 {
+  "title_line_1": "KO'RGAZMALAR",
+  "title_line_2": "va tadbirlar",
   "title": "Tadbirlar",
   "subtitle": "Ko'rgazmalar, konferensiyalar va vebinarlar",
   "read_more": "Batafsil",
   "free": "Bepul",
   "online": "Onlayn",
+  "cta": "ISHTIROK ETISH",
   "type": {
-    "exhibition": "Ko'rgazma",
-    "conference": "Konferensiya",
-    "webinar": "Vebinar",
-    "meetup": "Uchrashuv"
+    "exhibition": "KO'RGAZMA",
+    "event": "TADBIR",
+    "conference": "KONFERENSIYA",
+    "webinar": "VEBINAR",
+    "meetup": "UCHRASHUV"
   }
 }

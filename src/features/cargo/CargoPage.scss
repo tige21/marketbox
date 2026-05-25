@@ -32,118 +32,218 @@
 // --------------- CargoMain (/cargo) ---------------
 
 .cargo-main {
-  min-height: 100dvh;
+  width: 100%;
+  min-height: 100%;
   background: $color-bg-primary;
-  display: flex;
-  flex-direction: column;
+  padding: 0 20px 120px;
+  position: relative;
 
-  &__body {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    padding: $space-4;
-    gap: $space-3;
+  &__back {
+    position: absolute;
+    top: 16px;
+    left: 20px;
+    width: 48px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    border-radius: 14px;
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform $duration-fast $easing-standard;
+    z-index: 2;
+    @include glass-gradient-border(14px);
+    @include focus-ring;
+
+    &::before { z-index: 2; }
+    &:active { transform: scale(0.94); }
+
+    img {
+      display: block;
+      width: 48px;
+      height: 28px;
+      pointer-events: none;
+    }
+  }
+
+  // Title center-y must align with back-btn center-y (66px from top):
+  //   back: top 52 + height 28 → center 66
+  //   title: line-height 1 × 33px = 33 → center = padding-top + 16.5
+  //   padding-top = 66 - 16.5 = 49.5px
+  &__title {
+    margin: 0 0 28px;
+    padding-top: 19px;
+    text-align: center;
+    font-family: $font-travels;
+    font-weight: 800;
+    font-size: 22px;
+    line-height: 1;
+    color: $color-white;
+    letter-spacing: 0;
+    text-transform: uppercase;
   }
 
   &__tiles {
     display: flex;
     flex-direction: column;
-    gap: $space-3;
+    gap: 25px;
   }
 
-  // Full-width tile card — 171px tall, purple bg + glass overlay bar at bottom
+  // Full-width tile card — 171px tall, full-bleed cargo image + glass
+  // overlay bar at bottom. The purple bg is a fallback for cargo entries
+  // that arrive without an `image` field (or before BackendImage finishes
+  // resolving its placeholder).
   &__tile {
     @include tap-feedback;
     position: relative;
     width: 100%;
     height: 171px;
     background: $color-premium;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: $radius-card;
+    border-radius: 20px;
     overflow: hidden;
     cursor: pointer;
     padding: 0;
     display: block;
     text-align: left;
+    @include glass-gradient-border(20px);
+
+    &::before { z-index: 2; }
   }
 
-  // Glass overlay bar at bottom
+  &__tile-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+    display: block;
+  }
+
+  // Glass overlay bar at bottom — mirrors CategoryCard grid pattern
+  // so title + description sit in one horizontal row (title left, desc flex:1)
   &__tile-bar {
     position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 45px;
-    display: flex;
+    bottom: 9px;
+    left: 9.5px;
+    right: 9.5px;
+    min-height: 45px;
+    border-radius: 20px;
+    background: linear-gradient(rgba(0, 0, 0, 0.58), rgba(0, 0, 0, 0.58));
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    display: grid;
+    grid-template-columns: minmax(110px, max-content) 1fr 22px;
     align-items: center;
-    justify-content: space-between;
-    padding: 0 $space-4;
-    background: rgba(0, 0, 0, 0.55);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-radius: 0 0 $radius-card $radius-card;
-    gap: $space-2;
+    column-gap: 12px;
+    padding: 6px 16px 6px 20px;
+    overflow: hidden;
+    z-index: 3;
   }
 
-  &__tile-info {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    min-width: 0;
-    flex: 1;
+  // When there is no description, collapse to 2 columns (title + chevron)
+  &__tile-bar--no-desc {
+    grid-template-columns: 1fr 22px;
   }
 
   &__tile-title {
     font-family: $font-gilroy;
     font-weight: $fw-bold;
-    font-size: $text-md;
     color: $color-white;
-    @include truncate;
-    line-height: $lh-tight;
+    line-height: 1.05;
+    white-space: pre-line;
+    word-break: break-word;
+
+    &--size-lg { font-size: 20px; }
+    &--size-sm { font-size: 14px; }
   }
 
   &__tile-desc {
+    margin: 0;
     font-family: $font-gilroy;
-    font-weight: $fw-regular;
-    font-size: 11px;
-    color: $color-white-60;
+    font-weight: $fw-medium;
+    font-size: 9px;
+    line-height: 1.25;
+    color: $color-white;
     display: -webkit-box;
-    -webkit-line-clamp: 1;
+    -webkit-line-clamp: 4;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    line-height: $lh-tight;
   }
 
   &__tile-chevron {
-    font-size: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 12px;
+    height: 14px;
     color: $color-white;
     flex-shrink: 0;
     line-height: 1;
+    opacity: 0.95;
   }
 
   &__chat-btn {
     @include tap-feedback;
+    position: relative;
     width: 100%;
     height: 55px;
     background: $color-premium;
-    border: 1px solid rgba(255, 255, 255, 0.6);
-    border-radius: 14px;
+    border-radius: 14.695px;
+    padding: 0 28px;
+    margin-top: 25px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 14.695px;
+      padding: 0.735px;
+      background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.55) 0%,
+        rgba(255, 255, 255, 0.04) 50%,
+        rgba(255, 255, 255, 0.50) 100%
+      );
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+  }
+
+  &__chat-icon {
+    position: absolute;
+    left: 28px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 35px;
+    height: 26px;
+    object-fit: contain;
+    pointer-events: none;
+  }
+
+  &__chat-label {
     font-family: $font-gilroy;
-    font-weight: 800;
-    font-size: 24px;
+    font-weight: 900;
+    font-size: 29.39px;
+    line-height: 1;
     color: $color-white;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
-    cursor: pointer;
-    margin-top: $space-4;
-    @include flex-center;
+    letter-spacing: 0.02em;
   }
 }
 
 // --------------- CargoListPage (/cargo/logistics, /cargo/fulfillment) ---------------
 
 .cargo-list {
-  min-height: 100dvh;
+  width: 100%;
+  min-height: 100%;
   background: $color-bg-primary;
   display: flex;
   flex-direction: column;
@@ -152,27 +252,32 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    padding: $space-4;
-    gap: $space-3;
+    width: 100%;
+    padding: $space-4 20px calc($space-8 + 90px);
+    gap: 14px;
   }
 
-  // Company card row
+  // Company card row — interactivity disabled, display-only
   &__card {
-    @include tap-feedback;
+    position: relative;
+    width: 100%;
     display: flex;
     align-items: center;
     gap: $space-4;
     background: #171717;
-    border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 17px;
-    padding: $space-4;
-    cursor: pointer;
+    padding: $space-4 16px;
+    cursor: default;
+    pointer-events: none;
+    @include glass-gradient-border(17px);
+
+    &::before { z-index: 2; }
   }
 
-  // Company logo — 92×92px
+  // Company logo — enlarged so it reads as the primary visual on the list card
   &__logo {
-    width: 92px;
-    height: 92px;
+    width: 110px;
+    height: 110px;
     border-radius: $radius-md;
     object-fit: cover;
     flex-shrink: 0;
@@ -198,6 +303,9 @@
     @include truncate;
   }
 
+  // Preview text — clamp to 2 lines so backend-driven length variation
+  // doesn't blow up the card height (e.g. "ООО МБЛ" ships a full description
+  // in preview_text; the full text belongs on the detail page).
   &__countries-label {
     font-family: $font-gilroy;
     font-weight: $fw-regular;
@@ -205,6 +313,11 @@
     color: $color-white-60;
     margin: 0;
     line-height: $lh-normal;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   &__flags {
@@ -213,9 +326,8 @@
     margin: 0;
   }
 
-  // "Подробное ›" pill button
+  // "Подробное ›" pill button — disabled, display-only
   &__details-btn {
-    @include tap-feedback;
     display: inline-flex;
     align-items: center;
     padding: 5px 14px;
@@ -226,15 +338,165 @@
     font-weight: $fw-medium;
     font-size: 13px;
     color: $color-white;
+    cursor: default;
+    pointer-events: none;
+    align-self: flex-start;
+    opacity: 1; // override browser disabled dimming
+
+    &:disabled { opacity: 1; }
+  }
+}
+
+// --------------- CargoFulfillmentPage (/cargo/fulfillment) ---------------
+
+.cargo-fulfillment {
+  width: 100%;
+  min-height: 100%;
+  background: $color-bg-primary;
+  display: flex;
+  flex-direction: column;
+
+  &__body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 20px 20px calc($space-8 + 90px);
+    gap: 16px;
+  }
+
+  // Provider card — 114px tall, 92×92 thumb at left, content right
+  // Image at 16px from card left; content starts ~120px from card left
+  //   (16 image-left + 92 image-width + 12 gap = 120)
+  &__card {
+    @include tap-feedback;
+    position: relative;
+    width: 100%;
+    min-height: 114px;
+    background: #171717;
+    border-radius: 20px;
+    padding: 11px 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    overflow: hidden;
+    @include glass-gradient-border(20px);
+
+    &::before { z-index: 2; }
+  }
+
+  &__thumb {
+    width: 92px;
+    height: 92px;
+    border-radius: 11px;
+    object-fit: cover;
+    flex-shrink: 0;
+    display: block;
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  &__info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    position: relative;
+  }
+
+  &__name {
+    margin: 0;
+    font-family: $font-gilroy;
+    font-weight: $fw-bold;
+    font-size: 18.992px;
+    line-height: 1.1;
+    color: $color-white;
+    text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    // Clamp to 2 lines to stop long backend strings from growing the card
+    // and pushing the subtitle/cta button out of the layout.
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  &__subtitle {
+    margin: 0;
+    font-family: $font-gilroy;
+    font-weight: $fw-regular;
+    font-size: 12px;
+    line-height: 1.2;
+    color: $color-white;
+  }
+
+  &__flags {
+    margin: 0;
+    font-family: $font-gilroy;
+    font-weight: $fw-bold;
+    font-size: 21.621px;
+    line-height: 1.1;
+    color: $color-white;
+    letter-spacing: 0;
+  }
+
+  // "Подробное ›" pill button — 111×23, purple, chevron on right
+  &__details-btn {
+    @include tap-feedback;
+    margin-top: 2px;
+    width: 111px;
+    height: 23px;
+    padding: 0 10px 0 0;
+    background: $color-premium;
+    border: none;
+    border-radius: 7.531px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    color: $color-white;
     cursor: pointer;
     align-self: flex-start;
+    position: relative;
+  }
+
+  &__details-label {
+    font-family: $font-gilroy;
+    font-weight: $fw-bold;
+    font-size: 13.597px;
+    line-height: 1;
+    color: $color-white;
+    text-align: center;
+  }
+
+  &__details-chevron {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 7px;
+    height: 12px;
+    color: $color-white;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+
+    svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
   }
 }
 
 // --------------- CargoDetailPage (/cargo/:id) ---------------
 
 .cargo-detail {
-  min-height: 100dvh;
+  min-height: 100%;
   background: $color-bg-primary;
   display: flex;
   flex-direction: column;
@@ -398,7 +660,8 @@
 // --------------- CargoWhitePage (/cargo/white) ---------------
 
 .cargo-white {
-  min-height: 100dvh;
+  width: 100%;
+  min-height: 100%;
   background: $color-bg-primary;
   display: flex;
   flex-direction: column;
@@ -407,272 +670,504 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    padding: $space-4;
-    gap: $space-4;
-    padding-bottom: $space-8;
+    width: 100%;
+    padding: 10px 20px 0;
+    gap: 25px;
+    padding-bottom: calc(24px + 90px); // breathing room above tab bar
   }
 
-  // Video lesson card
+  // ── Video lesson combo (card + footer) ──────────────────────
+
+  &__lesson {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  // Light-gray card body — 376×274 in Figma, stretches fluidly
   &__lesson-card {
-    background: #171717;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: $radius-card;
+    position: relative;
+    width: 100%;
+    height: 274px;
+    background: #e5e5e5;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-bottom: none;
+    border-radius: 20px 20px 0 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__lesson-title {
+    flex-shrink: 0;
+    margin: 0;
+    padding: 11px 72px 0 22px;
+    font-family: $font-gilroy;
+    font-weight: 800;
+    font-size: 20px;
+    line-height: 21px;
+    color: #363636;
+    white-space: pre-line;
+    letter-spacing: 0.01em;
+  }
+
+  // Heart button — dark circle, yellow heart; top-right corner
+  &__lesson-heart {
+    position: absolute;
+    top: 11px;
+    right: 14px;
+    width: 42px;
+    height: 42px;
+    border-radius: $radius-full;
+    background: #363636;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    z-index: 2;
+    @include flex-center;
+    @include tap-feedback;
+
+    svg {
+      display: block;
+      width: 20px;
+      height: 18px;
+    }
+  }
+
+  // Lesson thumbnail: 336×189 centered in card, radius 10
+  &__lesson-thumb-wrap {
+    flex: 1;
+    margin: 11px 20px 15px;
+    min-height: 0;
+    border-radius: 10px;
     overflow: hidden;
   }
 
   &__lesson-thumb {
-    position: relative;
-    height: 275px;
-    background: #1a1a1a;
-    overflow: hidden;
-  }
-
-  &__lesson-img {
-    position: absolute;
-    bottom: 0;
-    left: $space-3;
-    right: $space-3;
-    height: 190px;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
-    border-radius: 10px;
     display: block;
   }
 
-  &__lesson-title-overlay {
-    position: absolute;
-    top: $space-4;
-    left: $space-4;
-    right: 60px;
-    font-family: $font-gilroy;
-    font-weight: $fw-bold;
-    font-size: $text-base;
-    color: $color-white;
-    line-height: $lh-tight;
-    z-index: 1;
-  }
-
-  // Heart button — top-right corner, circular glass
-  &__lesson-heart {
-    @include tap-feedback;
-    position: absolute;
-    top: $space-4;
-    right: $space-4;
-    width: 36px;
-    height: 36px;
-    border-radius: $radius-full;
-    background: rgba(0, 0, 0, 0.45);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    @include flex-center;
-    color: $color-white;
-    cursor: pointer;
-
-    &:active { color: #ff6b6b; }
-  }
-
-  // Materials bar at bottom of lesson card
+  // Footer bar — dark, attached under card (rounded-bottom 11px)
   &__lesson-footer {
-    height: 68px;
     background: #171717;
+    border-radius: 0 0 11px 11px;
+    height: 68px;
+    display: flex;
+    align-items: center;
+    padding: 0 14px;
+  }
+
+  &__lesson-materials {
+    background: #1e1e1e;
+    border-radius: 11px;
+    height: 32px;
+    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: $space-2;
-    font-family: $font-gilroy;
-    font-weight: $fw-medium;
-    font-size: $text-base;
-    color: $color-white-60;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    cursor: pointer;
+    gap: 8px;
+
+    svg {
+      flex-shrink: 0;
+      display: block;
+    }
+
+    span {
+      font-family: $font-gilroy;
+      font-weight: 800;
+      font-size: 10.688px;
+      line-height: 11.222px;
+      color: $color-white;
+      letter-spacing: 0.02em;
+    }
   }
 
-  // Company info card
-  &__company-card {
+  // ── About card (Wave Logistic) ──────────────────────────────
+
+  &__about {
+    position: relative;
+    width: 100%;
+    min-height: 169px;
     background: #171717;
-    border: 1px solid rgba(255, 255, 255, 0.6);
-    border-radius: 17px;
-    padding: $space-5;
+    border-radius: 20px;
+    padding: 26px 24px 22px;
     display: flex;
     flex-direction: column;
-    gap: $space-2;
+    @include glass-gradient-border(20px);
   }
 
-  &__company-name {
+  &__about-name {
+    margin: 0;
+    font-family: $font-travels;
+    font-weight: 800;
+    font-size: 26px;
+    line-height: 1;
+    color: $color-premium;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+  }
+
+  &__about-tagline {
+    margin: 8px 0 0;
     font-family: $font-gilroy;
     font-weight: 800;
-    font-size: $text-xl;
-    color: $color-accent;
-    margin: 0;
-    line-height: $lh-tight;
-    text-align: center;
-  }
-
-  &__company-tagline {
-    font-family: $font-gilroy;
-    font-weight: $fw-regular;
     font-size: 12px;
+    line-height: 1.25;
     color: $color-white-60;
-    margin: 0;
-    text-align: center;
   }
 
-  &__company-desc {
+  &__about-desc {
+    margin: 14px 0 0;
     font-family: $font-gilroy;
-    font-weight: $fw-regular;
+    font-weight: 300;
     font-size: 12px;
+    line-height: 13px;
     color: $color-white;
+    text-align: left;
+  }
+
+  // ── Sections (Команда / Контакты) ───────────────────────────
+
+  &__section {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    width: 100%;
+
+    &--socials {
+      gap: 14px;
+      margin-top: 6px;
+    }
+  }
+
+  &__heading {
     margin: 0;
-    line-height: $lh-normal;
-  }
-
-  // Section shared heading
-  &__section-title {
-    font-family: $font-gilroy;
+    font-family: $font-travels;
     font-weight: 800;
-    font-size: $text-xl;
+    font-size: 33px;
+    line-height: 1;
     color: $color-white;
-    margin: 0 0 $space-3;
+    letter-spacing: 0.01em;
   }
 
-  // Team grid
-  &__team-section {
-    // no extra styles needed
-  }
+  // ── Team grid ──────────────────────────────────────────────
 
   &__team-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: $space-3;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 13px;
   }
 
-  &__member-card {
+  &__member {
+    position: relative;
     background: #171717;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 17px;
-    padding: $space-3;
+    border-radius: 15.732px;
+    padding: 14.95px 6px 12px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: $space-1;
     text-align: center;
+    overflow: hidden;
+    @include glass-gradient-border(15.732px);
+
+    &::before { z-index: 2; }
   }
 
   &__member-avatar {
-    width: 56px;
-    height: 56px;
+    width: 56.636px;
+    height: 56.636px;
     border-radius: $radius-full;
-    object-fit: cover;
+    background: #d9d9d9;
+    overflow: hidden;
     flex-shrink: 0;
-    margin-bottom: $space-1;
     display: block;
-    background: rgba(150, 138, 215, 0.3);
+  }
+
+  &__member-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
   }
 
   &__member-name {
+    margin: 14px 0 0;
     font-family: $font-gilroy;
-    font-weight: $fw-bold;
-    font-size: 13px;
+    font-weight: 800;
+    font-size: 11.013px;
+    line-height: 11.7px;
     color: $color-white;
-    margin: 0;
-    line-height: $lh-tight;
+    white-space: pre-line;
+    text-align: center;
+    letter-spacing: 0.01em;
   }
 
   &__member-role {
+    margin: 6px 0 0;
     font-family: $font-gilroy;
-    font-weight: $fw-regular;
-    font-size: 11px;
-    color: $color-white-60;
-    margin: 0;
-    line-height: $lh-tight;
+    font-weight: 800;
+    font-size: 6.293px;
+    line-height: 6.678px;
+    color: rgba(250, 250, 250, 0.5);
+    text-align: center;
   }
 
   &__member-exp {
-    font-family: $font-gilroy;
-    font-weight: $fw-regular;
-    font-size: $text-xs;
-    color: $color-white-40;
-    margin: 0;
-  }
-
-  // Contacts section
-  &__contacts-section {
-    // no extra styles needed
-  }
-
-  &__contacts-title {
+    margin: 6px 0 0;
     font-family: $font-gilroy;
     font-weight: 800;
-    font-size: 20px;
+    font-size: 6.293px;
+    line-height: 6.678px;
     color: $color-white;
-    margin: 0 0 $space-3;
+    text-align: center;
   }
 
-  &__contacts-list {
+  // ── Contacts list ──────────────────────────────────────────
+
+  &__contacts {
+    list-style: none;
+    margin: 0;
+    padding: 0;
     display: flex;
     flex-direction: column;
-    gap: $space-3;
+    gap: 14px;
+  }
+
+  &__contact {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-height: 20px;
+  }
+
+  &__contact-icon {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+    display: block;
+    object-fit: contain;
+
+    &--website {
+      width: 14px;
+      height: 14px;
+    }
+  }
+
+  &__contact-text {
+    font-family: 'Jost', 'Inter', system-ui, sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    color: #f2f2f3;
+  }
+
+  // ── Socials ────────────────────────────────────────────────
+
+  &__socials-title {
+    margin: 0;
+    font-family: 'Jost', 'Inter', system-ui, sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 1;
+    color: $color-white;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+  }
+
+  &__socials-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  &__social-btn {
+    @include tap-feedback;
+    @include flex-center;
+    width: 26px;
+    height: 26px;
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+
+    img {
+      display: block;
+      width: 26px;
+      height: 26px;
+      object-fit: contain;
+    }
+  }
+}
+
+
+// Add flag image styles to cargo-list and cargo-fulfillment
+.cargo-list__flag,
+.cargo-fulfillment__flag {
+  width: 20px;
+  height: 14px;
+  object-fit: cover;
+  border-radius: 2px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.cargo-list__flags,
+.cargo-fulfillment__flags {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+
+// --------------- CargoLogisticDetailPage (/cargo/items/:id) ---------------
+
+.cargo-logistic-detail {
+  position: relative;
+  width: 100%;
+  min-height: 100%;
+  background: $color-bg-primary;
+  padding: 0 20px calc($space-8 + 90px);
+
+  &__back {
+    position: absolute;
+    top: 16px;
+    left: 20px;
+    width: 48px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    overflow: hidden;
+    z-index: 2;
+    @include glass-gradient-border(14px);
+
+    &::before { z-index: 2; }
+    &:active { transform: scale(0.94); }
+
+    img {
+      display: block;
+      width: 48px;
+      height: 28px;
+      pointer-events: none;
+    }
+  }
+
+  &__title {
+    margin: 0 0 20px;
+    padding: 19px 60px 0;
+    text-align: center;
+    font-family: $font-travels;
+    font-weight: 800;
+    font-size: 28px;
+    line-height: 1.15;
+    color: $color-white;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+  }
+
+  &__body {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  &__image {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    border-radius: 20px;
+    object-fit: cover;
+    background: rgba(255, 255, 255, 0.04);
+    display: block;
+  }
+
+  // ── Description card ────────────────────────────────────────
+  &__description-card {
+    background: #1a1a1a;
+    border-radius: 20px;
+    padding: 18px;
+  }
+
+  &__description {
+    margin: 0;
+    font-family: $font-gilroy;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.5;
+    color: rgba(250, 250, 250, 0.85);
+    white-space: pre-line;
+
+    &--placeholder { color: rgba(255, 255, 255, 0.35); }
+  }
+
+  // ── Contact card ────────────────────────────────────────────
+  &__contact-card {
+    background: #1a1a1a;
+    border-radius: 20px;
+    padding: 18px 18px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__contact-title {
+    margin: 0 0 8px;
+    font-family: $font-gilroy;
+    font-weight: 800;
+    font-size: 14px;
+    line-height: 1.2;
+    color: $color-white;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  &__contact-divider {
+    height: 1px;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.08);
+    margin-bottom: 4px;
   }
 
   &__contact-row {
     display: flex;
     align-items: center;
-    gap: $space-3;
+    gap: 14px;
+    padding: 14px 4px;
+    color: $color-white;
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+
+    &:last-child { border-bottom: 0; }
+    &:active { opacity: 0.8; }
   }
 
   &__contact-icon {
-    @include flex-center;
-    width: 32px;
-    height: 32px;
-    border-radius: $radius-sm;
-    background: rgba(255, 255, 255, 0.06);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    color: rgba(250, 250, 250, 0.85);
     flex-shrink: 0;
-    color: $color-white-60;
   }
 
   &__contact-text {
     font-family: $font-gilroy;
-    font-weight: $fw-medium;
-    font-size: $text-base;
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 1.3;
     color: $color-white;
-  }
-
-  // Socials section
-  &__socials-section {
-    // no extra styles needed
-  }
-
-  &__socials-title {
-    font-family: $font-gilroy;
-    font-weight: 800;
-    font-size: 20px;
-    color: $color-white;
-    margin: 0 0 $space-3;
-  }
-
-  &__socials-row {
-    display: flex;
-    gap: $space-3;
-  }
-
-  &__social-btn {
-    @include tap-feedback;
-    display: inline-flex;
-    align-items: center;
-    gap: $space-2;
-    padding: $space-2 $space-4;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: $radius-full;
-    font-family: $font-gilroy;
-    font-weight: $fw-medium;
-    font-size: $text-sm;
-    color: $color-white;
-    cursor: pointer;
-  }
-
-  &__social-icon {
-    font-size: $text-md;
-    line-height: 1;
+    overflow-wrap: anywhere;
+    word-break: break-word;
   }
 }

@@ -5,12 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#121212" />
     <title>MarketBox</title>
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <!-- Open the TLS handshake to the API before JS even parses. Same origin
+         in prod, but on slow networks the early connect still saves ~1 RTT. -->
+    <link rel="preconnect" href="https://marketandbox.ru" crossorigin />
+    <link rel="dns-prefetch" href="https://marketandbox.ru" />
     <!-- Preload critical fonts -->
-    <link rel="preload" href="/fonts/Gilroy-Bold.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/Gilroy-Medium.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/app/fonts/BebasNeue-Regular.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/app/fonts/Oswald-Medium-Cyrillic.woff2" as="font" type="font/woff2" crossorigin />
+    <!-- Manrope (profile page) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Jost:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" />
   </head>
   <body>
+    <style>
+      html, body { margin: 0; padding: 0; background: #121212; min-height: 100dvh; }
+      #root { min-height: 100dvh; }
+    </style>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

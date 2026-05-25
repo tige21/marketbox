@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { GlassHeader } from '@/components/GlassHeader'
 import { triggerHaptic } from '@/utils'
 import { bem, cn } from '@/utils/cn'
@@ -23,6 +24,7 @@ function ChevronDownIcon() {
 }
 
 export function ProfilePaymentPage() {
+  const { t } = useTranslation('profile')
   const [subscriptionOpen, setSubscriptionOpen] = useState(true)
 
   const handleToggle = () => {
@@ -36,19 +38,19 @@ export function ProfilePaymentPage() {
 
   return (
     <div className={b}>
-      <GlassHeader showBack size="medium" title="Платежная Информация" />
+      <GlassHeader showBack size="medium" title={t('pages.payment_title')} />
       <div className={bem(b, 'content')}>
         <div className={bem(b, 'card')}>
           <div className={cn(bem(b, 'row'), bem(b, 'row', { interactive: true }))}>
             <img
-              src="/images/profile/payment.svg"
+              src="/app/images/profile/payment.svg"
               alt=""
               aria-hidden="true"
               className={bem(b, 'row-icon')}
               loading="lazy"
               decoding="async"
             />
-            <span className={bem(b, 'row-label')}>Привязанная карта</span>
+            <span className={bem(b, 'row-label')}>{t('rows.linked_card')}</span>
             <div className={bem(b, 'row-right')}>
               <span className={bem(b, 'row-value')}>0025****</span>
               <ChevronRightIcon />
@@ -65,7 +67,7 @@ export function ProfilePaymentPage() {
             aria-expanded={subscriptionOpen}
             onKeyDown={(e) => { if (e.key === 'Enter') handleToggle() }}
           >
-            <span className={bem(b, 'row-label')}>Управления подпиской</span>
+            <span className={bem(b, 'row-label')}>{t('rows.manage_subscription')}</span>
             <div className={bem(b, 'row-right')}>
               <ChevronDownIcon />
             </div>
@@ -78,7 +80,7 @@ export function ProfilePaymentPage() {
                 onClick={handleCancelSubscription}
                 type="button"
               >
-                Отменить подписку
+                {t('rows.cancel_subscription')}
               </button>
             </div>
           )}

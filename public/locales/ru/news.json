@@ -1,5 +1,7 @@
 {
   "title": "Новости",
+  "title_uppercase": "НОВОСТИ",
+  "cta_participate": "УЧАСТВОВАТЬ",
   "subtitle": "Актуальные новости e-commerce",
   "read_more": "Подробнее",
   "views": "просмотров",

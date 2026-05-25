@@ -1,11 +1,52 @@
-.courses-chats {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+// Courses — CoursesChatsPage.scss — Figma 1048:10962
 
-  &__content {
-    padding: $space-4;
-    padding-bottom: $space-8;
+.courses-chats {
+  width: 100%;
+  min-height: 100%;
+  background: $color-bg-primary;
+  padding: 0 20px 120px;
+  position: relative;
+
+  &__back {
+    position: absolute;
+    top: 16px;
+    left: 20px;
+    width: 48px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    border-radius: 14px;
+    overflow: hidden;
+    z-index: 2;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform $duration-fast $easing-standard;
+    @include glass-gradient-border(14px);
+    @include focus-ring;
+
+    &::before { z-index: 2; }
+    &:active { transform: scale(0.94); }
+
+    img {
+      display: block;
+      width: 48px;
+      height: 28px;
+      pointer-events: none;
+    }
+  }
+
+  &__title {
+    margin: 0 0 30px;
+    padding-top: 19px;
+    text-align: center;
+    font-family: $font-travels;
+    font-weight: 800;
+    font-size: 22px;
+    line-height: 1;
+    color: $color-white;
+    letter-spacing: 0;
+    text-transform: uppercase;
   }
 
   &__list {
@@ -14,44 +55,69 @@
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 26px;
+  }
+
+  &__item {
+    display: block;
+    width: 100%;
   }
 
   &__row {
+    position: relative;
     display: flex;
     align-items: center;
     width: 100%;
     height: 49px;
-    background: rgba(150, 138, 215, 0.9);
-    border-radius: 25px;
+    padding: 0 20px 0 48px;
+    background: $color-premium;
     border: none;
+    border-radius: 20px;
     cursor: pointer;
-    padding: 0 $space-4;
-    gap: $space-3;
-    @include tap-feedback;
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform $duration-fast $easing-standard;
+    @include glass-gradient-border(20px);
+    @include focus-ring;
+
+    &::before { z-index: 2; }
+    &:active { transform: scale(0.98); }
   }
 
   &__row-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    display: block;
+    pointer-events: none;
   }
 
   &__row-name {
     flex: 1;
     font-family: $font-gilroy;
-    font-weight: $fw-bold;
-    font-size: $text-md;
+    font-weight: 900;
+    font-size: 22px;
+    line-height: 1;
     color: $color-white;
     text-align: left;
+    text-transform: uppercase;
+    margin-left: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   &__row-chevron {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    opacity: 0.8;
+    width: 10px;
+    height: 18px;
+    color: $color-white;
+    margin-left: 12px;
   }
 }

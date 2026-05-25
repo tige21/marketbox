@@ -1,8 +1,12 @@
-import { useRef, useEffect } from 'react'
+import { useRef, useLayoutEffect, useEffect } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import { GlassTabBar, type TabItem } from '@/components/GlassTabBar'
 import { ToastContainer } from '@/components/Toast'
 import { OfflineBanner } from '@/components/OfflineBanner'
+import { PremiumGate } from '@/components/PremiumGate'
+import { useAuthStore } from '@/stores/authStore'
+import { useIdlePrefetch } from '@/hooks/useIdlePrefetch'
+import { retryAuth } from './AuthProvider'
 import './AppLayout.scss'
 
 function IconHome() {
@@ -70,19 +74,50 @@ const TABS: TabItem[] = [
 export function AppLayout() {
   const mainRef = useRef<HTMLElement>(null)
   const { pathname } = useLocation()
+  const authState = useAuthStore((s) => s.authState)
+  const isPremium = useAuthStore((s) => s.isPremium)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual'
+    }
+  }, [])
+
+  useLayoutEffect(() => {
     mainRef.current?.scrollTo(0, 0)
   }, [pathname])
+
+  // Warm up the chunks for the features users tap into most often (cargo,
+  // courses, factories, china-guide). Runs once on mount, only while the
+  // browser is idle, and skips itself on 2g / saveData connections.
+  useIdlePrefetch()
+
+  // When the user returns to the Mini App (e.g. after paying in the bot),
+  // re-fetch subscription state so the gate closes automatically.
+  useEffect(() => {
+    function handleVisibility() {
+      if (document.visibilityState === 'visible') {
+        retryAuth()
+      }
+    }
+    document.addEventListener('visibilitychange', handleVisibility)
+    return () => document.removeEventListener('visibilitychange', handleVisibility)
+  }, [])
+
+  // Gate is open only after auth has resolved and we have a confirmed
+  // non-premium state. During loading/error/non-telegram we let the
+  // AuthProvider screens handle the UI instead.
+  const gateOpen = authState === 'ok' && !isPremium
 
   return (
     <div className="app-layout">
       <OfflineBanner />
-      <main ref={mainRef} className="app-layout__main">
+      <main key={pathname} ref={mainRef} className="app-layout__main">
         <Outlet />
       </main>
       <GlassTabBar tabs={TABS} />
       <ToastContainer />
+      <PremiumGate open={gateOpen} onRefresh={retryAuth} />
     </div>
   )
 }

@@ -18,5 +18,21 @@
     "subscribe": "Kanalga obuna bo'lish"
   },
   "updated": "Yangilandi",
-  "cbr_rate": "MBR"
+  "cbr_rate": "MBR",
+  "section_rates": "Valyuta kurslari",
+  "channel_title": "VALYUTA ALMASHINUVI",
+  "channel_subtitle": "Ishonchli sherigingiz",
+  "channel_description": "Kurslar faqat ma'lumot uchun berilgan va almashinuv paytida biroz farq qilishi mumkin. Aniq kurs va almashinuv uchun biz bilan bevosita bog'laning.",
+  "channel_telegram": "TELEGRAM",
+  "swap_aria": "Valyutalarni almashtirish",
+  "currencies": {
+    "UZS": "O'zbek so'mi",
+    "USD": "AQSh dollari",
+    "EUR": "Yevro",
+    "RUB": "Rossiya rubli",
+    "CNY": "Xitoy yuani",
+    "KZT": "Qozog'iston tenge",
+    "TRY": "Turk lirasi",
+    "KGS": "Qirg'iziston som"
+  }
 }

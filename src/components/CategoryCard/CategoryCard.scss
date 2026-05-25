@@ -1,12 +1,18 @@
 .category-card {
   position: relative;
-  border-radius: $radius-card;
-  overflow: hidden;
+  width: 100%;
   height: 171px;
+  border-radius: 20px;
+  overflow: hidden;
   cursor: pointer;
-  @include glass-gradient-border($radius-card);
   flex-shrink: 0;
   transition: transform $duration-fast $easing-standard;
+  -webkit-tap-highlight-color: transparent;
+  @include glass-gradient-border(20px);
+
+  &::before {
+    z-index: 2;
+  }
 
   &:active {
     transform: scale(0.98);
@@ -33,56 +39,61 @@
 
   &__glass-bar {
     position: absolute;
-    bottom: $space-2;
-    left: 9px;
-    right: 9px;
+    bottom: 9px;
+    left: 9.5px;
+    right: 9.5px;
     min-height: 45px;
-    border-radius: 16px;
-    background: rgba(0, 0, 0, 0.72);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    display: flex;
+    border-radius: 20px;
+    background: linear-gradient(rgba(0, 0, 0, 0.58), rgba(0, 0, 0, 0.58));
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    display: grid;
+    grid-template-columns: minmax(110px, max-content) 1fr 22px;
     align-items: center;
-    gap: $space-2;
-    padding: 7px $space-3;
-    @include glass-gradient-border(16px);
+    column-gap: 12px;
+    padding: 6px 16px 6px 20px;
+    overflow: hidden;
   }
 
   &__title {
-    font-family: $font-gilroy;
+    // Lock the font to Manrope + explicit fallbacks. system-ui is excluded
+    // on purpose: iOS auto-optical-sizes SF Pro at different sizes (22px
+    // gets a wider cut, 14px a tighter one), which made titles look like
+    // they used different typefaces. Forcing one variable font keeps the
+    // cut identical across sizes.
+    font-family: 'Manrope', 'Inter', 'Roboto', sans-serif;
     font-weight: $fw-bold;
-    font-size: 12px;
+    font-optical-sizing: none;
+    font-variation-settings: 'wght' 700;
+    letter-spacing: -0.01em;
     color: $color-white;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    flex-shrink: 0;
-    max-width: 38%;
-    line-height: $lh-tight;
+    line-height: 1.05;
+    white-space: normal;
+    word-break: break-word;
+
+    &--size-lg { font-size: 22px; }
+    &--size-md { font-size: 14px; }
+    &--size-sm { font-size: 12px; }
   }
 
   &__description {
-    flex: 1;
+    margin: 0;
     font-family: $font-gilroy;
     font-weight: $fw-medium;
-    font-size: 10px;
+    font-size: 9px;
+    line-height: 1.25;
     color: $color-white;
-    opacity: 0.85;
-    line-height: 1.3;
-    overflow: hidden;
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 5;
     -webkit-box-orient: vertical;
-    margin: 0;
+    overflow: hidden;
   }
 
   &__chevron {
-    font-size: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: $color-white;
-    flex-shrink: 0;
-    line-height: 1;
-    margin-left: $space-1;
+    opacity: 0.95;
   }
-
 }

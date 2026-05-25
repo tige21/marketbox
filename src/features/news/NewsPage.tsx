@@ -1,160 +1,101 @@
-import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
-import { GlassHeader } from '@/components/GlassHeader'
 import { EmptyState } from '@/components/EmptyState'
-import { newsApi } from '@/api/endpoints'
-import type { NewsArticle, NewsCategory } from '@/api/types'
+import { BackButton } from '@/components/BackButton'
+import { BackendImage } from '@/components/BackendImage'
+import type { BackendArticle } from '@/api/types'
+import { pickLocale, pickLocaleStr, useLang } from '@/api/locale'
 import { bem } from '@/utils/cn'
 import { useHaptic } from '@/hooks/useHaptic'
+import { formatBadgeDate } from '@/utils'
+import { useArticles } from './hooks/useArticles'
 import './NewsPage.scss'
 
 const b = 'news-page'
 
-// ─── Helpers ────────────────────────────────────────────────
-
-function formatDate(iso: string): string {
-  try {
-    return new Date(iso).toLocaleDateString('ru-RU', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-    })
-  } catch {
-    return iso
-  }
-}
-
-// ─── News Card ───────────────────────────────────────────────
-
 interface NewsCardProps {
-  article: NewsArticle
-  onClick: () => void
+  article: BackendArticle
 }
 
-function NewsCard({ article, onClick }: NewsCardProps) {
-  const { t, i18n } = useTranslation('news')
+function NewsCard({ article }: NewsCardProps) {
+  const { t } = useTranslation('news')
+  const lang = useLang()
   const haptic = useHaptic()
-  const isUz = i18n.language === 'uz'
+  const title = pickLocaleStr(article.title, lang)
+  const summary = pickLocaleStr(article.preview_text, lang)
+  const image = pickLocale(article.image, lang)
+  const ctaUrl = article.url
 
-  const title = isUz && article.titleUz ? article.titleUz : article.title
-  const summary = isUz && article.summaryUz ? article.summaryUz : article.summary
-  const categoryLabel = t(`category.${article.category as NewsCategory}`, {
-    defaultValue: article.category,
-  })
+  const openUrl = () => {
+    if (!ctaUrl) return
+    haptic.tap()
+    window.open(ctaUrl, '_blank', 'noopener,noreferrer')
+  }
 
   const handleClick = () => {
-    haptic.tap()
-    onClick()
+    openUrl()
+  }
+
+  const handleCtaClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    openUrl()
   }
 
   return (
-    <article
-      className={bem(b, 'card')}
-      onClick={handleClick}
-      role="button"
-      tabIndex={0}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault()
-          handleClick()
-        }
-      }}
-      aria-label={title}
-    >
-      <div className={bem(b, 'card-image-wrap')}>
-        <img
-          src={article.imageUrl}
-          alt={title}
+    <article className={bem(b, 'item')}>
+      <div
+        className={bem(b, 'card')}
+        onClick={handleClick}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => e.key === 'Enter' && handleClick()}
+        aria-label={title}
+      >
+        <BackendImage
+          src={image}
+          alt=""
           className={bem(b, 'card-image')}
-          loading="lazy"
-          decoding="async"
         />
-        <span className={bem(b, 'category-badge')}>{categoryLabel}</span>
-      </div>
-
-      <div className={bem(b, 'card-body')}>
-        <h3 className={bem(b, 'card-title')}>{title}</h3>
-        <p className={bem(b, 'card-summary')}>{summary}</p>
-
-        <div className={bem(b, 'card-footer')}>
-          <div className={bem(b, 'card-meta')}>
-            <span className={bem(b, 'card-date')}>{formatDate(article.publishedAt)}</span>
-            {article.viewsCount > 0 && (
-              <span className={bem(b, 'card-views')}>
-                👁 {article.viewsCount.toLocaleString('ru-RU')} {t('views')}
-              </span>
-            )}
-          </div>
-          <button type="button" className={bem(b, 'read-more-btn')}>
-            {t('read_more')}
-          </button>
+        <div className={bem(b, 'date-badge')}>
+          <img src="/app/images/news/calendar.svg" alt="" aria-hidden="true" />
+          <span>{formatBadgeDate(article.date)}</span>
+        </div>
+        <div className={bem(b, 'glass-bar')}>
+          <p className={bem(b, 'glass-text')}>
+            <span className={bem(b, 'title-regular')}>{title} </span>
+            {summary && <span className={bem(b, 'title-bold')}>{summary}</span>}
+          </p>
         </div>
       </div>
+
+      <button type="button" className={bem(b, 'footer')} onClick={handleCtaClick}>
+        <span className={bem(b, 'footer-pill')}>{t('cta_participate')}</span>
+      </button>
     </article>
   )
 }
 
-// ─── Skeleton ────────────────────────────────────────────────
-
-function NewsCardSkeleton() {
-  return (
-    <div className={bem(b, 'card-skeleton')}>
-      <div className="skeleton skeleton--variant-rect" style={{ height: 200, borderRadius: 0 }} />
-      <div className={bem(b, 'skeleton-body')}>
-        <div className="skeleton skeleton--variant-rect" style={{ width: 80, height: 22, borderRadius: 11 }} />
-        <div className="skeleton skeleton--variant-text" style={{ height: 18, width: '85%' }} />
-        <div className="skeleton skeleton--variant-text" style={{ height: 14, width: '70%' }} />
-        <div className="skeleton skeleton--variant-text" style={{ height: 14, width: '55%' }} />
-      </div>
-    </div>
-  )
-}
-
-// ─── Main Page ───────────────────────────────────────────────
-
 export function NewsPage() {
-  const { t } = useTranslation('news')
-
-  const { data, isLoading, error } = useQuery({
-    queryKey: ['news', 'list'],
-    queryFn: () => newsApi.getList().then((res) => res.data),
-    staleTime: 3 * 60 * 1000,
-  })
-
-  const articles: NewsArticle[] = data?.data ?? []
-
-  const handleArticleClick = (id: string) => {
-    // Detail navigation can be wired up when a NewsDetailPage exists
-    console.debug('Open article', id)
-  }
-
-  if (error) {
-    return (
-      <div className={b}>
-        <GlassHeader showBack title={t('title')} />
-        <div className={bem(b, 'content')}>
-          <EmptyState icon="📰" title={t('common:error.generic')} />
-        </div>
-      </div>
-    )
-  }
+  const { t } = useTranslation(['news', 'common'])
+  const { data: articles = [], isLoading, error } = useArticles()
 
   return (
     <div className={b}>
-      <GlassHeader showBack title={t('title')} />
+      <BackButton block={b} to="/" />
+
+      <h1 className={bem(b, 'title')}>{t('news:title_uppercase')}</h1>
 
       <div className={bem(b, 'content')}>
-        {isLoading ? (
-          Array.from({ length: 3 }).map((_, i) => <NewsCardSkeleton key={i} />)
+        {error ? (
+          <EmptyState icon="📰" title={t('common:error.generic')} />
+        ) : isLoading ? (
+          Array.from({ length: 2 }).map((_, i) => (
+            <div key={i} className={bem(b, 'card-skeleton')} />
+          ))
         ) : articles.length === 0 ? (
           <EmptyState icon="📰" title={t('common:empty.title')} />
         ) : (
           articles.map((article) => (
-            <NewsCard
-              key={article.id}
-              article={article}
-              onClick={() => handleArticleClick(article.id)}
-            />
+            <NewsCard key={article.id} article={article} />
           ))
         )}
       </div>

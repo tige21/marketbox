@@ -1,0 +1,183 @@
+.lesson-card {
+  &__wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    position: relative;
+  }
+
+  &__card {
+    position: relative;
+    width: 100%;
+    background: #1a1a1a;
+    border-radius: 20px 20px 0 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    @include glass-gradient-border(20px);
+  }
+
+  &__title {
+    flex-shrink: 0;
+    padding: 11px 72px 0 22px;
+    font-family: $font-gilroy;
+    font-weight: 800;
+    font-size: 20px;
+    color: #ffffff;
+    line-height: 21px;
+    margin: 0;
+    letter-spacing: 0.01em;
+    // Reserve two lines so a 1-line title doesn't let __thumb-wrap rise
+    // up under the heart button (heart is 42px tall + 11px top = 53px,
+    // matches 2 lines × 21px + 11px padding).
+    min-height: calc(21px * 2);
+  }
+
+  &__heart {
+    position: absolute;
+    top: 11px;
+    right: 14px;
+    width: 42px;
+    height: 42px;
+    border-radius: $radius-full;
+    background: rgba(255, 255, 255, 0.08);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    z-index: 2;
+    @include tap-feedback;
+
+    svg {
+      display: block;
+      width: 22px;
+      height: 20px;
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+  }
+
+  &__thumb-wrap {
+    position: relative;
+    width: calc(100% - 40px);
+    aspect-ratio: 16 / 9;
+    margin: 22px 20px 15px;
+    border-radius: 14px;
+    overflow: hidden;
+    background: transparent;
+  }
+
+  &__thumb {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    border-radius: 14px;
+  }
+
+  &__poster {
+    @include tap-feedback;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: #000;
+    padding: 0;
+    cursor: pointer;
+    overflow: hidden;
+    border-radius: 14px;
+    -webkit-tap-highlight-color: transparent;
+    display: block;
+
+    &:disabled { cursor: default; }
+  }
+
+  &__play {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    transition: transform 0.18s ease;
+  }
+
+  &__poster:active &__play {
+    transform: scale(0.92);
+  }
+
+  &__soon {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.85);
+    font-family: $font-gilroy;
+    font-weight: 700;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    pointer-events: none;
+  }
+
+  &__iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    border-radius: 14px;
+  }
+
+  &__materials {
+    background: #171717;
+    border-radius: 0 0 11px 11px;
+    height: 68px;
+    display: flex;
+    align-items: center;
+    padding: 0 14px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    -webkit-tap-highlight-color: transparent;
+    @include tap-feedback;
+  }
+
+  &__materials-bar {
+    background: #1e1e1e;
+    border-radius: 11px;
+    height: 32px;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    svg {
+      flex-shrink: 0;
+      display: block;
+    }
+
+    span {
+      font-family: $font-gilroy;
+      font-weight: 800;
+      font-size: 10.688px;
+      color: $color-white;
+      line-height: 1;
+      letter-spacing: 0.02em;
+    }
+  }
+}

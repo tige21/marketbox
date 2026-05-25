@@ -21,5 +21,26 @@
   "author": "Автор",
   "what_learn": "Что вы изучите",
   "requirements": "Требования",
-  "syllabus": "Программа курса"
+  "syllabus": "Программа курса",
+  "lesson_number": "Урок {{number}}",
+  "lesson_materials": "Материалы к уроку",
+  "lessons_coming_soon": "Курсы скоро появятся",
+  "lessons_load_error": "Не удалось загрузить уроки",
+  "title_uppercase": "КУРСЫ",
+  "chats_title": "ЧАТЫ",
+  "course_title": "КУРС",
+  "marketplaces": {
+    "ozon": "OZON",
+    "wildberries": "WILDBERRIES",
+    "uzum": "UZUM MARKET",
+    "dropshipping": "DROPSHIPPING",
+    "china": "БИЗНЕС С КИТАЕМ"
+  },
+  "chat_labels": {
+    "ozon": "OZON",
+    "wildberries": "Wildberries",
+    "uzum": "Uzum Market",
+    "dropshipping": "Dropshipping",
+    "china": "Бизнес с Китаем"
+  }
 }

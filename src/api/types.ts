@@ -1,3 +1,5 @@
+import type { Localized } from './locale'
+
 // ============================================================
 // Standard response wrappers
 // ============================================================
@@ -24,6 +26,383 @@ export interface ApiError {
 export interface PaginationParams {
   page?: number
   perPage?: number
+}
+
+// ============================================================
+// Raw backend entities (Localized text via pickLocale())
+// Shape comes from https://marketandbox.ru/api/docs
+// ============================================================
+
+export interface BackendDocumentation {
+  id: number
+  title: Localized
+  image: Localized
+  created_at: string
+  updated_at: string
+}
+
+export interface BackendCandidate {
+  id: number
+  name: Localized
+  surname: Localized
+  photo: Localized
+  age: number
+  address: Localized
+  ability: Localized
+  experience: Localized
+  preview_text: Localized
+  url: string
+  title_url: Localized
+  is_verify: 0 | 1 | boolean
+  created_at: string
+  updated_at: string
+}
+
+export interface BackendDocumentationCandidate extends BackendCandidate {
+  documentation_id: number
+}
+
+export interface BackendArticle {
+  id: number
+  title: Localized
+  image: Localized
+  preview_text: Localized
+  content: Localized
+  date: string
+  url: string
+  title_url: Localized
+  created_at: string
+  updated_at: string
+}
+
+export interface BackendCourse {
+  id: number
+  title: Localized
+  image: Localized
+  url: string | null
+  title_url: Localized | null
+  preview_text: Localized
+  description: Localized
+  /** Telegram chat link for this course (added May 2026). */
+  chat_url?: string | null
+}
+
+export interface BackendCargoTeamMember {
+  fio: Localized
+  position: Localized
+  experience: Localized | null
+  photo: Localized
+}
+
+export interface BackendCargo {
+  id: number
+  title: Localized
+  /** Brand/company name shown on the About card (e.g. "Wave Logistic"). */
+  company_name?: Localized | null
+  preview_text: Localized
+  image: Localized
+  description: Localized
+  team: BackendCargoTeamMember[]
+  phone: string | null
+  email: string | null
+  site: string | null
+  /** Telegram chat link for this cargo (added May 2026). */
+  chat_url?: string | null
+  /** Cargo type from backend enum: WHITE | COMPANY | FULFILLMENT. */
+  type?: string
+  /** Social network links shown on the white-cargo detail page. */
+  socials?: Array<{ type: string; url: string }>
+}
+
+export interface BackendLesson {
+  id: number
+  type: string
+  title: Localized
+  image: Localized | null
+  preview_text: Localized
+  description: Localized
+  morphable_type?: string
+  morphable_id?: number
+  // Backend will start sending one of these for the lesson player.
+  // `video_url` is preferred (e.g. https://kinescope.io/iUKdgKCmcXvGRbQdXPYBN9);
+  // `embed_html` is the raw <iframe …> snippet from Kinescope/YouTube.
+  video_url?: string | null
+  /** Poster/thumbnail image shown before video plays (added May 2026). */
+  video_preview?: string | null
+  embed_html?: string | null
+  duration?: string | null
+  // Legacy frontend shape; kept for back-compat.
+  materials?: Array<{ name: string; url: string; size?: string | null }>
+  // New canonical shape from Swagger — array of document URLs.
+  documents?: string[]
+}
+
+export interface BackendCargoInfo {
+  cargo: BackendCargo
+  lessons: BackendLesson[]
+  logistics: BackendCargoLogistic[]
+  fulfillment: BackendCargoLogistic[]
+}
+
+export interface BackendCourseLesson {
+  id: number
+  title: Localized
+  image: Localized | null
+  course_id?: number
+  module_id?: number
+  created_at?: string
+  updated_at?: string
+  preview_text?: Localized
+  description?: Localized
+  // Video player fields — backend will start sending these:
+  video_url?: string | null
+  embed_html?: string | null
+  duration?: string | null
+  // Legacy: prior `materials` array. New backend ships a flat `documents`
+  // array of URLs; LessonDetailPage maps them onto the same UI.
+  materials?: Array<{ name: string; url: string; size?: string | null }>
+  documents?: string[]
+}
+
+// Backend now intermediates between Course and Lesson with a Module
+// resource. Per Swagger:
+//   GET /courses/{course}/modules → Module[]
+//   GET /modules/{module}/lessons → Lesson[]
+export interface BackendModule {
+  id: number
+  course_id?: number
+  title: Localized
+  image: Localized | null
+  url?: string | null
+  title_url?: Localized | null
+  preview_text?: Localized
+  description?: Localized
+}
+
+export type CargoLogisticKind = 1 | 2 // 1 = logistics, 2 = fulfillment
+
+export interface BackendCargoLogistic {
+  id: number
+  title: Localized
+  image: Localized
+  type: CargoLogisticKind
+  cargo_id: number | null
+  url: string
+  title_url: Localized
+  preview_text: Localized
+  /** Full text for the in-app detail page (added May 2026). */
+  description: Localized | null
+  flags: string[]
+  /** Optional contact fields (admin may populate later). Detail page
+   * renders rows conditionally based on which are non-null. */
+  phone?: string | null
+  email?: string | null
+  website?: string | null
+  address?: string | null
+  created_at?: string
+  updated_at?: string
+}
+
+// ─── Events / News-like ─────────────────────────────────────
+// `/api/events` returns plain strings — the backend does not localize
+// this resource (verified live). Optional `created_at` / `updated_at`
+// because the swagger schema marks the whole shape as `nullable: true`
+// at the field level.
+
+export interface BackendEvent {
+  id: number
+  title: string
+  preview_text: string
+  /** Full text for the in-app detail page (added May 2026). */
+  description: string | null
+  image: string
+  date: string
+  type: string
+  url: string | null
+  title_url: string | null
+  created_at?: string
+  updated_at?: string
+}
+
+// ─── Sellers (wholesale) ────────────────────────────────────
+
+export interface BackendSeller {
+  id: number
+  title: Localized
+  image: Localized
+  address: Localized
+  url: string
+  title_url: Localized
+  created_at: string
+  updated_at: string
+}
+
+// ─── Jobs (Work + Candidate) ────────────────────────────────
+
+export interface BackendWork {
+  id: number
+  title: Localized
+  created_at: string
+  updated_at: string
+}
+
+export interface BackendWorkCandidate extends BackendCandidate {
+  work_id: number
+}
+
+// ─── Design services + design candidates ────────────────────
+
+export interface BackendDesignServiceInfo {
+  id: number
+  title: Localized
+  created_at: string
+  updated_at: string
+}
+
+export interface BackendDesignCandidate extends BackendCandidate {
+  design_service_id: number
+}
+
+// ─── China Guide (5 entity types) ───────────────────────────
+
+export interface BackendGuid {
+  id: number
+  title: Localized
+  preview_text: Localized
+  image: Localized
+  created_at: string
+  updated_at: string
+}
+
+interface BackendGuideBase {
+  id: number
+  title: Localized
+  title_short: Localized
+  address: Localized
+  image: Localized
+  description: Localized
+  guid_id: number | null
+  baidu_url: string | null
+  apple_map_url: string | null
+  /** Optional event/availability date set in admin (e.g. "2026-04-30"). */
+  date?: string | null
+  /** Optional external URL set in admin (booking page, website). */
+  url?: string | null
+  created_at: string
+  updated_at: string
+}
+
+export interface BackendMarket extends BackendGuideBase {}
+export interface BackendHotel extends BackendGuideBase {}
+export interface BackendRestaurant extends BackendGuideBase {
+  grade: number | string
+}
+
+export interface BackendTour {
+  id: number
+  title: Localized
+  address: Localized
+  image: Localized
+  preview_text: Localized
+  /** Full text for the in-app detail page (added May 2026). */
+  description: Localized | null
+  date: string
+  guid_id: number | null
+  url: string
+  title_url: Localized
+  created_at?: string
+  updated_at?: string
+}
+
+export interface BackendTranslator {
+  id: number
+  name: Localized
+  surname: Localized
+  photo: Localized
+  age: number
+  address: Localized
+  hometown: Localized
+  languages: Array<{ title: Localized }>
+  preview_text: Localized
+  about_me: Localized
+  can_help: Array<{ title: Localized }>
+  guid_id: number | null
+  url: string
+  title_url: Localized | null
+  is_verify: 0 | 1 | boolean
+  created_at?: string
+  updated_at?: string
+}
+
+// ─── Factories (3-level) ────────────────────────────────────
+
+export interface BackendFabric {
+  id: number
+  title: Localized
+  image: Localized
+  /** Telegram chat link for this country's fabric chat (added May 2026). */
+  chat_url?: string | null
+  /** Whether to show the WeChat block on companies in this fabric. */
+  wechat?: boolean
+  created_at?: string
+  updated_at?: string
+}
+
+export interface BackendFabricSection {
+  id: number
+  title: Localized
+  image: Localized
+  fabric_id: number
+  created_at: string
+  updated_at: string
+}
+
+export interface BackendCompany {
+  id: number
+  title: Localized
+  image: Localized
+  fabric_section_id: number
+  fabric_id?: number
+  url: string | null
+  title_url: Localized | null
+  preview_description: Localized
+  /** Full text for the in-app detail page (added May 2026). */
+  description: Localized | null
+  /** WeChat QR-code image URL (null if not uploaded by backend yet). */
+  qr_code: Localized | string | null
+  /** Optional contact fields (may be added by admin later). The detail
+   * page renders rows conditionally based on which of these are non-null. */
+  phone?: string | null
+  email?: string | null
+  website?: string | null
+  address?: string | null
+  created_at?: string
+  updated_at?: string
+}
+
+// ─── Menu (not used for home categories — data mismatched) ──
+
+export type MenuType =
+  | 'course'
+  | 'fabric'
+  | 'cargo'
+  | 'seller'
+  | 'guid'
+  | 'work'
+  | 'design'
+  | 'documentation'
+  | 'exchange'
+  | 'event'
+  | 'article'
+
+export interface BackendMenuInfo {
+  id: number
+  title: Localized
+  preview_text: Localized
+  preview_image: Localized
+  type: MenuType | string
+  created_at?: string
+  updated_at?: string
 }
 
 // ============================================================
@@ -71,6 +450,7 @@ export interface Category {
   isPremium: boolean
   isActive: boolean
   order: number
+  titleSize?: 'lg' | 'md' | 'sm'
 }
 
 // ============================================================
@@ -220,6 +600,13 @@ export interface ChinaGuideItem {
   aboutMe?: string
   canHelp?: string[]
   isVerified?: boolean
+  // Market-specific deep links for route-building
+  baiduUrl?: string
+  appleUrl?: string
+  /** Optional secondary-line short description shown on cards (city, tagline, etc.). */
+  shortDesc?: string
+  /** External URL (tours, translators, etc.) to open on card tap. */
+  externalUrl?: string
 }
 
 // ============================================================
@@ -227,6 +614,7 @@ export interface ChinaGuideItem {
 // ============================================================
 
 export type JobType = 'full-time' | 'part-time' | 'remote' | 'freelance'
+export type JobMarketplace = 'ozon' | 'wildberries' | 'uzum'
 
 export interface Job {
   id: string
@@ -249,6 +637,14 @@ export interface Job {
   isVerified: boolean
   createdAt: string
   expiresAt?: string
+  // Candidate-profile fields (Figma 1048:13050 — "Работа" / manager cards)
+  name?: string
+  age?: number
+  city?: string
+  specialization?: string
+  experience?: string
+  photoUrl?: string
+  marketplace?: JobMarketplace
 }
 
 // ============================================================
@@ -326,7 +722,7 @@ export interface ExchangeRatesResponse {
 // NOTE: Named MarketboxEvent to avoid conflict with the DOM built-in Event type
 // ============================================================
 
-export type EventType = 'exhibition' | 'conference' | 'webinar' | 'meetup'
+export type EventType = 'exhibition' | 'event' | 'conference' | 'webinar' | 'meetup'
 
 export interface MarketboxEvent {
   id: string
@@ -347,6 +743,10 @@ export interface MarketboxEvent {
   registrationUrl?: string
   isPremium: boolean
   isFeatured: boolean
+  /** Optional call-to-action label shown on the card footer pill. */
+  ctaText?: string
+  /** Optional external URL opened when the CTA pill is tapped. */
+  ctaUrl?: string
 }
 
 // ============================================================
@@ -369,12 +769,83 @@ export interface NewsArticle {
   viewsCount: number
   publishedAt: string
   isFeatured: boolean
+  /** Optional call-to-action label shown on the card footer pill. Defaults to "УЧАСТВОВАТЬ". */
+  ctaText?: string
+  /** Optional external URL opened when the CTA pill is tapped. */
+  ctaUrl?: string
+  /** Optional short date label shown in the purple badge ("15 МАЯ"). */
+  badgeDate?: string
+  /** Optional highlighted vendor phrase (e.g. "UZUM MARKET"). */
+  highlight?: string
+  /** Optional Uzbek variant of `highlight`. */
+  highlightUz?: string
 }
 
 // ============================================================
 // User Profile
 // ============================================================
 
+// Raw shape returned by the real `/api/me` endpoint. Shape matches the
+// Swagger `User` schema: only `telegram_*` snake_case fields are
+// guaranteed; phone/language/subscription are not yet provided.
+// Real backend transaction (May 2026). Currently only minimal shape;
+// `body` is server-side description (likely JSON or plain text).
+export interface BackendTransaction {
+  id: number
+  user_id?: number
+  body?: string
+}
+
+export interface BackendReferralStatus {
+  id: number
+  title: string
+  /** Earnings percentage for this status tier (5/10/15). */
+  percentage: number
+}
+
+export interface BackendUser {
+  id: number
+  name?: string
+  /** User-editable surname. Set via PUT /user?surname=... */
+  surname?: string
+  email?: string
+  telegram_id?: number
+  telegram_username?: string
+  telegram_first_name?: string
+  telegram_last_name?: string
+  telegram_photo_url?: string
+  /** User's own referral code — share this to invite. */
+  referral_code?: string
+  /** Untouched balance available for withdrawal. */
+  balance?: number
+  /** Total invited friends. */
+  referrals_count?: number
+  /** Of those, how many are "active" (paid plan, etc.). */
+  referrals_count_active?: number
+  /** Sum currently in pending state. */
+  pending?: number
+  /** Sum that ended up rejected. */
+  rejected?: number
+  /** Current referral tier (basic/partner/top). */
+  referral_status?: BackendReferralStatus
+}
+
+export interface BackendWithdrawalStatus {
+  code: 'approved' | 'pending' | 'rejected' | string
+  title: string
+}
+
+export interface BackendWithdrawal {
+  id: number
+  amount: number
+  status: 'approved' | 'pending' | 'rejected' | string
+  created_at?: string
+  updated_at?: string
+}
+
+// UI-facing camelCase shape consumed by ProfileMain / ProfileEditPage.
+// Stays superset of the backend response: optional fields are tolerated
+// on screens that don't need them yet.
 export interface UserProfile {
   id: number
   telegramId: number
@@ -383,8 +854,17 @@ export interface UserProfile {
   username?: string
   photoUrl?: string
   phone?: string
+  email?: string
   languageCode: 'ru' | 'uz'
   subscription: Subscription
+  /** Финансы и рефералка (приходят из /api/user). */
+  referralCode?: string
+  balance?: number
+  referralsCount?: number
+  referralsCountActive?: number
+  pendingAmount?: number
+  rejectedAmount?: number
+  referralStatus?: BackendReferralStatus
   createdAt: string
 }
 

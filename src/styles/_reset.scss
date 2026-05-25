@@ -50,6 +50,17 @@ input, textarea, select {
   color: inherit;
 }
 
+// Prevent iOS Safari / Telegram WebApp on iOS from auto-zooming the page
+// when an input is focused. The browser zoom-in is triggered when an input
+// renders text smaller than 16px logical. Force a 16px floor on all
+// inputs/textareas — features can still visually shrink if needed via
+// component-specific SCSS.
+input,
+textarea,
+select {
+  font-size: max(16px, 1em);
+}
+
 #root {
   min-height: 100dvh;
   display: flex;

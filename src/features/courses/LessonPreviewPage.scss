@@ -1,0 +1,340 @@
+.lesson-preview {
+  width: 100%;
+  min-height: 100%;
+  background: $color-bg-primary;
+
+  // Lesson titles can be long ("Официальный импорт", "Ценообразование в
+  // белой доставке"…) — at 18px uppercase they get truncated to "ИМПО…".
+  // Reduce header font-size only on this page.
+  &__header .glass-header__title {
+    font-size: 14px;
+    letter-spacing: 0.02em;
+  }
+
+  &__unavailable {
+    @include flex-center;
+    flex-direction: column;
+    gap: $space-4;
+    text-align: center;
+    padding: $space-6 $space-5 calc(#{$space-8} + 90px);
+    min-height: calc(100dvh - 120px);
+  }
+
+  &__unavailable-icon {
+    font-size: 64px;
+    line-height: 1;
+    opacity: 0.85;
+  }
+
+  &__unavailable-title {
+    margin: 0;
+    font-family: $font-travels;
+    font-weight: 800;
+    font-size: 22px;
+    line-height: 1.1;
+    color: $color-white;
+    text-transform: uppercase;
+  }
+
+  &__unavailable-text {
+    margin: 0;
+    font-family: $font-gilroy;
+    font-weight: $fw-medium;
+    font-size: 14px;
+    line-height: 1.4;
+    color: $color-white-60;
+    max-width: 280px;
+  }
+
+  &__unavailable-btn {
+    margin-top: $space-2;
+    width: 100%;
+    max-width: 280px;
+    height: 50px;
+    background: $color-premium;
+    color: $color-white;
+    border: none;
+    border-radius: 14px;
+    font-family: $font-gilroy;
+    font-weight: 800;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.15s ease, filter 0.15s ease;
+
+    &:hover { filter: brightness(1.05); }
+    &:active { transform: scale(0.98); }
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: $space-4;
+    padding: $space-4 $space-4 calc(#{$space-8} + 90px);
+  }
+
+  &__player {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    @include glass-gradient-border(20px);
+
+    &::before { z-index: 2; }
+  }
+
+  &__iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  &__poster {
+    @include tap-feedback;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: #000;
+    padding: 0;
+    cursor: pointer;
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+    display: block;
+  }
+
+  &__poster-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  &__poster-shade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 0.15) 60%,
+      rgba(0, 0, 0, 0.4) 100%
+    );
+  }
+
+  &__poster-play {
+    @include flex-center;
+    position: absolute;
+    inset: 0;
+    transition: transform 0.18s ease;
+  }
+
+  &__poster:active &__poster-play {
+    transform: scale(0.92);
+  }
+
+  &__poster-soon {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.85);
+    font-family: $font-gilroy;
+    font-weight: 700;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    pointer-events: none;
+  }
+
+  &__player-fallback {
+    @include flex-center;
+    position: absolute;
+    inset: 0;
+    color: $color-white-60;
+    font-family: $font-gilroy;
+    font-size: $text-base;
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+  }
+
+  &__badge {
+    font-family: $font-gilroy;
+    font-weight: $fw-bold;
+    font-size: 11px;
+    line-height: 1;
+    color: $color-accent;
+    background: rgba(172, 157, 255, 0.16);
+    border-radius: 999px;
+    padding: 6px 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  &__duration {
+    font-family: $font-gilroy;
+    font-weight: $fw-medium;
+    font-size: 12px;
+    color: $color-white-60;
+  }
+
+  &__title-row {
+    display: flex;
+    align-items: flex-start;
+    gap: $space-3;
+  }
+
+  &__title {
+    flex: 1;
+    margin: 0;
+    font-family: $font-gilroy;
+    font-weight: $fw-bold;
+    font-size: 18px;
+    line-height: 1.2;
+    color: $color-white;
+  }
+
+  &__like {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.06);
+    color: $color-white-60;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.15s ease, background 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+
+    &:active { transform: scale(0.94); }
+
+    &--active {
+      background: rgba(247, 251, 75, 0.12);
+      color: #F7FB4B;
+    }
+  }
+
+  &__description {
+    margin: 0;
+    font-family: $font-gilroy;
+    font-weight: $fw-medium;
+    font-size: 13px;
+    line-height: 1.5;
+    color: $color-white-80;
+
+    &--muted {
+      color: $color-white-60;
+      font-style: italic;
+    }
+  }
+
+  &__materials-empty {
+    margin: 0;
+    font-family: $font-gilroy;
+    font-weight: $fw-medium;
+    font-size: 12px;
+    line-height: 1.4;
+    color: $color-white-60;
+    background: #171717;
+    border-radius: 12px;
+    padding: 14px;
+    @include glass-gradient-border(12px);
+
+    &::before { z-index: 2; }
+  }
+
+  &__materials {
+    display: flex;
+    flex-direction: column;
+    gap: $space-2;
+    margin-top: $space-2;
+  }
+
+  &__materials-title {
+    margin: 0 0 $space-1;
+    font-family: $font-gilroy;
+    font-weight: $fw-bold;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: $color-white-60;
+    text-transform: uppercase;
+  }
+
+  &__materials-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__material {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    background: #171717;
+    border: none;
+    border-radius: 14px;
+    padding: 12px 14px;
+    color: $color-white;
+    cursor: pointer;
+    text-align: left;
+    -webkit-tap-highlight-color: transparent;
+    @include glass-gradient-border(14px);
+
+    &::before { z-index: 2; }
+    &:active { transform: scale(0.99); }
+  }
+
+  &__material-icon {
+    @include flex-center;
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    background: rgba(172, 157, 255, 0.18);
+    color: $color-accent;
+    flex-shrink: 0;
+  }
+
+  &__material-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  &__material-name {
+    font-family: $font-gilroy;
+    font-weight: $fw-bold;
+    font-size: 13px;
+    color: $color-white;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__material-size {
+    font-family: $font-gilroy;
+    font-weight: $fw-medium;
+    font-size: 11px;
+    color: $color-white-60;
+  }
+}

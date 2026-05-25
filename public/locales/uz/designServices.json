@@ -1,0 +1,20 @@
+{
+  "tabs": {
+    "webdesign": "Veb Dizayn",
+    "infograph": "Infograf",
+    "photographer": "Fotograf"
+  },
+  "roles": {
+    "webdesign": "Veb Dizayn",
+    "infograph": "Karta Dizayni",
+    "photographer": "Fotograf"
+  },
+  "aria": {
+    "verified": "Tasdiqlangan",
+    "specialization": "Mutaxassislik",
+    "contact": "Kontakt olish — {{name}}"
+  },
+  "age_suffix": "yosh",
+  "experience_label": "Tajriba {{years}}",
+  "contact_btn": "Kontakt Olish"
+}

@@ -1,30 +1,87 @@
+// ============================================================
+//  ChinaGuidePage — /china-guide (Figma 1048:11918)
+// ============================================================
+
 .china-guide-page {
-  min-height: 100dvh;
+  position: relative;
+  width: 100%;
+  min-height: 100%;
   background: $color-bg-primary;
+  padding: 0 20px 120px;
+
+  // Back button — top:52 left:25
+  &__back {
+    position: absolute;
+    top: 16px;
+    left: 20px;
+    width: 48px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    border-radius: 14px;
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform $duration-fast $easing-standard;
+    z-index: 2;
+    @include glass-gradient-border(14px);
+    @include focus-ring;
+
+    &::before { z-index: 2; }
+    &:active { transform: scale(0.94); }
+
+    img {
+      display: block;
+      width: 48px;
+      height: 28px;
+      pointer-events: none;
+    }
+  }
+
+  // Title — "ГИД" Gilroy Black 33px uppercase centered
+  &__title {
+    position: relative;
+    margin: 0 0 30px;
+    padding-top: 19px;
+    text-align: center;
+    font-family: $font-travels;
+    font-weight: 800;
+    font-size: 22px;
+    line-height: 1;
+    color: $color-white;
+    text-transform: uppercase;
+    letter-spacing: 0;
+  }
 
   &__content {
-    padding: $space-4;
     display: flex;
     flex-direction: column;
-    gap: $space-4;
-    padding-bottom: calc($space-4 + 70px);
+    gap: 25px;
   }
 
   // ── Category card ─────────────────────────────────────────────
-
   &__card {
     @include tap-feedback;
-    display: block;
     position: relative;
+    display: block;
     width: 100%;
     height: 171px;
-    border-radius: $radius-card;
-    border: 1px solid rgba(255, 255, 255, 0.6);
+    background: #171717;
+    border-radius: 20px;
     overflow: hidden;
     cursor: pointer;
-    background: transparent;
     padding: 0;
-    flex-shrink: 0;
+    border: none;
+    @include glass-gradient-border(20px);
+
+    &::before { z-index: 2; }
+
+    &--disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
   }
 
   &__card-image {
@@ -39,51 +96,41 @@
   &__card-bar {
     position: absolute;
     bottom: 9px;
-    left: 9px;
-    right: 9px;
+    left: 9.5px;
+    right: 9.5px;
     min-height: 45px;
-    border-radius: $radius-card;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    background: rgba(0, 0, 0, 0.67);
+    border-radius: 20px;
+    background: rgba(0, 0, 0, 0.58);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
     display: flex;
     align-items: center;
-    padding: 8px 12px;
+    padding: 8px 14px;
     gap: 10px;
-  }
-
-  &__card-bar-left {
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
+    @include glass-gradient-border(20px);
   }
 
   &__card-name {
+    flex-shrink: 0;
     font-family: $font-gilroy;
-    font-size: 14px;
     font-weight: $fw-bold;
-    color: $color-white;
+    font-size: 14px;
     line-height: 1.2;
+    color: $color-white;
+    text-align: left;
     white-space: nowrap;
-  }
-
-  &__card-bar-right {
-    flex: 1;
-    min-width: 0;
-    display: flex;
-    align-items: center;
-    gap: 8px;
   }
 
   &__card-desc {
     flex: 1;
     min-width: 0;
     font-family: $font-gilroy;
-    font-size: 10px;
-    font-weight: $fw-regular;
+    font-weight: $fw-medium;
+    font-size: 8px;
+    line-height: 1.3;
     color: $color-white;
-    line-height: 1.4;
-    margin: 0;
+    opacity: 0.85;
+    text-align: left;
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
@@ -92,8 +139,12 @@
 
   &__card-chevron {
     flex-shrink: 0;
-    color: $color-white;
-    display: flex;
+    margin-left: auto;
+    display: inline-flex;
     align-items: center;
+    justify-content: center;
+    width: 12px;
+    height: 14px;
+    pointer-events: none;
   }
 }

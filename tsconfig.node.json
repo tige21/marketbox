@@ -1,12 +1,18 @@
 {
   "compilerOptions": {
     "composite": true,
+    // Composite projects referenced by another tsconfig must emit (TS6310),
+    // but Vite reads vite.config.ts directly — so send the throwaway .js/.d.ts
+    // into node_modules instead of polluting the repo root.
+    "outDir": "./node_modules/.tmp/tsnode",
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
     "skipLibCheck": true,
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
     "strict": true,
     "types": ["node"]
   },
-  "include": ["vite.config.ts"]
+  "include": ["vite.config.ts", "package.json"]
 }

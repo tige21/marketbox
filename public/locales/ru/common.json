@@ -14,10 +14,11 @@
     "no_connection": "Нет соединения"
   },
   "premium": {
-    "title": "Только для Premium",
-    "description": "Оформите подписку для доступа к этому разделу",
-    "upgrade": "Оформить Premium",
-    "cancel": "Закрыть"
+    "title": "Подписка не активна",
+    "description": "Оформите подписку, чтобы получить доступ к приложению",
+    "upgrade": "Перейти к оплате",
+    "refresh": "Я оплатил",
+    "refresh_checking": "Проверяем…"
   },
   "actions": {
     "back": "Назад",
@@ -25,11 +26,22 @@
     "save": "Сохранить",
     "cancel": "Отмена",
     "confirm": "Подтвердить",
-    "search": "Поиск"
+    "search": "Поиск",
+    "favorite": "В избранное"
   },
   "empty": {
     "title": "Ничего не найдено",
     "description": "Попробуйте изменить параметры поиска"
+  },
+  "auth": {
+    "open_in_tg_title": "Откройте в Telegram",
+    "open_in_tg_body": "Это приложение работает только внутри Telegram",
+    "open_in_tg_cta": "Открыть в Telegram",
+    "error_title": "Ошибка авторизации",
+    "error_body": "Перезапустите приложение в Telegram",
+    "retry": "Повторить",
+    "continue_guest": "Продолжить без авторизации",
+    "copy_debug": "Скопировать"
   },
   "offline": "Нет подключения к интернету"
 }

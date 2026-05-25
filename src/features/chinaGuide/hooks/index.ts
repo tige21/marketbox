@@ -1,1 +1,1 @@
-export { useChinaGuideList, useChinaGuideDetail } from './useChinaGuide'
+export { useChinaGuideList, useChinaGuideDetail, useGuids } from './useChinaGuide'

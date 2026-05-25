@@ -1,35 +1,76 @@
 .quick-actions {
   display: flex;
-  gap: $space-3;
-  padding: 0 $space-4;
+  gap: 8px;
+  width: 100%;
+  align-items: flex-start;
+
+  &__cell {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+  }
 
   &__item {
-    @include glass-surface;
-    @include tap-feedback;
-    flex: 1;
+    position: relative;
+    width: 100%;
+    height: 75px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: $space-2;
-    height: 75px;
+    padding: 0 8px;
+    border-radius: 20px;
     cursor: pointer;
-    border-radius: $radius-card;
-    background: none;
-    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform $duration-fast $easing-standard;
+    @include glass-gradient-border(20px);
+    @include focus-ring;
+
+    &--variant-glass {
+      background: rgba(23, 23, 23, 0.5);
+      backdrop-filter: blur(7.5px);
+      -webkit-backdrop-filter: blur(7.5px);
+    }
+
+    &--variant-solid {
+      background: rgba(23, 23, 23, 0.5);
+      box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    }
+
+    &:active { transform: scale(0.96); }
+  }
+
+  &__icon {
+    width: 56px;
+    height: 56px;
+    object-fit: contain;
   }
 
   &__emoji {
-    font-size: 28px;
+    display: block;
+    font-family: $font-bebas;
+    font-weight: 400;
+    font-size: 34px;
     line-height: 1;
+    color: $color-white;
+    text-align: center;
   }
 
   &__label {
+    display: block;
     font-family: $font-bebas;
-    font-size: 11px;
+    font-weight: 400;
+    font-size: 10px;
+    line-height: 1.16;
     color: $color-white;
     text-align: center;
-    letter-spacing: 0.01em;
-    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }

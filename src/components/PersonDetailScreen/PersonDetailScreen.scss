@@ -1,0 +1,176 @@
+// PersonDetailScreen — shared layout for any specialist:
+// translators, jobs (Ozon/WB/Uzum managers), design candidates,
+// documentation specialists (accountants, lawyers, brokers, etc).
+// Matches designer screenshot (square photo with purple glow + rows
+// with icons + "Связаться" gradient button + address row).
+
+.person-detail {
+  width: 100%;
+  min-height: 100%;
+  background: $color-bg-primary;
+  padding: 0 16px calc(24px + 90px);
+  position: relative;
+
+  &__back {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    width: 48px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    overflow: hidden;
+    z-index: 2;
+    @include glass-gradient-border(14px);
+
+    &::before { z-index: 2; }
+    &:active { transform: scale(0.94); }
+
+    img {
+      display: block;
+      width: 48px;
+      height: 28px;
+      pointer-events: none;
+    }
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding-top: 60px;
+  }
+
+  &__header {
+    text-align: center;
+    margin-bottom: 4px;
+  }
+
+  &__category {
+    margin: 0;
+    font-family: $font-travels;
+    font-weight: 800;
+    font-size: 26px;
+    line-height: 1.1;
+    color: $color-white;
+  }
+
+  &__name {
+    margin: 6px 0 0;
+    font-family: $font-gilroy;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 1.2;
+    color: rgba(250, 250, 250, 0.85);
+  }
+
+  // Square photo — no outer frame/glow (per redesign).
+  &__photo-wrap {
+    align-self: center;
+    width: 80%;
+    max-width: 320px;
+    aspect-ratio: 1 / 1;
+    border-radius: 22px;
+    overflow: hidden;
+  }
+
+  &__photo,
+  &__photo-placeholder {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 22px;
+    background: #0d0d11;
+    display: block;
+  }
+
+  &__rows {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 6px;
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 14px 18px;
+    min-height: 56px;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 16px;
+    @include glass-gradient-border(16px);
+
+    &::before { z-index: 2; }
+
+    &--address {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+    }
+  }
+
+  &__row-head {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+
+  &__row-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    color: $color-premium;
+    flex-shrink: 0;
+  }
+
+  &__row-label {
+    font-family: $font-gilroy;
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 1;
+    color: $color-white;
+  }
+
+  &__row-value {
+    font-family: $font-gilroy;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 1.4;
+    color: rgba(250, 250, 250, 0.6);
+    text-align: right;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+
+    .person-detail__row--address & {
+      text-align: left;
+      padding-left: 34px;
+    }
+  }
+
+  &__cta {
+    @include tap-feedback;
+    margin-top: 4px;
+    width: 100%;
+    height: 56px;
+    background: linear-gradient(135deg, #6b5bd6 0%, #a08bff 100%);
+    border: none;
+    border-radius: 16px;
+    font-family: $font-gilroy;
+    font-weight: 700;
+    font-size: 17px;
+    color: $color-white;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    box-shadow: 0 6px 24px rgba(107, 91, 214, 0.4);
+  }
+}

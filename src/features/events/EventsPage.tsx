@@ -1,184 +1,206 @@
-import { useQuery } from '@tanstack/react-query'
+import { Routes, Route, useNavigate, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { GlassHeader } from '@/components/GlassHeader'
 import { EmptyState } from '@/components/EmptyState'
-import { eventsApi } from '@/api/endpoints'
-import type { MarketboxEvent } from '@/api/types'
+import { BackButton } from '@/components/BackButton'
+import { BackendImage } from '@/components/BackendImage'
+import { Skeleton } from '@/components/Skeleton'
+import type { BackendEvent } from '@/api/types'
+import { pickLocale, pickLocaleStr, useLang } from '@/api/locale'
 import { bem } from '@/utils/cn'
 import { useHaptic } from '@/hooks/useHaptic'
+import { formatBadgeDate } from '@/utils'
+import { useEvents, useEvent } from './hooks'
 import './EventsPage.scss'
 
 const b = 'events-page'
 
-// ─── Helpers ────────────────────────────────────────────────
-
-function formatDateRange(start: string, end: string): string {
-  try {
-    const startDate = new Date(start)
-    const endDate = new Date(end)
-    const opts: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'short' }
-    const s = startDate.toLocaleDateString('ru-RU', opts)
-    const e = endDate.toLocaleDateString('ru-RU', opts)
-    return s === e ? s : `${s} – ${e}`
-  } catch {
-    return start
-  }
-}
-
-function formatPrice(price: number, currency: string, freeLabel: string): string {
-  if (price === 0) return freeLabel
-  return price.toLocaleString('ru-RU') + ' ' + currency
-}
-
-// ─── Event Card ──────────────────────────────────────────────
-
 interface EventCardProps {
-  event: MarketboxEvent
-  onClick: () => void
+  event: BackendEvent
 }
 
-function EventCard({ event, onClick }: EventCardProps) {
-  const { t, i18n } = useTranslation('events')
+function EventCard({ event }: EventCardProps) {
+  const { t } = useTranslation(['events', 'common'])
+  const lang = useLang()
   const haptic = useHaptic()
-  const isUz = i18n.language === 'uz'
+  const navigate = useNavigate()
+  const title = pickLocaleStr(event.title, lang)
+  const image = pickLocale(event.image, lang)
+  const typeLabel = (pickLocaleStr(event.type, lang) || 'EVENT').toUpperCase()
+  const isWide = typeLabel !== 'EXHIBITION' && typeLabel !== 'ВЫСТАВКА'
+  const dateLabel = formatBadgeDate(event.date)
 
-  const title = isUz && event.titleUz ? event.titleUz : event.title
-  const description = isUz && event.descriptionUz ? event.descriptionUz : event.description
-  const typeLabel = t(`type.${event.type}`, { defaultValue: event.type })
-  const dateLabel = formatDateRange(event.startDate, event.endDate)
-  const priceLabel = formatPrice(event.price, event.currency, t('free'))
-
-  const handleClick = () => {
+  const handleCardClick = () => {
     haptic.tap()
-    onClick()
+    navigate(`/events/${event.id}`)
   }
 
   return (
-    <article
-      className={bem(b, 'card', { featured: event.isFeatured, premium: event.isPremium })}
-      onClick={handleClick}
-      role="button"
-      tabIndex={0}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault()
-          handleClick()
-        }
-      }}
-      aria-label={title}
-    >
-      <div className={bem(b, 'card-image-wrap')}>
-        <img
-          src={event.imageUrl}
-          alt={title}
+    <article className={bem(b, 'item')}>
+      <div
+        className={bem(b, 'card')}
+        onClick={handleCardClick}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault()
+            handleCardClick()
+          }
+        }}
+        aria-label={title}
+      >
+        <BackendImage
+          src={image}
+          alt=""
           className={bem(b, 'card-image')}
-          loading="lazy"
-          decoding="async"
         />
 
-        <div className={bem(b, 'card-badges')}>
-          <span className={bem(b, 'type-badge')}>{typeLabel}</span>
-          {event.isOnline && (
-            <span className={bem(b, 'online-badge')}>{t('online')}</span>
-          )}
-        </div>
-
-        <span className={bem(b, 'date-badge')}>
-          📅 {dateLabel}
-        </span>
-      </div>
-
-      <div className={bem(b, 'card-body')}>
-        <h3 className={bem(b, 'card-title')}>{title}</h3>
-
-        <div className={bem(b, 'card-location')}>
-          <span aria-hidden="true">📍</span>
-          <span>{event.location}</span>
-        </div>
-
-        <p className={bem(b, 'card-description')}>{description}</p>
-
-        <div className={bem(b, 'card-footer')}>
-          <span className={bem(b, 'card-price', { free: event.price === 0 })}>
-            {priceLabel}
-          </span>
-          <button type="button" className={bem(b, 'read-more-btn')}>
-            {t('read_more')}
-          </button>
+        <div className={bem(b, 'glass-bar')}>
+          <div className={bem(b, 'glass-meta')}>
+            <span className={bem(b, 'type-badge', { wide: isWide })}>{typeLabel}</span>
+            <span className={bem(b, 'date-badge')}>
+              <img src="/app/images/news/calendar.svg" alt="" aria-hidden="true" />
+              <span>{dateLabel}</span>
+            </span>
+          </div>
+          <p className={bem(b, 'glass-text')}>{title}</p>
         </div>
       </div>
+
+      <button
+        type="button"
+        className={bem(b, 'details-btn')}
+        onClick={(e) => { e.stopPropagation(); handleCardClick() }}
+      >
+        {t('common:actions.details', { defaultValue: 'Подробнее' })}
+      </button>
     </article>
   )
 }
 
-// ─── Skeleton ────────────────────────────────────────────────
+function EventsList() {
+  const { t } = useTranslation(['events', 'common'])
+  const { data: events = [], isLoading, error } = useEvents()
 
-function EventCardSkeleton() {
   return (
-    <div className={bem(b, 'card-skeleton')}>
-      <div className="skeleton skeleton--variant-rect" style={{ height: 200, borderRadius: 0 }} />
-      <div className={bem(b, 'skeleton-body')}>
-        <div style={{ display: 'flex', gap: 8 }}>
-          <div className="skeleton skeleton--variant-rect" style={{ width: 72, height: 22, borderRadius: 11 }} />
-          <div className="skeleton skeleton--variant-rect" style={{ width: 64, height: 22, borderRadius: 11 }} />
-        </div>
-        <div className="skeleton skeleton--variant-text" style={{ height: 18, width: '80%' }} />
-        <div className="skeleton skeleton--variant-text" style={{ height: 14, width: '50%' }} />
-        <div className="skeleton skeleton--variant-text" style={{ height: 14, width: '90%' }} />
-        <div className="skeleton skeleton--variant-text" style={{ height: 14, width: '70%' }} />
+    <div className={b}>
+      <BackButton block={b} to="/" />
+
+      <h1 className={bem(b, 'title')}>
+        <span className={bem(b, 'title-line', { primary: true })}>{t('events:title_line_1')}</span>
+        <span className={bem(b, 'title-line', { secondary: true })}>{t('events:title_line_2')}</span>
+      </h1>
+
+      <div className={bem(b, 'content')}>
+        {error ? (
+          <EmptyState icon="📅" title={t('common:error.generic')} />
+        ) : isLoading ? (
+          Array.from({ length: 2 }).map((_, i) => (
+            <div key={i} className={bem(b, 'card-skeleton')} />
+          ))
+        ) : events.length === 0 ? (
+          <EmptyState icon="📅" title={t('common:empty.title')} />
+        ) : (
+          events.map((event) => (
+            <EventCard key={event.id} event={event} />
+          ))
+        )}
       </div>
     </div>
   )
 }
 
-// ─── Main Page ───────────────────────────────────────────────
+const bd = 'event-detail'
 
-export function EventsPage() {
-  const { t } = useTranslation('events')
+function EventDetail() {
+  const { t } = useTranslation(['events', 'common'])
+  const lang = useLang()
+  const haptic = useHaptic()
+  const { id } = useParams<{ id: string }>()
+  const numId = id ? Number(id) : undefined
+  const validId = Number.isFinite(numId) && numId! > 0 ? numId : undefined
+  const { data: event, isLoading, error } = useEvent(validId)
 
-  const { data, isLoading, error } = useQuery({
-    queryKey: ['events', 'list'],
-    queryFn: () => eventsApi.getList().then((res) => res.data),
-    staleTime: 5 * 60 * 1000,
-  })
+  const title = event ? pickLocaleStr(event.title, lang) : ''
+  const description = event
+    ? pickLocaleStr(event.description ?? '', lang) ||
+      pickLocaleStr(event.preview_text, lang)
+    : ''
+  const image = event ? pickLocale(event.image, lang) : null
+  const ctaLabel = event ? pickLocaleStr(event.title_url, lang) : ''
+  const ctaUrl = event?.url ?? null
+  const dateLabel = event ? formatBadgeDate(event.date) : ''
 
-  const events: MarketboxEvent[] = data?.data ?? []
-
-  const handleEventClick = (id: string) => {
-    // Detail navigation can be wired up when an EventDetailPage exists
-    console.debug('Open event', id)
+  const handleCta = () => {
+    if (!ctaUrl) return
+    haptic.tap()
+    window.open(ctaUrl, '_blank', 'noopener,noreferrer')
   }
 
   if (error) {
     return (
-      <div className={b}>
-        <GlassHeader showBack title={t('title')} />
-        <div className={bem(b, 'content')}>
-          <EmptyState icon="🗓️" title={t('common:error.generic')} />
-        </div>
+      <div className={bd}>
+        <BackButton block={bd} to="/events" />
+        <EmptyState icon="😞" title={t('common:error.generic')} />
       </div>
     )
   }
 
   return (
-    <div className={b}>
-      <GlassHeader showBack title={t('title')} />
+    <div className={bd}>
+      <BackButton block={bd} to="/events" />
 
-      <div className={bem(b, 'content')}>
-        {isLoading ? (
-          Array.from({ length: 3 }).map((_, i) => <EventCardSkeleton key={i} />)
-        ) : events.length === 0 ? (
-          <EmptyState icon="🗓️" title={t('common:empty.title')} />
+      <div className={bem(bd, 'body')}>
+        {isLoading || !event ? (
+          <>
+            <Skeleton variant="rect" height={240} borderRadius={20} />
+            <Skeleton variant="rect" height={28} width="60%" borderRadius={6} />
+            <Skeleton variant="rect" height={120} borderRadius={12} />
+          </>
         ) : (
-          events.map((event) => (
-            <EventCard
-              key={event.id}
-              event={event}
-              onClick={() => handleEventClick(event.id)}
-            />
-          ))
+          <>
+            {image && (
+              <BackendImage
+                src={image}
+                alt={title}
+                className={bem(bd, 'image')}
+              />
+            )}
+
+            {dateLabel && (
+              <span className={bem(bd, 'date')}>
+                <img src="/app/images/news/calendar.svg" alt="" aria-hidden="true" />
+                <span>{dateLabel}</span>
+              </span>
+            )}
+
+            <h1 className={bem(bd, 'title')}>{title}</h1>
+
+            {description && (
+              <p className={bem(bd, 'description')}>{description}</p>
+            )}
+
+            {ctaUrl && (
+              <button
+                type="button"
+                className={bem(bd, 'cta')}
+                onClick={handleCta}
+              >
+                {ctaLabel || t('events:cta')}
+              </button>
+            )}
+          </>
         )}
       </div>
     </div>
+  )
+}
+
+export function EventsPage() {
+  return (
+    <Routes>
+      <Route index element={<EventsList />} />
+      <Route path=":id" element={<EventDetail />} />
+    </Routes>
   )
 }

@@ -1,0 +1,346 @@
+.money-withdrawal {
+  width: 100%;
+  min-height: 100%;
+  padding: 0 20px 120px;
+  background: #121212;
+  position: relative;
+
+  &__back {
+    position: absolute;
+    top: 16px;
+    left: 20px;
+    width: 48px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    border-radius: 14px;
+    overflow: hidden;
+    z-index: 2;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform $duration-fast $easing-standard;
+    @include glass-gradient-border(14px);
+    @include focus-ring;
+
+    &::before { z-index: 2; }
+    &:active { transform: scale(0.94); }
+
+    img {
+      display: block;
+      width: 48px;
+      height: 28px;
+      pointer-events: none;
+    }
+  }
+
+  &__title {
+    margin: 0;
+    padding-top: 19px;
+    padding-left: 56px;
+    padding-right: 56px;
+    text-align: center;
+    font-family: $font-travels;
+    font-weight: 800;
+    font-size: 18px;
+    line-height: 1;
+    color: $color-white;
+    text-transform: uppercase;
+    letter-spacing: 0;
+  }
+
+  &__content {
+    margin-top: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  // ─── Form card ───────────────────────────────────────────────
+  &__form-card {
+    position: relative;
+    width: 100%;
+    padding: 16px 18px 14px;
+    background: #222;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    @include glass-gradient-border(10px);
+  }
+
+  &__label {
+    font-family: $font-gilroy;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: rgba(250, 250, 250, 0.8);
+    margin: 4px 0 2px;
+    display: block;
+  }
+
+  &__input-wrap {
+    position: relative;
+    width: 100%;
+    height: 47.8px;
+    border-radius: 10px;
+    background: #222;
+    @include glass-gradient-border(10px);
+  }
+
+  &__input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    padding: 0 18px;
+    background: transparent;
+    border: none;
+    border-radius: 10px;
+    font-family: $font-gilroy;
+    font-weight: 400;
+    font-size: 17.2px;
+    letter-spacing: -0.02em;
+    color: $color-white;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    &[type='number'] {
+      -moz-appearance: textfield;
+    }
+
+    &::placeholder {
+      color: rgba(250, 250, 250, 0.3);
+    }
+  }
+
+  // ─── Methods ─────────────────────────────────────────────────
+  &__methods {
+    display: flex;
+    gap: 6px;
+    justify-content: space-between;
+    margin: 4px 0 6px;
+  }
+
+  &__method {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+    height: 84px;
+    background: #222;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 4px;
+    cursor: pointer;
+    color: $color-white;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform $duration-fast $easing-standard;
+    @include glass-gradient-border(10px);
+
+    &:active:not(:disabled) {
+      transform: scale(0.97);
+    }
+
+    &--active {
+      outline: 1px solid rgba(0, 255, 38, 0.6);
+      outline-offset: -1px;
+    }
+
+    &--disabled {
+      cursor: not-allowed;
+    }
+  }
+
+  &__method-emoji {
+    font-size: 30px;
+    line-height: 1;
+    display: block;
+
+    &--faded {
+      opacity: 0.6;
+    }
+  }
+
+  &__method-image {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+  }
+
+  &__method-label {
+    font-family: $font-gilroy;
+    font-weight: 400;
+    font-size: 10.78px;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: rgba(250, 250, 250, 0.8);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+
+    span { display: block; }
+  }
+
+  &__method--disabled &__method-label {
+    opacity: 0.7;
+  }
+
+  // ─── Submit & footnote ───────────────────────────────────────
+  &__submit {
+    position: relative;
+    width: 100%;
+    height: 36.1px;
+    margin-top: 6px;
+    background: #968ad7;
+    border: none;
+    border-radius: 7.523px;
+    font-family: $font-gilroy;
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: -0.02em;
+    color: $color-white;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform $duration-fast $easing-standard,
+                background-color $duration-fast $easing-standard;
+    @include glass-gradient-border(7.523px);
+
+    &:active:not(:disabled) {
+      transform: scale(0.98);
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.55;
+    }
+  }
+
+  &__footnote {
+    font-family: $font-gilroy;
+    font-weight: 400;
+    font-size: 10px;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: rgba(250, 250, 250, 0.5);
+    text-align: center;
+    margin: 8px 0 0;
+  }
+
+  // ─── History ─────────────────────────────────────────────────
+  &__history-title {
+    margin: 22px 0 0;
+    font-family: $font-gilroy;
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: $color-white;
+    text-align: center;
+  }
+
+  &__history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-top: 4px;
+  }
+
+  // ─── Transaction card ────────────────────────────────────────
+  &__tx-card {
+    position: relative;
+    width: 100%;
+    min-height: 80.78px;
+    padding: 14px 18px 10px;
+    background: #222;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    @include glass-gradient-border(10px);
+  }
+
+  &__tx-date {
+    font-family: $font-gilroy;
+    font-weight: 400;
+    font-size: 9px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: rgba(250, 250, 250, 0.5);
+  }
+
+  &__tx-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 4px;
+  }
+
+  &__tx-method {
+    font-family: $font-gilroy;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: $color-white;
+  }
+
+  &__tx-amount {
+    font-family: $font-gilroy;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+
+    &--pending { color: #ffc300; }
+    &--completed { color: #06c61d; }
+    &--failed { color: $color-error; }
+  }
+
+  &__tx-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.15);
+    margin: 8px 0 4px;
+  }
+
+  &__tx-status-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__tx-status-label {
+    font-family: $font-gilroy;
+    font-weight: 400;
+    font-size: 9px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: $color-white;
+  }
+
+  &__tx-status {
+    font-family: $font-gilroy;
+    font-weight: 400;
+    font-size: 9px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+
+    &--pending { color: #ffc300; }
+    &--completed { color: #00ff1e; }
+    &--failed { color: $color-error; }
+  }
+}

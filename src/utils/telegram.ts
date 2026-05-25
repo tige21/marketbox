@@ -71,6 +71,29 @@ export function isTelegramEnvironment(): boolean {
   }
 }
 
+// ─── Mini App control ────────────────────────────────────────────────────────
+
+/**
+ * Close the Mini App. Disables the "are you sure?" confirmation first so the
+ * exit is immediate — used by the paywall to bounce the user back to the bot
+ * chat for payment. Falls back to a raw `web_app_close` postEvent on clients
+ * the SDK can't address.
+ */
+export function closeMiniApp(): void {
+  try {
+    if (closingBehavior.disableConfirmation.isAvailable()) {
+      closingBehavior.disableConfirmation()
+    }
+    if (miniApp.close.isAvailable()) {
+      miniApp.close()
+      return
+    }
+  } catch {
+    // fall through to postEvent
+  }
+  _postEvent('web_app_close')
+}
+
 // ─── Haptics ─────────────────────────────────────────────────────────────────
 
 export type HapticType = 'tap' | 'success' | 'error' | 'select'

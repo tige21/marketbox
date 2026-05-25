@@ -14,10 +14,11 @@
     "no_connection": "Ulanish yo'q"
   },
   "premium": {
-    "title": "Faqat Premium uchun",
-    "description": "Ushbu bo'limga kirish uchun obuna rasmiylashting",
-    "upgrade": "Premium olish",
-    "cancel": "Yopish"
+    "title": "Obuna faol emas",
+    "description": "Ilovaga kirish uchun obunani rasmiylashtiring",
+    "upgrade": "To'lovga o'tish",
+    "refresh": "To'lov qildim",
+    "refresh_checking": "Tekshirilmoqda…"
   },
   "actions": {
     "back": "Orqaga",
@@ -25,11 +26,22 @@
     "save": "Saqlash",
     "cancel": "Bekor qilish",
     "confirm": "Tasdiqlash",
-    "search": "Qidirish"
+    "search": "Qidirish",
+    "favorite": "Sevimlilarga"
   },
   "empty": {
     "title": "Hech narsa topilmadi",
     "description": "Qidiruv parametrlarini o'zgartirib ko'ring"
+  },
+  "auth": {
+    "open_in_tg_title": "Telegramda oching",
+    "open_in_tg_body": "Ushbu ilova faqat Telegram ichida ishlaydi",
+    "open_in_tg_cta": "Telegramda ochish",
+    "error_title": "Avtorizatsiya xatosi",
+    "error_body": "Ilovani Telegramda qayta ishga tushiring",
+    "retry": "Qayta urinish",
+    "continue_guest": "Avtorizatsiyasiz davom etish",
+    "copy_debug": "Nusxalash"
   },
   "offline": "Internet aloqasi yo'q"
 }
