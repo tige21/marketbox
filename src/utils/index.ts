@@ -1,6 +1,6 @@
 export { bem, cn } from './cn'
 export * from './motion'
 export { default as i18n } from './i18n'
-export { initTelegramSDK, isTelegramEnvironment, triggerHaptic, closeMiniApp } from './telegram'
+export { initTelegramSDK, isTelegramEnvironment, triggerHaptic, closeMiniApp, openTelegramLink } from './telegram'
 export type { HapticType } from './telegram'
 export * from './dates'

@@ -50,12 +50,14 @@ apiClient.interceptors.request.use(
 // page offset. Without this, React keys collide (`undefined`) and
 // navigation to `/<resource>/${id}` lands on `/<resource>/undefined`.
 apiClient.interceptors.response.use(
-  (response: AxiosResponse) => {
+  async (response: AxiosResponse) => {
     const body = response.data
 
     // 1. Laravel pagination → frontend shape.
     let normalized = body
     let pageOffset = 0
+    let lastPage = 1
+    let isPaginated = false
     if (
       body
       && typeof body === 'object'
@@ -63,9 +65,11 @@ apiClient.interceptors.response.use(
       && typeof body.meta === 'object'
       && 'current_page' in body.meta
     ) {
+      isPaginated = true
       const m = body.meta as Record<string, unknown>
       const page = Number(m['current_page'] ?? 1)
       const perPage = Number(m['per_page'] ?? 0)
+      lastPage = Number(m['last_page'] ?? 1)
       pageOffset = perPage > 0 ? (page - 1) * perPage : 0
       normalized = {
         data: body.data,
@@ -73,7 +77,7 @@ apiClient.interceptors.response.use(
           page,
           perPage,
           total: Number(m['total'] ?? 0),
-          totalPages: Number(m['last_page'] ?? 1),
+          totalPages: lastPage,
         },
       }
     }
@@ -95,13 +99,63 @@ apiClient.interceptors.response.use(
       }
     }
 
+    // 3. Auto-fetch the remaining pages of a paginated LIST so the UI never
+    //    silently shows only the first 15 of N items. The backend ignores
+    //    `per_page` (fixed at 15) but honours `?page=N`, so we pull pages
+    //    2..last and concatenate. `__noPaginate` on the sub-requests stops
+    //    the recursion (each page response re-enters this interceptor).
+    const cfg = response.config as InternalAxiosRequestConfig & { __noPaginate?: boolean }
+    if (
+      isPaginated
+      && lastPage > 1
+      && !cfg.__noPaginate
+      && Array.isArray((normalized as { data: unknown }).data)
+    ) {
+      const MAX_PAGES = 50
+      const cap = Math.min(lastPage, MAX_PAGES)
+      if (lastPage > MAX_PAGES) {
+        console.warn(`[pagination] ${cfg.url} has ${lastPage} pages; capping at ${MAX_PAGES}`)
+      }
+      const requests = []
+      for (let p = 2; p <= cap; p++) {
+        requests.push(
+          apiClient.request({
+            ...cfg,
+            __noPaginate: true,
+            params: { ...(cfg.params ?? {}), page: p },
+          } as InternalAxiosRequestConfig & { __noPaginate?: boolean }),
+        )
+      }
+      const more = await Promise.all(requests)
+      const extra = more.flatMap((r) => {
+        const d = (r.data as { data?: unknown }).data
+        return Array.isArray(d) ? d : []
+      })
+      const merged = [...(normalized as { data: unknown[] }).data, ...extra]
+      normalized = {
+        ...(normalized as object),
+        data: merged,
+        meta: {
+          ...((normalized as { meta?: object }).meta ?? {}),
+          perPage: merged.length,
+          totalPages: 1,
+        },
+      }
+    }
+
     response.data = normalized
     return response
   },
   async (error: AxiosError) => {
     const status = error.response?.status
 
-    if (status === 401) {
+    // A 401 normally means the session is dead → clear it. But non-critical
+    // requests can opt out via `skipAuthClear` so a transient 401 on, say,
+    // the contest-gifts endpoint doesn't log a valid user out.
+    const skipAuthClear =
+      (error.config as (InternalAxiosRequestConfig & { skipAuthClear?: boolean }) | undefined)
+        ?.skipAuthClear === true
+    if (status === 401 && !skipAuthClear) {
       onUnauthorized?.()
     }
 

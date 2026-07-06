@@ -1,4 +1,4 @@
-import { type ReactNode, useState } from 'react'
+import { type ReactNode, memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { BackendImage } from '@/components/BackendImage'
 import { pickLocale, pickLocaleStr, useLang, type Localized } from '@/api/locale'
@@ -30,16 +30,18 @@ interface LessonCardProps {
   onMaterialsClick?: () => void
   /** Visual loading/disabled state for like (e.g. favorites optimistic remove). */
   disabled?: boolean
+  /** Locked lesson: shows a lock instead of play, hides materials, blocks
+   * playback. Used for modules the user's subscription hasn't unlocked. */
+  locked?: boolean
   /** Wraps the card (e.g. <motion.div> from framer-motion). Defaults to <div>. */
   Container?: (props: { className: string; children: ReactNode }) => ReactNode
 }
 
-function PlayIcon() {
+function LockGlyph() {
   return (
-    <svg width="56" height="56" viewBox="0 0 56 56" fill="none" aria-hidden="true">
-      <circle cx="28" cy="28" r="28" fill="rgba(0,0,0,0.55)" />
-      <circle cx="28" cy="28" r="27" stroke="rgba(255,255,255,0.85)" strokeWidth="1" />
-      <path d="M22 18L40 28L22 38V18Z" fill="white" />
+    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <rect x="4" y="10" width="16" height="11" rx="2.5" fill="rgba(255,255,255,0.92)" />
+      <path d="M8 10V7a4 4 0 0 1 8 0v3" stroke="rgba(255,255,255,0.92)" strokeWidth="2" strokeLinecap="round" />
     </svg>
   )
 }
@@ -93,13 +95,18 @@ function extractKinescopeId(url: string): string | null {
   return m?.[1] ?? null
 }
 
-export function LessonCard({
+// Memoised so siblings in a list don't re-render when one card's local
+// state changes. Note: callers passing inline `Container`/`onMaterialsClick`
+// will still re-render this card (those props change identity) — that's by
+// design for the favorites list which animates via framer-motion `layout`.
+export const LessonCard = memo(function LessonCard({
   lesson,
   number,
   liked = false,
   onLikeToggle,
   onMaterialsClick,
   disabled = false,
+  locked = false,
   Container,
 }: LessonCardProps) {
   const { t } = useTranslation('courses')
@@ -109,16 +116,11 @@ export function LessonCard({
   const thumbnail = pickLocale(lesson.image, lang)
   const videoUrl = lesson.video_url ?? ''
   const kinescopeId = videoUrl ? extractKinescopeId(videoUrl) : null
-  const embedSrc = kinescopeId ? `https://kinescope.io/embed/${kinescopeId}?autoplay=1` : null
-  const hasVideo = !!embedSrc || !!lesson.embed_html
-
-  const [playing, setPlaying] = useState(false)
-
-  const handlePlay = () => {
-    if (!hasVideo) return
-    triggerHaptic('tap')
-    setPlaying(true)
-  }
+  // No `?autoplay=1`: cross-origin iframe autoplay is blocked in the iOS
+  // Telegram WebView (the parent tap isn't a user gesture inside the iframe),
+  // which showed a black frame with no controls. Without autoplay Kinescope
+  // renders its own poster + play button; tapping that plays reliably.
+  const embedSrc = kinescopeId ? `https://kinescope.io/embed/${kinescopeId}` : null
 
   const handleLike = (e: React.MouseEvent) => {
     e.stopPropagation()
@@ -149,7 +151,7 @@ export function LessonCard({
           {title}
         </h3>
 
-        {onLikeToggle && (
+        {onLikeToggle && !locked && (
           <button
             type="button"
             className={cn(bem(b, 'heart'), liked && bem(b, 'heart', { active: true }))}
@@ -163,7 +165,15 @@ export function LessonCard({
         )}
 
         <div className={bem(b, 'thumb-wrap')}>
-          {playing && embedSrc ? (
+          {locked ? (
+            <div className={bem(b, 'poster')}>
+              <BackendImage src={thumbnail} alt="" className={bem(b, 'thumb')} />
+              <span className={bem(b, 'lock-overlay')} aria-hidden="true">
+                <LockGlyph />
+                <span className={bem(b, 'lock-text')}>{t('lesson_locked_short')}</span>
+              </span>
+            </div>
+          ) : embedSrc ? (
             <iframe
               className={bem(b, 'iframe')}
               src={embedSrc}
@@ -172,37 +182,21 @@ export function LessonCard({
               allowFullScreen
               loading="lazy"
             />
-          ) : playing && lesson.embed_html ? (
+          ) : lesson.embed_html ? (
             <div
               className={bem(b, 'iframe')}
               dangerouslySetInnerHTML={{ __html: lesson.embed_html }}
             />
           ) : (
-            <button
-              type="button"
-              className={bem(b, 'poster')}
-              onClick={handlePlay}
-              aria-label={hasVideo ? 'Воспроизвести' : 'Видео скоро'}
-              disabled={!hasVideo}
-            >
-              <BackendImage
-                src={thumbnail}
-                alt=""
-                className={bem(b, 'thumb')}
-              />
-              {hasVideo ? (
-                <span className={bem(b, 'play')}>
-                  <PlayIcon />
-                </span>
-              ) : (
-                <span className={bem(b, 'soon')}>Видео скоро</span>
-              )}
-            </button>
+            <div className={bem(b, 'poster')}>
+              <BackendImage src={thumbnail} alt="" className={bem(b, 'thumb')} />
+              <span className={bem(b, 'soon')}>Видео скоро</span>
+            </div>
           )}
         </div>
       </div>
 
-      {onMaterialsClick && (
+      {onMaterialsClick && !locked && (
         <button
           type="button"
           className={bem(b, 'materials')}
@@ -223,4 +217,4 @@ export function LessonCard({
   ) : (
     <div className={wrapperClass}>{body}</div>
   )
-}
+})

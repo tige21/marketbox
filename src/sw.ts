@@ -101,10 +101,10 @@ self.addEventListener('fetch', (event) => {
     return
   }
 
-  // Locale JSONs change occasionally — stale-while-revalidate gives instant
-  // UI while quietly refreshing in the background.
+  // Locale JSONs — network-first so new translation keys land immediately
+  // after a deploy; cached copy is only an offline fallback.
   if (LOCALE_JSON.test(url.pathname)) {
-    event.respondWith(staleWhileRevalidate(request, LOCALE_CACHE))
+    event.respondWith(networkFirstRequest(request, LOCALE_CACHE))
     return
   }
 
@@ -156,16 +156,21 @@ async function networkFirst(
   }
 }
 
-async function staleWhileRevalidate(request: Request, cacheName: string): Promise<Response> {
-  const cached = await caches.match(request)
-  const networkPromise = fetch(request)
-    .then((res) => {
-      if (isValidResponse(res)) {
-        const cloned = res.clone()
-        caches.open(cacheName).then((c) => c.put(request, cloned)).catch(() => undefined)
-      }
-      return res
-    })
-    .catch(() => undefined)
-  return cached || (await networkPromise) || Response.error()
+// Network-first keyed by the request. Always try the network so freshly
+// deployed translation keys appear immediately; fall back to the cached copy
+// only when offline. (staleWhileRevalidate used to serve a stale locale file
+// after a deploy, which surfaced raw i18n keys like "CHANNEL_BUTTON".)
+async function networkFirstRequest(request: Request, cacheName: string): Promise<Response> {
+  try {
+    const res = await fetch(request)
+    if (isValidResponse(res)) {
+      const cloned = res.clone()
+      caches.open(cacheName).then((c) => c.put(request, cloned)).catch(() => undefined)
+    }
+    return res
+  } catch {
+    const cached = await caches.match(request)
+    if (cached) return cached
+    return Response.error()
+  }
 }

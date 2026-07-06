@@ -26,6 +26,15 @@
     line-height: 1.2;
   }
 
+  // Base-currency hint under "Курсы валют": rates are сум (UZS) per 1 unit.
+  &__rates-note {
+    margin: -6px 0 14px;
+    font-family: $font-gilroy;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.5);
+    line-height: 1.2;
+  }
+
   // ─── Rates Card ──────────────────────────────────────────
 
   &__rates-section {

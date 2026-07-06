@@ -113,9 +113,9 @@
     left: 0;
     right: 0;
     bottom: 0;
-    min-height: 108px;
+    min-height: 88px;
     max-height: 65%;
-    padding: 18px 20px 14px 20px;
+    padding: 14px 18px 12px 18px;
     border-radius: 20px;
     background: rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(12px);
@@ -126,12 +126,14 @@
     @include glass-gradient-border(20px);
   }
 
+  // Compact typography to match the home-screen cards — the previous 14px
+  // ran long and clipped mid-word in the glass bar.
   &__glass-text {
     margin: 0;
     font-family: $font-gilroy;
     font-weight: 400;
-    font-size: 14px;
-    line-height: 14px;
+    font-size: 11px;
+    line-height: 1.35;
     color: $color-white;
     display: -webkit-box;
     -webkit-line-clamp: 6;
@@ -203,4 +205,154 @@
 @keyframes news-skeleton {
   from { opacity: 0.5; }
   to { opacity: 0.85; }
+}
+
+// Mirrors the cargo detail screen (.cargo-white): dark glass "about" card
+// with a Travels-font premium title, on a primary-bg column.
+.news-detail {
+  width: 100%;
+  min-height: 100%;
+  background: $color-bg-primary;
+  display: flex;
+  flex-direction: column;
+
+  &__body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 10px 20px 0;
+    gap: 25px;
+    padding-bottom: calc(24px + 90px); // breathing room above tab bar
+  }
+
+  &__hero {
+    position: relative;
+    width: 100%;
+    height: 220px;
+    border-radius: 20px;
+    overflow: hidden;
+    @include glass-gradient-border(20px);
+
+    &::before { z-index: 2; }
+  }
+
+  &__hero-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__date-badge {
+    position: absolute;
+    bottom: 12px;
+    right: 16px;
+    height: 16px;
+    padding: 0 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    background: $color-premium;
+    border-radius: 5.244px;
+    font-family: $font-gilroy;
+    font-weight: 700;
+    font-size: 10.487px;
+    line-height: 1;
+    color: $color-white;
+    white-space: nowrap;
+    letter-spacing: 0.02em;
+    z-index: 2;
+
+    img {
+      width: 11px;
+      height: 11px;
+      object-fit: contain;
+    }
+  }
+
+  // About-style glass card — same recipe as .cargo-white__about
+  &__card {
+    position: relative;
+    width: 100%;
+    background: #171717;
+    border-radius: 20px;
+    padding: 26px 24px 22px;
+    display: flex;
+    flex-direction: column;
+    @include glass-gradient-border(20px);
+
+    &::before { z-index: 2; }
+  }
+
+  &__name {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    font-family: $font-travels;
+    font-weight: 800;
+    font-size: 24px;
+    line-height: 1.05;
+    color: $color-premium;
+    letter-spacing: 0.01em;
+  }
+
+  &__tagline {
+    position: relative;
+    z-index: 1;
+    margin: 12px 0 0;
+    font-family: $font-gilroy;
+    font-weight: 800;
+    font-size: 13px;
+    line-height: 1.35;
+    color: $color-white-60;
+  }
+
+  &__text {
+    position: relative;
+    z-index: 1;
+    margin: 16px 0 0;
+    font-family: $font-gilroy;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 1.55;
+    color: $color-white;
+    word-wrap: break-word;
+
+    p { margin: 0 0 12px; }
+    a { color: $color-premium; text-decoration: underline; }
+    img { max-width: 100%; height: auto; border-radius: 12px; }
+    ul, ol { margin: 0 0 12px; padding-left: 20px; }
+  }
+
+  &__source {
+    width: 100%;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: $color-premium;
+    border: none;
+    border-radius: $radius-md;
+    font-family: $font-gilroy;
+    font-weight: 700;
+    font-size: 14px;
+    color: $color-white;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: filter $duration-fast $easing-standard;
+    @include focus-ring;
+
+    &:active { filter: brightness(0.95); }
+  }
+
+  &__skeleton {
+    width: 100%;
+    height: 220px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.04);
+    animation: news-skeleton 1.2s ease-in-out infinite alternate;
+  }
 }

@@ -7,6 +7,7 @@ import { Skeleton } from '@/components/Skeleton'
 import { BackendImage } from '@/components/BackendImage'
 import { userApi, referralApi, lessonsApi } from '@/api/endpoints'
 import { pickLocale, pickLocaleStr, useLang } from '@/api/locale'
+import type { Localized, Lang } from '@/api/locale'
 import { useLessonFavorites } from '@/features/favorites/hooks/useLessonFavorites'
 import { triggerHaptic } from '@/utils'
 import { bem, cn } from '@/utils/cn'
@@ -36,24 +37,42 @@ function ChevronRightIcon() {
   )
 }
 
+function PlayIcon() {
+  return (
+    <svg width="20" height="22" viewBox="0 0 20 22" fill="none" aria-hidden="true">
+      <path d="M19 9.27a2 2 0 0 1 0 3.46L3 21.6A2 2 0 0 1 0 19.87V2.13A2 2 0 0 1 3 .4L19 9.27Z" fill="currentColor" />
+    </svg>
+  )
+}
+
+// Mirror of the lesson player's URL parser (LessonCard/LessonDetailPage):
+// pulls the Kinescope id out of a share/embed URL so we can build an
+// autoplay embed src.
+function extractKinescopeId(url: string): string | null {
+  const m = url.match(/kinescope\.io\/(?:embed\/)?([A-Za-z0-9]+)/)
+  return m?.[1] ?? null
+}
+
+// Referral-page text fields are `string` per Swagger but every other content
+// endpoint sends `Localized` — tolerate both so we work whichever the backend
+// actually returns.
+function resolveText(v: Localized | string | null | undefined, lang: Lang): string {
+  if (v == null) return ''
+  return typeof v === 'string' ? v : pickLocaleStr(v, lang)
+}
+
 function MoneyMainView() {
   const { t } = useTranslation('money')
   const navigate = useNavigate()
   const lang = useLang()
   const [copied, setCopied] = useState(false)
+  const [refPlaying, setRefPlaying] = useState(false)
 
   // /api/user is the single source of truth for balance + referral fields.
   const { data: profile, isLoading: profileLoading } = useQuery({
     queryKey: ['profile'],
     queryFn: () => userApi.getProfile().then((r) => r.data.data),
     staleTime: 60_000,
-  })
-
-  // /api/referral/statuses lists all 3 tiers (basic/partner/top with their %).
-  const { data: tiers = [] } = useQuery({
-    queryKey: ['referral', 'statuses'],
-    queryFn: () => referralApi.getStatuses().then((r) => r.data),
-    staleTime: 60 * 60_000,
   })
 
   // Money hero card — first module-typed lesson the backend returns.
@@ -71,6 +90,42 @@ function MoneyMainView() {
     ? (heroLesson.video_preview ?? pickLocale(heroLesson.image, lang))
     : null
   const heroFirstDoc = heroLesson?.documents?.[0] ?? null
+
+  // Referral promo content (title / preview / video) from /api/referral/page.
+  // throwOnError:false so a down endpoint never crashes the money screen — we
+  // simply fall back to the legacy lesson hero below.
+  const { data: referralPage } = useQuery({
+    queryKey: ['referral', 'page', lang],
+    queryFn: () => referralApi.getPage().then((r) => r.data),
+    staleTime: 5 * 60_000,
+    throwOnError: false,
+    retry: 1,
+  })
+
+  const refTitle = resolveText(referralPage?.title, lang)
+  const refSubtitle = resolveText(referralPage?.preview_text, lang)
+  const refPoster = referralPage?.video_preview ?? null
+  const refVideoUrl = referralPage?.video_url ?? ''
+  const refKinescopeId = refVideoUrl ? extractKinescopeId(refVideoUrl) : null
+  const refEmbedSrc = refKinescopeId
+    ? `https://kinescope.io/embed/${refKinescopeId}`
+    : null
+  // Non-autoplay embed: when the backend ships no `video_preview`, we render
+  // this directly so Kinescope shows its own poster frame + play button
+  // (instead of an empty gray box).
+  const refEmbedStatic = refKinescopeId
+    ? `https://kinescope.io/embed/${refKinescopeId}`
+    : null
+  const refHasVideo = !!refEmbedSrc
+  // Prefer the referral hero whenever the backend has any content for it;
+  // otherwise keep the existing lesson-derived hero (no regression).
+  const showReferralHero = !!referralPage && (!!refTitle || !!refPoster || refHasVideo)
+
+  const handleRefPlay = () => {
+    if (!refHasVideo) return
+    triggerHaptic('tap')
+    setRefPlaying(true)
+  }
 
   // Favorite toggle for the hero lesson (when present).
   const { isFavorite, toggle: toggleFavorite } = useLessonFavorites()
@@ -122,16 +177,70 @@ function MoneyMainView() {
 
   const invitedCount = profile?.referralsCount ?? 0
   const activeCount = profile?.referralsCountActive ?? 0
-  const currentTier = profile?.referralStatus
-  const currentPct = currentTier?.percentage ?? 0
 
   return (
     <div className={b}>
       <GlassHeader size="medium" title={t('title')} />
 
       <div className={bem(b, 'content')}>
-        {/* Hero lesson card — only when backend has a money-typed lesson */}
-        {heroLesson && (
+        {/* Referral hero — promo content + inline video from /referral/page */}
+        {showReferralHero && (
+          <article className={bem(b, 'hero')}>
+            <div className={bem(b, 'hero-card')}>
+              <h2 className={bem(b, 'hero-title')}>
+                <span>{refTitle}</span>
+              </h2>
+              {refSubtitle && (
+                <p className={bem(b, 'hero-subtitle')}>{refSubtitle}</p>
+              )}
+              <div className={bem(b, 'hero-thumb-wrap')}>
+                {refPlaying && refEmbedSrc ? (
+                  <iframe
+                    className={bem(b, 'hero-iframe')}
+                    src={refEmbedSrc}
+                    title={refTitle}
+                    allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+                    allowFullScreen
+                    loading="lazy"
+                  />
+                ) : refPoster ? (
+                  <button
+                    type="button"
+                    className={bem(b, 'hero-poster')}
+                    onClick={handleRefPlay}
+                    aria-label={refHasVideo ? t('actions.play', { ns: 'common', defaultValue: 'Воспроизвести' }) : refTitle}
+                    disabled={!refHasVideo}
+                  >
+                    <BackendImage
+                      src={refPoster}
+                      alt=""
+                      className={bem(b, 'hero-thumb')}
+                    />
+                    {refHasVideo && (
+                      <span className={bem(b, 'hero-play')} aria-hidden="true">
+                        <PlayIcon />
+                      </span>
+                    )}
+                  </button>
+                ) : refEmbedStatic ? (
+                  // No backend poster → embed Kinescope directly; it renders
+                  // its own thumbnail and play control.
+                  <iframe
+                    className={bem(b, 'hero-iframe')}
+                    src={refEmbedStatic}
+                    title={refTitle}
+                    allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+                    allowFullScreen
+                    loading="lazy"
+                  />
+                ) : null}
+              </div>
+            </div>
+          </article>
+        )}
+
+        {/* Hero lesson card — fallback when referral page has no content */}
+        {!showReferralHero && heroLesson && (
           <article className={bem(b, 'hero')}>
             <div
               className={bem(b, 'hero-card')}
@@ -248,27 +357,10 @@ function MoneyMainView() {
                     bem(b, 'stats-value', { purple: true }),
                   )}
                 >
-                  {currentPct}%
+                  {/* Fixed at 25% per business decision — not driven by tier. */}
+                  25%
                 </span>
               </div>
-            </div>
-
-            <h3 className={bem(b, 'stats-heading')}>{t('your_status')}</h3>
-            <div className={bem(b, 'status-badges')}>
-              {tiers.map((tier) => {
-                const isActive = currentTier?.id === tier.id
-                return (
-                  <span
-                    key={tier.id}
-                    className={cn(
-                      bem(b, 'status-badge'),
-                      isActive && bem(b, 'status-badge', { active: true }),
-                    )}
-                  >
-                    {tier.title} - {tier.percentage}%
-                  </span>
-                )
-              })}
             </div>
           </section>
         )}

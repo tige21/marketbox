@@ -13,7 +13,10 @@ const RELOAD_KEY = '__chunk_reload_at__'
 function isChunkLoadError(err: unknown): boolean {
   if (!err) return false
   const msg = (err as Error).message ?? String(err)
-  return /import.*module|Failed to fetch dynamically|ChunkLoadError|Loading chunk/i.test(msg)
+  // Includes Vite's "Unable to preload CSS for …" — the CSS sibling of a
+  // lazy chunk can 404 after a deploy just like the JS module, and that was
+  // crashing whole routes (e.g. wholesale) into the ErrorBoundary.
+  return /import.*module|Failed to fetch dynamically|ChunkLoadError|Loading chunk|Unable to preload/i.test(msg)
 }
 function lazyWithReload<T extends ComponentType<unknown>>(
   factory: () => Promise<{ default: T }>,

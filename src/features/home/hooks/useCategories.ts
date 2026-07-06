@@ -6,10 +6,12 @@ import type { BackendMenuInfo, Category, MenuType } from '@/api/types'
 // Backend `/api/menu` returns a `type` discriminator per item. We map it
 // to the client route + visual size of the card. If backend adds new
 // types later, add an entry here.
+// All home-screen cards use the same `md` title size so headings look
+// uniform across sections (per client feedback — no more 22px vs 14px mix).
 const TYPE_CONFIG: Record<MenuType, { route: string; titleSize: 'lg' | 'md' | 'sm' }> = {
-  course:        { route: '/courses',         titleSize: 'lg' },
-  fabric:        { route: '/factories',       titleSize: 'lg' },
-  cargo:         { route: '/cargo',           titleSize: 'lg' },
+  course:        { route: '/courses',         titleSize: 'md' },
+  fabric:        { route: '/factories',       titleSize: 'md' },
+  cargo:         { route: '/cargo',           titleSize: 'md' },
   seller:        { route: '/wholesale',       titleSize: 'md' },
   guid:          { route: '/china-guide',     titleSize: 'md' },
   work:          { route: '/jobs',            titleSize: 'md' },

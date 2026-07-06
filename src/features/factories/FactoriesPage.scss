@@ -90,6 +90,26 @@
     margin-top: $space-4;
     @include glass-gradient-border(14px);
   }
+
+  // "Перейти в канал" — same purple CTA, smaller font for the longer label.
+  &__channel-btn {
+    @include tap-feedback;
+    position: relative;
+    width: 100%;
+    height: 55px;
+    background: $color-premium;
+    border: none;
+    border-radius: 14px;
+    font-family: $font-gilroy;
+    font-weight: 800;
+    font-size: 20px;
+    color: $color-white;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    margin-top: $space-4;
+    @include glass-gradient-border(14px);
+  }
 }
 
 // --------------- FactoryCountryPage ---------------

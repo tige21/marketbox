@@ -196,13 +196,13 @@ function TourCard({
           alt=""
           className={bem('cg-tours', 'card-image')}
         />
-        {badge && (
-          <div className={bem('cg-tours', 'date-badge')}>
-            <img src="/app/images/news/calendar.svg" alt="" aria-hidden="true" />
-            <span>{badge}</span>
-          </div>
-        )}
         <div className={bem('cg-tours', 'glass-bar')}>
+          {badge && (
+            <div className={bem('cg-tours', 'date-badge')}>
+              <img src="/app/images/news/calendar.svg" alt="" aria-hidden="true" />
+              <span>{badge}</span>
+            </div>
+          )}
           <p className={bem('cg-tours', 'glass-text')}>{title}</p>
         </div>
       </div>
@@ -319,18 +319,9 @@ function TranslatorCard({
   const { i18n, t } = useTranslation(['chinaGuide', 'common'])
   const isUz = i18n.language === 'uz'
   const name = isUz && item.nameUz ? item.nameUz : item.name
-  const ageLabel = item.age ? `${item.age} ${t('age_suffix')}` : ''
-  const location = shortAddress(item.address, item.city || t('country_fallback'))
-  const origin = item.origin || ''
-  // Pair languages ("A - B", next line "C - D") to match Figma layout.
-  const langPairs: string[] = []
-  if (item.languages && item.languages.length) {
-    for (let i = 0; i < item.languages.length; i += 2) {
-      const pair = item.languages.slice(i, i + 2).join(' - ')
-      if (pair) langPairs.push(pair)
-    }
-  }
-  const description = isUz && item.descriptionUz ? item.descriptionUz : item.description
+  // Card shows only the skill — for a translator that's the language set.
+  // Age, city, origin and description now live on the detail page.
+  const languages = item.languages?.join(', ') ?? ''
 
   return (
     <article
@@ -360,40 +351,17 @@ function TranslatorCard({
               className={bem('cg-translators', 'verified')}
             />
           )}
-          {ageLabel && (
-            <span className={bem('cg-translators', 'age')}>{ageLabel}</span>
-          )}
         </div>
 
-        <div className={bem('cg-translators', 'row')}>
-          <img src="/app/images/documents/location.svg" alt="" aria-hidden="true" />
-          <span>{location}</span>
-        </div>
-
-        {origin && (
-          <div className={bem('cg-translators', 'row')}>
-            <img src="/app/images/documents/website.svg" alt="" aria-hidden="true" />
-            <span>{origin}</span>
-          </div>
-        )}
-
-        {langPairs.length > 0 && (
-          <div
-            className={`${bem('cg-translators', 'row')} ${bem('cg-translators', 'languages')}`}
-          >
-            <img src="/app/images/documents/display.svg" alt="" aria-hidden="true" />
-            <span className={bem('cg-translators', 'languages-text')}>
-              {langPairs.map((line, idx) => (
-                <span key={idx}>{line}</span>
-              ))}
+        {languages && (
+          <>
+            <span className={bem('cg-translators', 'skills-label')}>
+              {t('common:person.skills', { defaultValue: 'Навыки' })}
             </span>
-          </div>
+            <p className={bem('cg-translators', 'skills')}>{languages}</p>
+          </>
         )}
       </div>
-
-      {description && (
-        <p className={bem('cg-translators', 'desc')}>{description}</p>
-      )}
 
       <button
         type="button"

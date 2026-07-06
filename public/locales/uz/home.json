@@ -10,6 +10,16 @@
   "quick_refer": "Do'st taklif qilish",
   "go_to_profile": "Profilga o'tish",
   "expiry_until": "{{date}} gacha",
+  "contest": {
+    "toggle_aria": "Konkurs jarayonini ko'rsatish",
+    "stepwise": "Bosqichma-bosqich ochilish",
+    "title": "Obunani uzaytirish uchun sovg'alar",
+    "subtitle": "Obunaning har bir oyi, yangi sovg'alarni ochadi",
+    "month_label": "{{n}}-Oy",
+    "locked": "Yopiq",
+    "unlocked": "Ochiq",
+    "empty": "Sovg'alar tez kunda paydo bo'ladi"
+  },
   "section_title_categories": "Barcha kategoriyalar",
   "premium_badge": "Premium",
   "see_all": "Hammasini ko'rish",

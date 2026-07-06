@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { bem } from '@/utils/cn'
 import { BackendImage } from '@/components/BackendImage'
 import { pickLocale, pickLocaleStr, useLang } from '@/api/locale'
@@ -32,7 +33,7 @@ function ChevronRightIcon() {
   )
 }
 
-export function MarketCard({ seller, onClick }: MarketCardProps) {
+export const MarketCard = memo(function MarketCard({ seller, onClick }: MarketCardProps) {
   const lang = useLang()
   const name = pickLocaleStr(seller.title, lang)
   const address = pickLocaleStr(seller.address, lang)
@@ -64,4 +65,4 @@ export function MarketCard({ seller, onClick }: MarketCardProps) {
       </div>
     </button>
   )
-}
+})

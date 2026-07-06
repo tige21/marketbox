@@ -26,6 +26,7 @@ import type {
   BackendDocumentation,
   BackendDocumentationCandidate,
   BackendArticle,
+  SubscriptionGiftsResponse,
   BackendCargo,
   BackendCargoInfo,
   BackendCourse,
@@ -54,6 +55,7 @@ import type {
   BackendWithdrawal,
   BackendWithdrawalStatus,
   BackendReferralStatus,
+  BackendReferralPage,
 } from './types'
 
 /**
@@ -108,7 +110,14 @@ interface TelegramAuthResponse {
 async function fetchMeAsUserProfile() {
   const r = await apiClient.get<{
     user?: BackendUser
-    subscription?: { id?: number; is_actual?: boolean; date_expired?: string | null }
+    subscription?: {
+      id?: number
+      is_actual?: boolean
+      date_expired?: string | null
+      type?: 'standard' | 'full_access' | null
+      unlocked_module_level?: number | null
+      consecutive_months?: number | null
+    }
   }>('/api/user')
   const raw = r.data?.user ?? ({} as BackendUser)
   const sub = r.data?.subscription
@@ -127,6 +136,9 @@ async function fetchMeAsUserProfile() {
       isPremium: !!sub?.is_actual,
       expiresAt: sub?.date_expired ?? null,
       plan: sub?.is_actual ? 'premium' : 'free',
+      type: sub?.type ?? null,
+      unlockedModuleLevel: sub?.unlocked_module_level ?? null,
+      consecutiveMonths: sub?.consecutive_months ?? null,
     },
     referralCode: raw.referral_code,
     balance: raw.balance,
@@ -167,6 +179,18 @@ export const userApi = {
   updateProfile: (data: UpdateProfileRequest) =>
     USE_MOCK_TG ? mockApi.updateMe(data) : updateMeOnBackend(data),
   getSubscription: () => mockApi.getSubscription(),
+}
+
+// ─── Subscription contest gifts (real backend) ──────────────
+// Bearer-auth; the home-header contest panel reads the ladder + how many
+// gifts the user has unlocked (`passed_count` = consecutive months).
+export const subscriptionGiftsApi = {
+  getList: (params?: LangAware) =>
+    apiClient.get<SubscriptionGiftsResponse>('/api/subscription-gifts', {
+      params,
+      // Non-critical premium widget — a 401 here must NOT wipe the session.
+      skipAuthClear: true,
+    } as Parameters<typeof apiClient.get>[1] & { skipAuthClear: true }),
 }
 
 // ─── Categories (MSW-mocked; legacy shape for home tiles) ───
@@ -570,4 +594,9 @@ export const withdrawalsApi = {
 export const referralApi = {
   getStatuses: () =>
     apiClient.get<BackendReferralStatus[]>('/api/referral/statuses'),
+
+  // GET /api/referral/page — promo content (title/description/video) for the
+  // "Пригласи друга" hero. Response is a bare object (not wrapped in {data}).
+  getPage: () =>
+    apiClient.get<BackendReferralPage>('/api/referral/page'),
 }

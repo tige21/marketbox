@@ -77,7 +77,6 @@ export function CargoMain() {
                       src={image}
                       alt=""
                       className={bem(b, 'tile-img')}
-                      loading="lazy"
                     />
                   )}
                   <div className={bem(b, 'tile-bar', { 'no-desc': !desc })}>

@@ -2,11 +2,13 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { GlassHeader } from '@/components/GlassHeader'
 import { bem, cn } from '@/utils/cn'
-import { triggerHaptic } from '@/utils'
+import { triggerHaptic, openTelegramLink } from '@/utils'
 import './ProfileSubPage.scss'
 import './ProfileFaqPage.scss'
 
 const b = 'profile-faq'
+
+const SUPPORT_URL = 'https://t.me/cashyou_help'
 
 interface FaqItem {
   q: string
@@ -79,6 +81,18 @@ export function ProfileFaqPage() {
             )
           })}
         </div>
+
+        {/* Direct line to support — redirects to the Telegram help account. */}
+        <button
+          type="button"
+          className={bem(b, 'support-btn')}
+          onClick={() => {
+            triggerHaptic('tap')
+            openTelegramLink(SUPPORT_URL)
+          }}
+        >
+          {t('faq.support_button', { defaultValue: 'Написать в поддержку' })}
+        </button>
       </div>
     </div>
   )

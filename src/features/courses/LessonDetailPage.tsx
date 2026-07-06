@@ -17,16 +17,6 @@ function extractKinescopeId(url: string): string | null {
   return m?.[1] ?? null
 }
 
-function PlayIcon() {
-  return (
-    <svg width="56" height="56" viewBox="0 0 56 56" fill="none" aria-hidden="true">
-      <circle cx="28" cy="28" r="28" fill="rgba(0,0,0,0.55)" />
-      <circle cx="28" cy="28" r="27" stroke="rgba(255,255,255,0.85)" strokeWidth="1" />
-      <path d="M22 18L40 28L22 38V18Z" fill="white" />
-    </svg>
-  )
-}
-
 function HeartIcon({ filled }: { filled: boolean }) {
   return (
     <svg width="22" height="20" viewBox="-1 -1 22 20" fill="none" aria-hidden="true">
@@ -62,7 +52,6 @@ export function LessonDetailPage() {
   const lessonId = Number(id)
   const enabled = Number.isFinite(lessonId) && lessonId > 0
   const [liked, setLiked] = useState(false)
-  const [playing, setPlaying] = useState(false)
 
   const { data: lesson, isLoading, error } = useQuery({
     queryKey: ['lesson', lessonId, lang],
@@ -93,19 +82,33 @@ export function LessonDetailPage() {
     )
   }
 
+  // Deep-link guard: a lesson the subscription hasn't unlocked must not play
+  // even if the user navigates straight to its URL. The list already hides
+  // the play affordance, but the detail route is reachable directly.
+  if (lesson.is_accessible === false) {
+    return (
+      <div className={b}>
+        <GlassHeader showBack title={pickLocaleStr(lesson.title, lang)} />
+        <div className={bem(b, 'content')}>
+          <EmptyState
+            icon="🔒"
+            title="Урок пока закрыт"
+            description="Этот урок откроется по мере прохождения предыдущих модулей."
+          />
+        </div>
+      </div>
+    )
+  }
+
   const title = pickLocaleStr(lesson.title, lang)
   const description = pickLocaleStr(lesson.description, lang) || pickLocaleStr(lesson.preview_text, lang)
   const videoUrl = lesson.video_url ?? ''
   const kinescopeId = videoUrl ? extractKinescopeId(videoUrl) : null
-  const embedSrc = kinescopeId ? `https://kinescope.io/embed/${kinescopeId}?autoplay=1` : null
-  const hasVideo = !!embedSrc || !!lesson.embed_html
+  // No autoplay — blocked in the iOS Telegram WebView (black frame). Kinescope
+  // shows its own poster + play button; the in-iframe tap starts playback.
+  const embedSrc = kinescopeId ? `https://kinescope.io/embed/${kinescopeId}` : null
   const posterImg = lesson.video_preview ?? pickLocale(lesson.image, lang) ?? null
 
-  const handlePlay = () => {
-    if (!hasVideo) return
-    triggerHaptic('tap')
-    setPlaying(true)
-  }
   // Backend (May 2026) ships `documents: string[]` (URLs only). Older
   // builds still surface the richer `materials` shape with name/size —
   // accept both, normalise to `{ name, url, size? }`.
@@ -128,7 +131,7 @@ export function LessonDetailPage() {
 
       <div className={bem(b, 'content')}>
         <div className={bem(b, 'player')}>
-          {playing && embedSrc ? (
+          {embedSrc ? (
             <iframe
               className={bem(b, 'iframe')}
               src={embedSrc}
@@ -137,19 +140,13 @@ export function LessonDetailPage() {
               allowFullScreen
               loading="lazy"
             />
-          ) : playing && lesson.embed_html ? (
+          ) : lesson.embed_html ? (
             <div
               className={bem(b, 'iframe')}
               dangerouslySetInnerHTML={{ __html: lesson.embed_html }}
             />
           ) : (
-            <button
-              type="button"
-              className={bem(b, 'poster')}
-              onClick={handlePlay}
-              aria-label={hasVideo ? 'Воспроизвести' : 'Видео скоро'}
-              disabled={!hasVideo}
-            >
+            <div className={bem(b, 'poster')}>
               {posterImg && (
                 <BackendImage
                   src={posterImg}
@@ -158,14 +155,8 @@ export function LessonDetailPage() {
                 />
               )}
               <span className={bem(b, 'poster-shade')} aria-hidden="true" />
-              {hasVideo ? (
-                <span className={bem(b, 'poster-play')}>
-                  <PlayIcon />
-                </span>
-              ) : (
-                <span className={bem(b, 'poster-soon')}>Видео скоро</span>
-              )}
-            </button>
+              <span className={bem(b, 'poster-soon')}>Видео скоро</span>
+            </div>
           )}
         </div>
 

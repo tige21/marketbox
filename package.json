@@ -1,7 +1,7 @@
 {
   "name": "marketbox",
   "private": true,
-  "version": "0.2.1",
+  "version": "0.7.5",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -34,6 +34,7 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",
     "msw": "^2.12.14",
+    "playwright-core": "^1.60.0",
     "sass": "^1.98.0",
     "typescript": "^6.0.2",
     "vite": "^8.0.3",

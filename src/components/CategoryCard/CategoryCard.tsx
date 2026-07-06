@@ -1,6 +1,8 @@
+import { memo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { bem, cn } from '@/utils/cn'
 import { triggerHaptic } from '@/utils'
+import { BackendImage } from '@/components/BackendImage'
 import './CategoryCard.scss'
 
 export type CategoryCardTitleSize = 'lg' | 'md' | 'sm'
@@ -18,7 +20,9 @@ export interface CategoryCardProps {
 
 const b = 'category-card'
 
-export function CategoryCard({
+// Memoised: the home category list re-renders on lang/query changes but the
+// per-card props (all primitives) stay stable, so cards skip re-render.
+export const CategoryCard = memo(function CategoryCard({
   id: _id,
   title,
   description,
@@ -43,12 +47,14 @@ export function CategoryCard({
       aria-label={title}
     >
       <div className={bem(b, 'image-wrap')}>
-        <img
+        {/* BackendImage (not a raw <img>): rewrites the cdn.marketandbox.ru
+            host to the same-origin domain and loads eagerly with a retry —
+            the raw <img loading="lazy"> failed to show on iOS WKWebView and
+            never applied the host rewrite, so category art stayed blank. */}
+        <BackendImage
           src={imageUrl}
           alt=""
           className={bem(b, 'image')}
-          loading="lazy"
-          decoding="async"
         />
       </div>
       <div className={bem(b, 'glass-bar')}>
@@ -77,4 +83,4 @@ export function CategoryCard({
       </div>
     </article>
   )
-}
+})

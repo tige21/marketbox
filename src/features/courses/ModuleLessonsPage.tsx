@@ -15,10 +15,12 @@ const b = 'marketplace-courses'
 function LessonCardWithLike({
   lesson,
   number,
+  locked,
   onMaterialsClick,
 }: {
   lesson: LessonCardLesson
   number: number
+  locked: boolean
   onMaterialsClick: () => void
 }) {
   const { isFavorite, toggle, pendingId } = useLessonFavorites()
@@ -29,6 +31,7 @@ function LessonCardWithLike({
       liked={isFavorite(lesson.id)}
       onLikeToggle={() => toggle(lesson)}
       disabled={pendingId === lesson.id}
+      locked={locked}
       onMaterialsClick={onMaterialsClick}
     />
   )
@@ -84,6 +87,7 @@ export function ModuleLessonsPage() {
               key={lesson.id}
               lesson={lesson}
               number={i + 1}
+              locked={lesson.is_accessible === false}
               onMaterialsClick={() => handleOpenLesson(lesson.id)}
             />
           ))

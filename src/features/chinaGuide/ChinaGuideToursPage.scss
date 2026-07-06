@@ -93,10 +93,12 @@
     object-fit: cover;
   }
 
-  // ── Date badge (top-right inside image) ─────────────────────
+  // ── Date badge — anchored just above the glass bar ──────────
+  // Lives inside `&__glass-bar` so it tracks the bar's top edge no matter how
+  // tall the bar grows (the bar now hugs its text instead of a fixed height).
   &__date-badge {
     position: absolute;
-    bottom: 100px;
+    bottom: calc(100% + 8px);
     right: 20px;
     height: 15.7px;
     width: 80px;
@@ -128,8 +130,9 @@
     left: 0;
     right: 0;
     bottom: 0;
-    min-height: 108px;
-    padding: 18px 20px 14px 20px;
+    // No fixed min-height — the bar hugs its text. A one-line title no longer
+    // leaves a large empty area below it; multi-line titles grow the bar.
+    padding: 14px 20px;
     border-radius: 20px;
     background: rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(12px);

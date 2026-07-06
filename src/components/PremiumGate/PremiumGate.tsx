@@ -5,8 +5,13 @@ import { useTranslation } from 'react-i18next'
 import { useFocusTrap } from '@/hooks/useFocusTrap'
 import { bem, cn } from '@/utils/cn'
 import { GlassButton } from '@/components/GlassButton'
-import { triggerHaptic, closeMiniApp } from '@/utils'
+import { triggerHaptic, openTelegramLink } from '@/utils'
 import './PremiumGate.scss'
+
+// Bot that hosts the subscription/payment flow. Opening it inside Telegram is
+// more reliable than closing the Mini App and hoping the user lands back in
+// the right chat.
+const BOT_USERNAME = import.meta.env['VITE_TG_BOT_USERNAME'] ?? 'marketbox_bot'
 
 export interface PremiumGateProps {
   /** Whether the gate is rendered. Stays open until the parent observes
@@ -27,7 +32,8 @@ export function PremiumGate({ open, onRefresh, className }: PremiumGateProps) {
 
   const handleUpgrade = () => {
     triggerHaptic('tap')
-    closeMiniApp()
+    // Navigate the user into the bot chat where the payment flow lives.
+    openTelegramLink(`https://t.me/${BOT_USERNAME}`)
   }
 
   const handleRefresh = () => {

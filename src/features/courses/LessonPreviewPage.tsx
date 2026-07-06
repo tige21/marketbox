@@ -63,7 +63,7 @@ export function LessonPreviewPage() {
   const [liked, setLiked] = useState(false)
   const [playing, setPlaying] = useState(false)
   const id = extractKinescopeId(MOCK.videoUrl)
-  const embedSrc = id ? `https://kinescope.io/embed/${id}?autoplay=1` : null
+  const embedSrc = id ? `https://kinescope.io/embed/${id}` : null
 
   const handlePlay = () => {
     triggerHaptic('tap')

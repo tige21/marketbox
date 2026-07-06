@@ -24,6 +24,7 @@
     "payment_info": "Платежная Информация",
     "subscription": "Подписка",
     "subscription_until": "до {{date}}",
+    "subscription_inactive": "Не активна",
     "support": "Служба заботы",
     "rules": "Правила сообщество",
     "faq": "Вопрос - Ответ",
@@ -56,6 +57,7 @@
   },
   "faq": {
     "subtitle": "Нажмите на вопрос, чтобы увидеть ответ",
+    "support_button": "Написать в поддержку",
     "items": [
       {
         "q": "Что такое MarketBox?",

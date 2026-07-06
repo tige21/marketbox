@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { memo, useCallback, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { GlassHeader } from '@/components/GlassHeader'
@@ -7,11 +7,40 @@ import { EmptyState } from '@/components/EmptyState'
 import { BackendImage } from '@/components/BackendImage'
 import { bem } from '@/utils/cn'
 import { triggerHaptic } from '@/utils'
-import { pickLocale, pickLocaleStr, useLang } from '@/api/locale'
+import { pickLocale, pickLocaleStr, useLang, type Lang } from '@/api/locale'
+import type { BackendFabricSection } from '@/api/types'
 import { useFabric, useFabricSections } from './hooks'
 import './FactoriesPage.scss'
 
 const b = 'factory-country'
+
+// Memoised row: with a stable `onTap`, typing in the search box no longer
+// re-renders every section card — only the filtered set changes.
+interface SectionCardProps {
+  section: BackendFabricSection
+  lang: Lang
+  onTap: (sectionId: number) => void
+}
+
+const SectionCard = memo(function SectionCard({ section, lang, onTap }: SectionCardProps) {
+  const name = pickLocaleStr(section.title, lang)
+  const image = pickLocale(section.image, lang)
+  return (
+    <li className={bem(b, 'item')}>
+      <button
+        className={bem(b, 'card')}
+        onClick={() => onTap(section.id)}
+        type="button"
+      >
+        <BackendImage src={image} alt={name} className={bem(b, 'card-img')} />
+        <div className={bem(b, 'card-bar')}>
+          <span className={bem(b, 'card-name')}>{name}</span>
+          <span className={bem(b, 'card-chevron')} aria-hidden="true">›</span>
+        </div>
+      </button>
+    </li>
+  )
+})
 
 export function FactoryCountryPage() {
   const { countryCode = '' } = useParams<{ countryCode: string }>()
@@ -34,17 +63,21 @@ export function FactoryCountryPage() {
   const error = fabricError ?? sectionsError
   const isLoading = fabricLoading || sectionsLoading
 
-  const filtered = query.trim()
-    ? sections.filter((s) =>
-        pickLocaleStr(s.title, lang).toLowerCase().includes(query.trim().toLowerCase()),
-      )
-    : sections
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase()
+    if (!q) return sections
+    return sections.filter((s) => pickLocaleStr(s.title, lang).toLowerCase().includes(q))
+  }, [sections, query, lang])
 
-  function handleCategoryTap(sectionId: number) {
-    if (!fabric) return
-    triggerHaptic('tap')
-    navigate(`/factories/${fabric.id}/${sectionId}`)
-  }
+  const fabricRouteId = fabric?.id
+  const handleCategoryTap = useCallback(
+    (sectionId: number) => {
+      if (fabricRouteId == null) return
+      triggerHaptic('tap')
+      navigate(`/factories/${fabricRouteId}/${sectionId}`)
+    },
+    [fabricRouteId, navigate],
+  )
 
   return (
     <div className={b}>
@@ -84,29 +117,14 @@ export function FactoryCountryPage() {
           <EmptyState icon="🏭" title={t('common:empty.title')} />
         ) : (
           <ul className={bem(b, 'list')}>
-            {filtered.map((section) => {
-              const name = pickLocaleStr(section.title, lang)
-              const image = pickLocale(section.image, lang)
-              return (
-                <li key={section.id} className={bem(b, 'item')}>
-                  <button
-                    className={bem(b, 'card')}
-                    onClick={() => handleCategoryTap(section.id)}
-                    type="button"
-                  >
-                    <BackendImage
-                      src={image}
-                      alt={name}
-                      className={bem(b, 'card-img')}
-                    />
-                    <div className={bem(b, 'card-bar')}>
-                      <span className={bem(b, 'card-name')}>{name}</span>
-                      <span className={bem(b, 'card-chevron')} aria-hidden="true">›</span>
-                    </div>
-                  </button>
-                </li>
-              )
-            })}
+            {filtered.map((section) => (
+              <SectionCard
+                key={section.id}
+                section={section}
+                lang={lang}
+                onTap={handleCategoryTap}
+              />
+            ))}
           </ul>
         )}
       </div>

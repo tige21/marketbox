@@ -3,54 +3,6 @@
   min-height: 100%;
   background: $color-bg-primary;
   padding: 24px 20px 0;
-  position: relative;
-  overflow: hidden;
-  // Block the OS-level overscroll/glow so our pull indicator owns the
-  // top edge unambiguously.
-  overscroll-behavior-y: contain;
-
-  // ── Pull-to-refresh indicator ───────────────────────────────
-  // Sits at the very top, height grows with the pull. Inner spinner
-  // fades in with progress and rotates while refreshing.
-  &__pull-indicator {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    pointer-events: none;
-    z-index: 5;
-    transition: height 0.25s ease;
-  }
-
-  &__pull-spinner {
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    border: 2.5px solid rgba(255, 255, 255, 0.18);
-    border-top-color: $color-white;
-    transition: opacity 0.15s ease, transform 0.05s linear;
-    will-change: transform, opacity;
-
-    &--spinning {
-      animation: favorites-page-spin 0.7s linear infinite;
-    }
-  }
-
-  &__inner {
-    will-change: transform;
-  }
-}
-
-@keyframes favorites-page-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.favorites-page {
 
   // ── Title ───────────────────────────────────────────────────
 

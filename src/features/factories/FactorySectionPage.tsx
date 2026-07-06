@@ -36,7 +36,9 @@ export function FactorySectionPage() {
   const {
     data: companies = [],
     isLoading,
+    isFetching,
     error,
+    refetch,
   } = useFabricSectionCompanies(validFabricId, validSectionId)
 
   const country = fabric ? pickLocaleStr(fabric.title, lang) : ''
@@ -62,7 +64,17 @@ export function FactorySectionPage() {
             ))}
           </ul>
         ) : error ? (
-          <EmptyState icon="🏭" title={t('common:error.generic')} />
+          <EmptyState
+            icon="🏭"
+            title={t('common:error.generic')}
+            action={{
+              label: t('common:error.retry'),
+              onClick: () => {
+                triggerHaptic('tap')
+                if (!isFetching) refetch()
+              },
+            }}
+          />
         ) : companies.length === 0 ? (
           <EmptyState icon="🏭" title={t('common:empty.title')} />
         ) : (

@@ -27,10 +27,9 @@ function SpecialistCard({ specialist }: SpecialistCardProps) {
 
   const name = `${pickLocaleStr(specialist.name, lang)} ${pickLocaleStr(specialist.surname, lang)}`.trim()
   const photo = pickLocale(specialist.photo, lang)
-  const city = pickLocaleStr(specialist.address, lang)
-  const role = pickLocaleStr(specialist.ability, lang)
-  const experience = pickLocaleStr(specialist.experience, lang)
-  const about = pickLocaleStr(specialist.preview_text, lang)
+  // Card shows only the skills (ability). Age, city, experience and the
+  // long description now live on the detail page ("Подробнее").
+  const skills = pickLocaleStr(specialist.ability, lang)
 
   const handleDetails = () => {
     triggerHaptic('tap')
@@ -60,23 +59,16 @@ function SpecialistCard({ specialist }: SpecialistCardProps) {
             </span>
           ) : null}
         </h3>
-        <span className={bem(b, 'age')}>{specialist.age}</span>
 
-        <div className={bem(b, 'row')}>
-          <img src="/app/images/documents/location.svg" alt="" aria-hidden="true" />
-          <span>{city}</span>
-        </div>
-        <div className={bem(b, 'row')}>
-          <img src="/app/images/documents/website.svg" alt="" aria-hidden="true" />
-          <span>{role}</span>
-        </div>
-        <div className={bem(b, 'row')}>
-          <img src="/app/images/documents/display.svg" alt="" aria-hidden="true" />
-          <span>{experience}</span>
-        </div>
+        {skills && (
+          <>
+            <span className={bem(b, 'skills-label')}>
+              {t('common:person.skills', { defaultValue: 'Навыки' })}
+            </span>
+            <p className={bem(b, 'skills')}>{skills}</p>
+          </>
+        )}
       </div>
-
-      <p className={bem(b, 'about')}>{about}</p>
 
       <button
         type="button"

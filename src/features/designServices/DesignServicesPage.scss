@@ -269,6 +269,30 @@
     -webkit-box-orient: vertical;
   }
 
+  &__skills-label {
+    margin-top: 6px;
+    font-family: $font-gilroy;
+    font-weight: $fw-bold;
+    font-size: 10px;
+    line-height: 1.2;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  &__skills {
+    margin: 2px 0 0;
+    font-family: $font-gilroy;
+    font-weight: $fw-medium;
+    font-size: 11px;
+    line-height: 1.4;
+    color: $color-white;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+  }
+
   // ── "Подробнее" outline button — pinned to bottom of the card so
   //    rows of cards keep the CTA on a single y-coord regardless of
   //    description length.

@@ -10,7 +10,53 @@
     overflow-y: auto;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
+    // Anchor for the absolutely-positioned pull indicator.
+    position: relative;
+    // Block the OS-level overscroll/glow so our pull indicator owns the top edge.
+    overscroll-behavior-y: contain;
     // Account for fixed tab bar + Telegram safe area (tab bar 54px + its bottom 16px + page breathing room)
     padding-bottom: calc(100px + var(--tg-safe-area-inset-bottom, 0px));
+  }
+
+  // ── Global pull-to-refresh ──────────────────────────────────
+  // Indicator sits at the very top of the scroller; its height grows with
+  // the pull. The inner spinner fades in with progress and spins while the
+  // refetch is in flight. Driven imperatively by usePullToRefresh.
+  &__pull-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 5;
+    transition: height 0.25s ease;
+  }
+
+  &__pull-spinner {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 2.5px solid rgba(255, 255, 255, 0.18);
+    border-top-color: $color-white;
+    transition: opacity 0.15s ease, transform 0.05s linear;
+    will-change: transform, opacity;
+
+    &--spinning {
+      animation: app-layout-spin 0.7s linear infinite;
+    }
+  }
+
+  &__pull-content {
+    will-change: transform;
+    min-height: 100%;
+  }
+}
+
+@keyframes app-layout-spin {
+  to {
+    transform: rotate(360deg);
   }
 }

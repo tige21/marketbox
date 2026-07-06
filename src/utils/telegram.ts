@@ -94,6 +94,21 @@ export function closeMiniApp(): void {
   _postEvent('web_app_close')
 }
 
+// ─── Links ───────────────────────────────────────────────────────────────────
+
+/**
+ * Open a Telegram deep-link (t.me/...) inside the Mini App when possible,
+ * falling back to a normal new-tab open on the web. Shared by the support
+ * row, factories channel button, cargo chats, etc.
+ */
+export function openTelegramLink(url: string): void {
+  const tg = (window as unknown as {
+    Telegram?: { WebApp?: { openTelegramLink?: (u: string) => void } }
+  }).Telegram?.WebApp
+  if (tg?.openTelegramLink) tg.openTelegramLink(url)
+  else window.open(url, '_blank', 'noopener,noreferrer')
+}
+
 // ─── Haptics ─────────────────────────────────────────────────────────────────
 
 export type HapticType = 'tap' | 'success' | 'error' | 'select'

@@ -13,10 +13,13 @@
     <!-- Preload critical fonts -->
     <link rel="preload" href="/app/fonts/BebasNeue-Regular.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/app/fonts/Oswald-Medium-Cyrillic.woff2" as="font" type="font/woff2" crossorigin />
-    <!-- Manrope (profile page) -->
+    <!-- Manrope is bundled locally (see _fonts.scss). Preload the weight used
+         by card titles on the home screen so it paints without fallback flash. -->
+    <link rel="preload" href="/app/fonts/Manrope-700-cyrillic.woff2" as="font" type="font/woff2" crossorigin />
+    <!-- Remaining display families still come from Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Jost:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" />
   </head>
   <body>
     <style>

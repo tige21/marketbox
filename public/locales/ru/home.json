@@ -10,6 +10,16 @@
   "quick_refer": "Пригласи друга",
   "go_to_profile": "Перейти в профиль",
   "expiry_until": "до {{date}}",
+  "contest": {
+    "toggle_aria": "Показать прогресс конкурса",
+    "stepwise": "Поэтапное открытие",
+    "title": "Подарки за продление подписки",
+    "subtitle": "Каждый месяц подписки открывает новые подарки",
+    "month_label": "{{n}} мес",
+    "locked": "Закрыто",
+    "unlocked": "Открыто",
+    "empty": "Подарки появятся скоро"
+  },
   "section_title_categories": "Все категории",
   "premium_badge": "Premium",
   "see_all": "Смотреть всё",

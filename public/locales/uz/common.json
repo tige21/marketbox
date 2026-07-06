@@ -27,7 +27,11 @@
     "cancel": "Bekor qilish",
     "confirm": "Tasdiqlash",
     "search": "Qidirish",
-    "favorite": "Sevimlilarga"
+    "favorite": "Sevimlilarga",
+    "details": "Batafsil"
+  },
+  "person": {
+    "skills": "Ko'nikmalar"
   },
   "empty": {
     "title": "Hech narsa topilmadi",

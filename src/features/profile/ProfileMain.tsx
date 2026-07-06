@@ -5,13 +5,23 @@ import { useTranslation } from 'react-i18next'
 import { isAxiosError } from 'axios'
 import { useAuthStore } from '@/stores/authStore'
 import { retryAuth } from '@/app/AuthProvider'
-import { triggerHaptic } from '@/utils'
+import { triggerHaptic, openTelegramLink } from '@/utils'
 import { userApi } from '@/api/endpoints'
 import { bem, cn } from '@/utils/cn'
 import { Skeleton } from '@/components'
 import './ProfilePage.scss'
 
 const b = 'profile-page'
+
+// ISO date → DD.MM.YYYY (mirrors the home-header formatter). Guards against an
+// unparseable value so a bad string can't render "NaN.NaN.NaN".
+function formatDateDMY(isoDate: string): string {
+  const d = new Date(isoDate)
+  if (Number.isNaN(d.getTime())) return isoDate
+  const day = String(d.getDate()).padStart(2, '0')
+  const month = String(d.getMonth() + 1).padStart(2, '0')
+  return `${day}.${month}.${d.getFullYear()}`
+}
 
 function formatProfileError(err: unknown): string {
   if (isAxiosError(err)) {
@@ -148,7 +158,12 @@ function ProfileMainSkeleton() {
 export function ProfileMain() {
   const navigate = useNavigate()
   const { t } = useTranslation('profile')
-  const { user, errorDetail } = useAuthStore()
+  const user = useAuthStore((s) => s.user)
+  const errorDetail = useAuthStore((s) => s.errorDetail)
+  // Subscription expiry comes from the auth handshake (same source the home
+  // header uses), NOT a hardcoded literal. The date was previously pinned to
+  // "16.05.2026" so it never reflected renewals.
+  const subscriptionExpiry = useAuthStore((s) => s.subscriptionExpiry)
   const [retrying, setRetrying] = useState(false)
   const [copied, setCopied] = useState(false)
 
@@ -285,7 +300,11 @@ export function ProfileMain() {
                 <Row
                   iconSrc="/app/images/profile/ticket.svg"
                   label={t('rows.subscription')}
-                  value={t('rows.subscription_until', { date: '16.05.2026' })}
+                  value={
+                    subscriptionExpiry
+                      ? t('rows.subscription_until', { date: formatDateDMY(subscriptionExpiry) })
+                      : t('rows.subscription_inactive')
+                  }
                   showChevron={false}
                 />
               </div>
@@ -299,10 +318,8 @@ export function ProfileMain() {
                   label={t('rows.support')}
                   isLink
                   onClick={() => {
-                    const url = 'https://t.me/marketbox_asistant_bot'
-                    const tg = (window as unknown as { Telegram?: { WebApp?: { openTelegramLink?: (u: string) => void } } }).Telegram?.WebApp
-                    if (tg?.openTelegramLink) tg.openTelegramLink(url)
-                    else window.open(url, '_blank', 'noopener,noreferrer')
+                    triggerHaptic('tap')
+                    openTelegramLink('https://t.me/cashyou_help')
                   }}
                 />
                 <Row

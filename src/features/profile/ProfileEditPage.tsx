@@ -26,7 +26,7 @@ function formatError(err: unknown): string {
 
 export function ProfileEditPage() {
   const { t } = useTranslation('profile')
-  const { user } = useAuthStore()
+  const user = useAuthStore((s) => s.user)
   const qc = useQueryClient()
 
   // Don't throw on the profile query: we want the page to render even

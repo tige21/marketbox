@@ -24,6 +24,7 @@
     "payment_info": "To'lov ma'lumoti",
     "subscription": "Obuna",
     "subscription_until": "{{date}} gacha",
+    "subscription_inactive": "Faol emas",
     "support": "Qo'llab-quvvatlash xizmati",
     "rules": "Jamiyat qoidalari",
     "faq": "Savol - Javob",
@@ -57,6 +58,7 @@
   },
   "faq": {
     "subtitle": "Javobni ko'rish uchun savolni bosing",
+    "support_button": "Qo'llab-quvvatlashga yozish",
     "items": [
       {
         "q": "MarketBox nima?",

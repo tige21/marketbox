@@ -11,9 +11,16 @@ interface AuthStore {
   user: TgUser | null
   isPremium: boolean
   subscriptionExpiry: string | null
+  /** Months in a row with an active subscription — drives the home-header
+   * contest progress. null = backend didn't report it. */
+  consecutiveMonths: number | null
   errorDetail: string | null
   /** True iff this session was hydrated from localStorage (no fresh handshake yet). */
   hasHydratedSession: boolean
+  /** True while a background subscription re-check is in flight. Suppresses the
+   * premium gate so a user who JUST paid doesn't see the payment modal flash
+   * before the fresh `isPremium` lands. */
+  revalidating: boolean
   setAuth: (token: string, user: TgUser, subscription: Subscription) => void
   /** Patch a few fields on the current user (e.g. after profile edit). */
   patchUser: (patch: Partial<TgUser>) => void
@@ -22,6 +29,7 @@ interface AuthStore {
   setSoftError: (detail: string | null) => void
   setNonTelegram: () => void
   setLoading: () => void
+  setRevalidating: (value: boolean) => void
   clear: () => void
 }
 
@@ -33,8 +41,10 @@ export const useAuthStore = create<AuthStore>()(
       user: null,
       isPremium: false,
       subscriptionExpiry: null,
+      consecutiveMonths: null,
       errorDetail: null,
       hasHydratedSession: false,
+      revalidating: false,
 
       setAuth: (token, user, subscription) => {
         setAuthToken(token)
@@ -44,8 +54,10 @@ export const useAuthStore = create<AuthStore>()(
           user,
           isPremium: subscription.isPremium,
           subscriptionExpiry: subscription.expiresAt,
+          consecutiveMonths: subscription.consecutiveMonths ?? null,
           errorDetail: null,
           hasHydratedSession: true,
+          revalidating: false,
         })
       },
 
@@ -81,6 +93,10 @@ export const useAuthStore = create<AuthStore>()(
         set({ authState: 'loading', errorDetail: null })
       },
 
+      setRevalidating: (value) => {
+        set({ revalidating: value })
+      },
+
       clear: () => {
         clearAuthToken()
         set({
@@ -89,6 +105,7 @@ export const useAuthStore = create<AuthStore>()(
           user: null,
           isPremium: false,
           subscriptionExpiry: null,
+          consecutiveMonths: null,
           errorDetail: null,
           hasHydratedSession: false,
         })
@@ -110,6 +127,7 @@ export const useAuthStore = create<AuthStore>()(
         user: state.user,
         isPremium: state.isPremium,
         subscriptionExpiry: state.subscriptionExpiry,
+        consecutiveMonths: state.consecutiveMonths,
       }),
       onRehydrateStorage: () => (state) => {
         // After rehydration, restore the axios default Authorization

@@ -1,11 +1,14 @@
-import { useRef, useLayoutEffect, useEffect } from 'react'
+import { useRef, useLayoutEffect, useEffect, useCallback } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
+import { useQueryClient } from '@tanstack/react-query'
 import { GlassTabBar, type TabItem } from '@/components/GlassTabBar'
 import { ToastContainer } from '@/components/Toast'
 import { OfflineBanner } from '@/components/OfflineBanner'
 import { PremiumGate } from '@/components/PremiumGate'
 import { useAuthStore } from '@/stores/authStore'
 import { useIdlePrefetch } from '@/hooks/useIdlePrefetch'
+import { usePullToRefresh } from '@/hooks/usePullToRefresh'
+import { cn } from '@/utils/cn'
 import { retryAuth } from './AuthProvider'
 import './AppLayout.scss'
 
@@ -76,6 +79,25 @@ export function AppLayout() {
   const { pathname } = useLocation()
   const authState = useAuthStore((s) => s.authState)
   const isPremium = useAuthStore((s) => s.isPremium)
+  const revalidating = useAuthStore((s) => s.revalidating)
+  const queryClient = useQueryClient()
+
+  // Global pull-to-refresh. `.app-layout__main` is the single scroll
+  // container for every route, so one gesture handler covers all content
+  // sections (courses, factories, cargo, news, …) without per-page wiring.
+  // Refresh = invalidate the whole cache and refetch whatever the current
+  // screen has active; the spinner parks until those refetches settle.
+  const handleRefresh = useCallback(async () => {
+    try {
+      await queryClient.invalidateQueries({ refetchType: 'active' })
+    } catch (err) {
+      console.warn('[pull-to-refresh] invalidation failed', err)
+    }
+  }, [queryClient])
+
+  const { indicatorRef, contentRef, spinnerRef, isRefreshing } = usePullToRefresh({
+    onRefresh: handleRefresh,
+  })
 
   useLayoutEffect(() => {
     if ('scrollRestoration' in window.history) {
@@ -106,14 +128,40 @@ export function AppLayout() {
 
   // Gate is open only after auth has resolved and we have a confirmed
   // non-premium state. During loading/error/non-telegram we let the
-  // AuthProvider screens handle the UI instead.
-  const gateOpen = authState === 'ok' && !isPremium
+  // AuthProvider screens handle the UI instead. `!revalidating` holds the
+  // gate shut while a background subscription re-check runs (e.g. right after
+  // the user paid and returned), so the payment modal never flashes on a stale
+  // isPremium before the fresh value arrives.
+  const gateOpen = authState === 'ok' && !isPremium && !revalidating
 
   return (
     <div className="app-layout">
       <OfflineBanner />
-      <main key={pathname} ref={mainRef} className="app-layout__main">
-        <Outlet />
+      <main ref={mainRef} className="app-layout__main">
+        <div
+          ref={indicatorRef}
+          className="app-layout__pull-indicator"
+          style={{ height: 0 }}
+          aria-hidden="true"
+        >
+          <span
+            ref={spinnerRef}
+            className={cn(
+              'app-layout__pull-spinner',
+              isRefreshing && 'app-layout__pull-spinner--spinning',
+            )}
+            style={{ opacity: 0 }}
+            aria-hidden="true"
+          />
+        </div>
+        <div ref={contentRef} className="app-layout__pull-content">
+          {/* key={pathname} stays on the inner wrapper (not <main>) so the
+              scroller + pull indicator persist across routes while each route
+              still remounts. Scroll reset is handled by the scrollTo effect. */}
+          <div key={pathname} className="app-layout__route">
+            <Outlet />
+          </div>
+        </div>
       </main>
       <GlassTabBar tabs={TABS} />
       <ToastContainer />

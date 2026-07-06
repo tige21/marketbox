@@ -30,7 +30,7 @@ interface DesignCardProps {
   roleLabel: string
 }
 
-function DesignCard({ candidate, roleLabel }: DesignCardProps) {
+function DesignCard({ candidate }: DesignCardProps) {
   const { t } = useTranslation(['designServices', 'chinaGuide', 'common'])
   const lang = useLang()
   const haptic = useHaptic()
@@ -38,9 +38,9 @@ function DesignCard({ candidate, roleLabel }: DesignCardProps) {
 
   const name = `${pickLocaleStr(candidate.name, lang)} ${pickLocaleStr(candidate.surname, lang)}`.trim()
   const photo = pickLocale(candidate.photo, lang)
-  const city = pickLocaleStr(candidate.address, lang)
-  const description = pickLocaleStr(candidate.preview_text, lang)
-  const experience = pickLocaleStr(candidate.experience, lang)
+  // Card shows only the skills (ability). Age, city, role, experience and
+  // the description now live on the detail page ("Подробнее").
+  const skills = pickLocaleStr(candidate.ability, lang)
 
   function handleDetails() {
     haptic.tap()
@@ -70,31 +70,15 @@ function DesignCard({ candidate, roleLabel }: DesignCardProps) {
           ) : null}
         </div>
 
-        <span className={bem(bc, 'age')}>
-          {candidate.age} {t('designServices:age_suffix')}
-        </span>
-
-        <div className={bem(bc, 'meta-row')}>
-          <img src="/app/images/documents/location.svg" alt="" className={bem(bc, 'meta-icon')} />
-          <span className={bem(bc, 'meta-text')}>{city}</span>
-        </div>
-
-        <div className={bem(bc, 'meta-row')}>
-          <img src="/app/images/documents/website.svg" alt="" className={bem(bc, 'meta-icon')} />
-          <span className={bem(bc, 'meta-text')}>{roleLabel}</span>
-        </div>
-
-        <div className={bem(bc, 'meta-row')}>
-          <img
-            src="/app/images/documents/display.svg"
-            alt=""
-            className={bem(bc, 'meta-icon', { dim: true })}
-          />
-          <span className={bem(bc, 'meta-text')}>{experience}</span>
-        </div>
+        {skills && (
+          <>
+            <span className={bem(bc, 'skills-label')}>
+              {t('common:person.skills', { defaultValue: 'Навыки' })}
+            </span>
+            <p className={bem(bc, 'skills')}>{skills}</p>
+          </>
+        )}
       </div>
-
-      <p className={bem(bc, 'description')}>{description}</p>
 
       <button
         type="button"

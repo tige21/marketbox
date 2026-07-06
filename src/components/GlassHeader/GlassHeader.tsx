@@ -1,5 +1,5 @@
 import { type ReactNode } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { bem, cn } from '@/utils/cn'
 import { triggerHaptic } from '@/utils'
 import './GlassHeader.scss'
@@ -18,14 +18,22 @@ const b = 'glass-header'
 
 export function GlassHeader({ title, showBack, left, right, className, size = 'large' }: GlassHeaderProps) {
   const navigate = useNavigate()
+  const location = useLocation()
 
   function handleBack() {
     triggerHaptic('tap')
-    if (window.history.state?.idx > 0) {
+    const idx = window.history.state?.idx
+    if (typeof idx === 'number' && idx > 0) {
+      // Normal in-app navigation: step back through SPA history.
       navigate(-1)
-    } else {
-      navigate('/')
+      return
     }
+    // No SPA back-history — happens on a cold start at a deep URL or after the
+    // service-worker auto-reload that fires on every deploy. Going to '/' here
+    // was the "back kicks me to the home page" bug. Instead drop one path
+    // segment to the parent screen (e.g. /documents/5 → /documents).
+    const parent = location.pathname.replace(/\/[^/]+\/?$/, '')
+    navigate(parent || '/')
   }
 
   const leftContent = left ?? (showBack ? (

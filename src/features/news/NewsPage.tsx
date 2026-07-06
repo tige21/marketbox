@@ -1,3 +1,4 @@
+import { Routes, Route, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { EmptyState } from '@/components/EmptyState'
 import { BackButton } from '@/components/BackButton'
@@ -8,6 +9,7 @@ import { bem } from '@/utils/cn'
 import { useHaptic } from '@/hooks/useHaptic'
 import { formatBadgeDate } from '@/utils'
 import { useArticles } from './hooks/useArticles'
+import { NewsDetailPage } from './NewsDetailPage'
 import './NewsPage.scss'
 
 const b = 'news-page'
@@ -20,34 +22,29 @@ function NewsCard({ article }: NewsCardProps) {
   const { t } = useTranslation('news')
   const lang = useLang()
   const haptic = useHaptic()
+  const navigate = useNavigate()
   const title = pickLocaleStr(article.title, lang)
   const summary = pickLocaleStr(article.preview_text, lang)
   const image = pickLocale(article.image, lang)
-  const ctaUrl = article.url
 
-  const openUrl = () => {
-    if (!ctaUrl) return
+  const openDetail = () => {
     haptic.tap()
-    window.open(ctaUrl, '_blank', 'noopener,noreferrer')
-  }
-
-  const handleClick = () => {
-    openUrl()
+    navigate(`/news/${article.id}`)
   }
 
   const handleCtaClick = (e: React.MouseEvent) => {
     e.stopPropagation()
-    openUrl()
+    openDetail()
   }
 
   return (
     <article className={bem(b, 'item')}>
       <div
         className={bem(b, 'card')}
-        onClick={handleClick}
+        onClick={openDetail}
         role="button"
         tabIndex={0}
-        onKeyDown={(e) => e.key === 'Enter' && handleClick()}
+        onKeyDown={(e) => e.key === 'Enter' && openDetail()}
         aria-label={title}
       >
         <BackendImage
@@ -68,13 +65,13 @@ function NewsCard({ article }: NewsCardProps) {
       </div>
 
       <button type="button" className={bem(b, 'footer')} onClick={handleCtaClick}>
-        <span className={bem(b, 'footer-pill')}>{t('cta_participate')}</span>
+        <span className={bem(b, 'footer-pill')}>{t('read_more')}</span>
       </button>
     </article>
   )
 }
 
-export function NewsPage() {
+function NewsList() {
   const { t } = useTranslation(['news', 'common'])
   const { data: articles = [], isLoading, error } = useArticles()
 
@@ -100,5 +97,14 @@ export function NewsPage() {
         )}
       </div>
     </div>
+  )
+}
+
+export function NewsPage() {
+  return (
+    <Routes>
+      <Route index element={<NewsList />} />
+      <Route path=":id" element={<NewsDetailPage />} />
+    </Routes>
   )
 }

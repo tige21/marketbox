@@ -24,6 +24,21 @@ function isLikelyBroken(url: string | null | undefined): boolean {
   return KNOWN_BAD_HOST.test(url)
 }
 
+// `cdn.marketandbox.ru` is unreliable / blocked on many UZ/RU networks
+// (ERR_TIMED_OUT), while the same files are served from the main domain the
+// app itself loads from. Rewrite the host so images come same-origin —
+// reliable AND cacheable by our service worker.
+function rewriteHost(url: string): string {
+  return url.replace(
+    /^(https?:)?\/\/cdn\.marketandbox\.ru\//i,
+    'https://marketandbox.ru/',
+  )
+}
+
+function resolveSrc(src: string | null | undefined, fallback: string): string {
+  return isLikelyBroken(src) ? fallback : rewriteHost(src as string)
+}
+
 export interface BackendImageProps
   extends Omit<ImgHTMLAttributes<HTMLImageElement>, 'src' | 'onError'> {
   /** URL from backend. Null / empty / blacklisted host → placeholder. */
@@ -48,17 +63,24 @@ export function BackendImage({
   src,
   fallbackSrc = PLACEHOLDER,
   alt = '',
-  loading = 'lazy',
+  // `eager` by default: native lazy-loading is unreliable inside the iOS
+  // Telegram WebView (WKWebView) — images in animated/off-screen containers
+  // often never start loading. Callers that really need lazy can override.
+  loading = 'eager',
   decoding = 'async',
   ...rest
 }: BackendImageProps) {
-  const resolved = isLikelyBroken(src) ? fallbackSrc : (src as string)
-  const [current, setCurrent] = useState(resolved)
+  const target = resolveSrc(src, fallbackSrc)
+  const [current, setCurrent] = useState(target)
+  // Tracks whether we've already retried the current target, so a genuinely
+  // dead image still falls back to the placeholder after one retry.
+  const [retried, setRetried] = useState(false)
 
   // Resync when incoming prop changes (e.g. language switch).
   useEffect(() => {
-    setCurrent(isLikelyBroken(src) ? fallbackSrc : (src as string))
-  }, [src, fallbackSrc])
+    setCurrent(target)
+    setRetried(false)
+  }, [target])
 
   return (
     <img
@@ -68,7 +90,15 @@ export function BackendImage({
       loading={loading}
       decoding={decoding}
       onError={() => {
-        if (current !== fallbackSrc) setCurrent(fallbackSrc)
+        if (current === fallbackSrc) return
+        if (!retried) {
+          // First failure (often a stalled/aborted load in WKWebView) — retry
+          // once with a cache-buster before giving up to the placeholder.
+          setRetried(true)
+          setCurrent(`${target}${target.includes('?') ? '&' : '?'}r=${Date.now()}`)
+        } else {
+          setCurrent(fallbackSrc)
+        }
       }}
     />
   )

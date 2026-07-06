@@ -48,7 +48,13 @@ async function performAuth(): Promise<{
         photoUrl: '/app/images/home/avatar.png',
         languageCode: 'ru',
       },
-      subscription: { isPremium: true, expiresAt: '2026-05-16T12:00:00Z', plan: 'premium' },
+      subscription: {
+        isPremium: true,
+        expiresAt: '2026-05-16T12:00:00Z',
+        plan: 'premium',
+        // Dev knob for the home-header contest UI (0 = all locked).
+        consecutiveMonths: 2,
+      },
     }
   }
 
@@ -77,7 +83,13 @@ async function performAuth(): Promise<{
     try {
       const me = await apiClient.get<{
         user?: BackendUser
-        subscription?: { is_actual?: boolean; date_expired?: string | null }
+        subscription?: {
+          is_actual?: boolean
+          date_expired?: string | null
+          type?: 'standard' | 'full_access' | null
+          unlocked_module_level?: number | null
+          consecutive_months?: number | null
+        }
       }>('/api/user', { headers: { Authorization: `Bearer ${body.token}` } })
 
       const raw = me.data?.user
@@ -93,10 +105,16 @@ async function performAuth(): Promise<{
       }
       const sub = me.data?.subscription
       if (sub) {
+        if (sub.is_actual && sub.consecutive_months == null) {
+          console.warn('[header] consecutive_months missing in /api/user subscription')
+        }
         subscription = {
           isPremium: !!sub.is_actual,
           expiresAt: sub.date_expired ?? null,
           plan: sub.is_actual ? 'premium' : 'free',
+          type: sub.type ?? null,
+          unlockedModuleLevel: sub.unlocked_module_level ?? null,
+          consecutiveMonths: sub.consecutive_months ?? null,
         }
       }
     } catch {
@@ -138,7 +156,7 @@ interface AuthProviderProps {
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const { t } = useTranslation('common')
-  const { authState, errorDetail, token, user, setAuth, setSoftError, setNonTelegram, setLoading } = useAuthStore()
+  const { authState, errorDetail, token, user, setAuth, setSoftError, setNonTelegram, setLoading, setRevalidating } = useAuthStore()
   const [retryNonce, setRetryNonce] = useState(0)
 
   // Design-preview routes (`/preview/*`) skip the TG gate so we can review
@@ -169,7 +187,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
     // the cache and surface a soft error (visible in Profile).
     if (hasCachedSession) {
       // Mark state as 'ok' without changing user data so HomePage/header
-      // render real user instantly, no mock flash.
+      // render real user instantly, no mock flash. `revalidating` suppresses
+      // the premium gate while the fresh subscription check is in flight — a
+      // user who just paid must not see the payment modal flash with the
+      // stale (cached) isPremium=false before performAuth lands.
+      setRevalidating(true)
       useAuthStore.setState({ authState: 'ok' })
 
       performAuth()
@@ -181,6 +203,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
             ?? (e instanceof Error ? e.message : String(e))
           setSoftError(detail)
         })
+        .finally(() => setRevalidating(false))
       return
     }
 
@@ -195,7 +218,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
           ?? (e instanceof Error ? e.message : String(e))
         useAuthStore.getState().setError(detail)
       })
-  }, [setAuth, setSoftError, setNonTelegram, hasCachedSession, isPreviewRoute, retryNonce])
+  }, [setAuth, setSoftError, setNonTelegram, setRevalidating, hasCachedSession, isPreviewRoute, retryNonce])
 
   if (isPreviewRoute) return <>{children}</>
 

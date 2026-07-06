@@ -75,6 +75,27 @@ export interface BackendArticle {
   updated_at: string
 }
 
+// ─── Subscription contest gifts (GET /api/subscription-gifts) ───────────────
+// Backend already localizes `title`/`description` by the `lang` request header,
+// so they arrive as plain strings (not Localized).
+export interface BackendSubscriptionGift {
+  id: number
+  title: string
+  description: string
+  /** Full image URL (may be empty → BackendImage shows a placeholder). */
+  image: string
+  /** Position in the unlock ladder (sort ascending). */
+  order: number
+  /** Whether this gift is already unlocked for the current user. */
+  is_passed: boolean
+}
+
+export interface SubscriptionGiftsResponse {
+  data: BackendSubscriptionGift[]
+  /** Consecutive subscription months = number of unlocked gifts. */
+  passed_count: number
+}
+
 export interface BackendCourse {
   id: number
   title: Localized
@@ -85,6 +106,21 @@ export interface BackendCourse {
   description: Localized
   /** Telegram chat link for this course (added May 2026). */
   chat_url?: string | null
+}
+
+// GET /api/referral/page — promo content for the "Пригласи друга" screen.
+// Swagger types the text fields as plain `string` (backend likely localizes
+// server-side via the `lang` header), but every other content endpoint uses
+// `Localized`, so we tolerate both shapes and resolve at the call site.
+export interface BackendReferralPage {
+  id: number
+  title: Localized | string
+  preview_text: Localized | string
+  description: Localized | string
+  /** Kinescope/YouTube URL for the inline player. */
+  video_url: string | null
+  /** Poster shown before the video plays. */
+  video_preview: string | null
 }
 
 export interface BackendCargoTeamMember {
@@ -135,6 +171,8 @@ export interface BackendLesson {
   materials?: Array<{ name: string; url: string; size?: string | null }>
   // New canonical shape from Swagger — array of document URLs.
   documents?: string[]
+  /** Whether this lesson is unlocked for the current user. */
+  is_accessible?: boolean
 }
 
 export interface BackendCargoInfo {
@@ -162,6 +200,8 @@ export interface BackendCourseLesson {
   // array of URLs; LessonDetailPage maps them onto the same UI.
   materials?: Array<{ name: string; url: string; size?: string | null }>
   documents?: string[]
+  /** Whether this lesson is unlocked for the current user. */
+  is_accessible?: boolean
 }
 
 // Backend now intermediates between Course and Lesson with a Module
@@ -177,6 +217,11 @@ export interface BackendModule {
   title_url?: Localized | null
   preview_text?: Localized
   description?: Localized
+  /** Display order = the module's "level". Lower unlocks first. */
+  order?: number
+  /** Whether this module is unlocked for the current user. Source of truth
+   * for gating — the backend computes it from the subscription level. */
+  is_accessible?: boolean
 }
 
 export type CargoLogisticKind = 1 | 2 // 1 = logistics, 2 = fulfillment
@@ -422,6 +467,15 @@ export interface Subscription {
   isPremium: boolean
   expiresAt: string | null
   plan: 'free' | 'premium'
+  /** Backend subscription type. `standard` unlocks modules progressively;
+   * `full_access` unlocks everything at once. Informational only — module
+   * gating uses each module's `is_accessible`. */
+  type?: 'standard' | 'full_access' | null
+  /** Highest module `order` level the user has unlocked (standard plans). */
+  unlockedModuleLevel?: number | null
+  /** How many months in a row the user has held an active subscription.
+   * Drives the home-header contest progress ("N/12" + prize unlocks). */
+  consecutiveMonths?: number | null
 }
 
 export interface AuthResponse {

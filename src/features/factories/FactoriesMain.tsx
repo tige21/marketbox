@@ -12,6 +12,20 @@ import './FactoriesPage.scss'
 
 const b = 'factories-main'
 
+// Hardcoded Telegram channel for the "Перейти в канал" button — backend does
+// not expose this link yet.
+const CHANNEL_URL = 'https://t.me/+VbqQ8PJl6glkNzEy'
+
+// Open a Telegram deep-link inside the Mini App when available, else fall back
+// to a normal new-tab open (web).
+function openTelegram(url: string) {
+  const tg = (window as unknown as {
+    Telegram?: { WebApp?: { openTelegramLink?: (u: string) => void } }
+  }).Telegram?.WebApp
+  if (tg?.openTelegramLink) tg.openTelegramLink(url)
+  else window.open(url, '_blank', 'noopener,noreferrer')
+}
+
 // Each fabric (country) ships its own `chat_url`. The single "ЧАТЫ" button
 // at the bottom of FactoriesMain opens the first non-null chat link we get.
 // When the user is inside a country, the dedicated FactoryCountryPage shows
@@ -33,11 +47,12 @@ export function FactoriesMain() {
   function handleChatTap() {
     if (!aggregateChatUrl) return
     triggerHaptic('tap')
-    const tg = (window as unknown as {
-      Telegram?: { WebApp?: { openTelegramLink?: (u: string) => void } }
-    }).Telegram?.WebApp
-    if (tg?.openTelegramLink) tg.openTelegramLink(aggregateChatUrl)
-    else window.open(aggregateChatUrl, '_blank', 'noopener,noreferrer')
+    openTelegram(aggregateChatUrl)
+  }
+
+  function handleChannelTap() {
+    triggerHaptic('tap')
+    openTelegram(CHANNEL_URL)
   }
 
   return (
@@ -88,6 +103,16 @@ export function FactoriesMain() {
             )}
           </>
         )}
+
+        {/* Channel CTA — always available (link is static), independent of
+            the fabrics fetch state. */}
+        <button
+          className={bem(b, 'channel-btn')}
+          onClick={handleChannelTap}
+          type="button"
+        >
+          {t('factories:channel_button', { defaultValue: 'Перейти в канал' })}
+        </button>
       </div>
     </div>
   )

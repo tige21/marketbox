@@ -92,6 +92,64 @@
     display: block;
   }
 
+  // ── Referral hero extras (subtitle + inline video) ──────────
+  &__hero-subtitle {
+    margin: 4px 22px 0;
+    font-family: $font-gilroy;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 1.3;
+    color: #5a5a5a;
+    flex-shrink: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  &__hero-poster {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: none;
+    background: #d8d8d8;
+    cursor: pointer;
+    display: block;
+    @include tap-feedback;
+
+    &:disabled {
+      cursor: default;
+    }
+  }
+
+  &__hero-play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 54px;
+    height: 54px;
+    border-radius: $radius-full;
+    background: rgba(0, 0, 0, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $color-white;
+    pointer-events: none;
+
+    svg {
+      margin-left: 3px;
+    }
+  }
+
+  &__hero-iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+  }
+
   &__hero-materials {
     height: 68px;
     background: #171717;

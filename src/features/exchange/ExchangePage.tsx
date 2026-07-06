@@ -45,11 +45,30 @@ interface RatesCardProps {
 
 function RatesCard({ rates }: RatesCardProps) {
   const { t } = useTranslation('exchange')
+
+  // USD is the base unit — show every currency as "units per 1 USD".
+  // The underlying data stays UZS-based (so the converter is untouched); we
+  // only re-express the list here. USD drops out (it's the base), UZS is
+  // added back so the user sees "1 $ = N сум". value = (UZS per 1 USD) /
+  // (UZS per 1 unit).
+  const usd = rates.find((r) => r.code === 'USD')
+  const display = usd
+    ? [
+        { code: 'UZS', currency: 'Узбекский сум', value: usd.buyRate },
+        ...rates
+          .filter((r) => r.code !== 'USD')
+          .map((r) => ({ code: r.code, currency: r.currency, value: usd.buyRate / r.buyRate })),
+      ]
+    : rates.map((r) => ({ code: r.code, currency: r.currency, value: r.buyRate }))
+
   return (
     <div className={bem(b, 'rates-section')}>
       <h2 className={bem(b, 'section-title')}>{t('section_rates')}</h2>
+      <p className={bem(b, 'rates-note')}>
+        {t('rates_base_note', { defaultValue: 'За 1 доллар США' })}
+      </p>
       <div className={bem(b, 'list')}>
-        {rates.map((rate, i) => {
+        {display.map((rate, i) => {
           const meta = CURRENCY_META[rate.code]
           const currencyLabel = t(`currencies.${rate.code}`, { defaultValue: rate.currency })
           return (
@@ -68,7 +87,7 @@ function RatesCard({ rates }: RatesCardProps) {
                   </div>
                 </div>
                 <div className={bem(b, 'rate-right')}>
-                  <span className={bem(b, 'rate-value')}>{formatRate(rate.buyRate)}</span>
+                  <span className={bem(b, 'rate-value')}>{formatRate(rate.value)}</span>
                 </div>
               </div>
             </Fragment>
@@ -115,7 +134,12 @@ function Converter({ rates }: ConverterProps) {
     return (inUZS / toRate.sellRate).toFixed(4)
   }, [fromAmount, fromCode, toCode, rates])
 
-  const allCodes = ['UZS', ...rates.filter(r => r.code !== 'UZS').map((r) => r.code)]
+  // Depends only on `rates` (stable from React Query) — memoise so typing
+  // an amount doesn't rebuild the array and re-create both <option> lists.
+  const allCodes = useMemo(
+    () => ['UZS', ...rates.filter((r) => r.code !== 'UZS').map((r) => r.code)],
+    [rates],
+  )
 
   const handleSwap = () => {
     haptic.select()

@@ -6,8 +6,7 @@ import type { BackendLesson } from '@/api/types'
 import { EmptyState } from '@/components/EmptyState'
 import { Skeleton } from '@/components/Skeleton'
 import { LessonCard } from '@/components/LessonCard'
-import { bem, cn } from '@/utils/cn'
-import { usePullToRefresh } from '@/hooks/usePullToRefresh'
+import { bem } from '@/utils/cn'
 import { useLessonFavorites } from './hooks/useLessonFavorites'
 import './FavoritesPage.scss'
 
@@ -56,36 +55,12 @@ function CardSkeleton() {
   )
 }
 
-function PullSpinner({ progress, spinning }: { progress: number; spinning: boolean }) {
-  // Discrete circle that fades in with the pull and rotates while
-  // refreshing. The rotation amount during the pull (0 → 180°) gives
-  // visible feedback that "you're getting closer to the trigger".
-  return (
-    <span
-      className={cn(bem(b, 'pull-spinner'), spinning && bem(b, 'pull-spinner', { spinning: true }))}
-      style={{
-        opacity: progress,
-        transform: spinning ? undefined : `rotate(${progress * 180}deg)`,
-      }}
-      aria-hidden="true"
-    />
-  )
-}
-
 export function FavoritesPage() {
   const { t } = useTranslation('favorites')
   const navigate = useNavigate()
-  const { lessons, isLoading, isError, toggle, pendingId, refetch } = useLessonFavorites()
-
-  // Pull-to-refresh: dampening 0.5 + threshold 80px means the user has
-  // to drag ~160px deliberately. Routine scroll-to-top gestures don't
-  // reach that distance, so this won't fire on accidental swipes.
-  const { pullDistance, isRefreshing, progress } = usePullToRefresh({
-    onRefresh: () => refetch(),
-    threshold: 80,
-    dampening: 0.5,
-    enabled: !isLoading,
-  })
+  // Pull-to-refresh is now global (AppLayout) — it invalidates the whole
+  // query cache, including these favorites, so no per-page handler here.
+  const { lessons, isLoading, isError, toggle, pendingId } = useLessonFavorites()
 
   const handleOpenMaterials = (lesson: BackendLesson) => {
     // Direct lesson route — works for both cargo-sourced and
@@ -93,60 +68,39 @@ export function FavoritesPage() {
     navigate(`/lessons/${lesson.id}`)
   }
 
-  // While the user is actively pulling, kill the transition so the
-  // content tracks the finger 1:1. On release the transition kicks in
-  // and the snap-back / park-at-threshold animates smoothly.
-  const isAnimating = pullDistance === 0 || isRefreshing
-
   return (
     <div className={b}>
-      <div
-        className={bem(b, 'pull-indicator')}
-        style={{ height: pullDistance }}
-        aria-hidden="true"
-      >
-        <PullSpinner progress={progress} spinning={isRefreshing} />
-      </div>
+      <h1 className={bem(b, 'title')}>{t('title')}</h1>
 
-      <div
-        className={bem(b, 'inner')}
-        style={{
-          transform: `translateY(${pullDistance}px)`,
-          transition: isAnimating ? 'transform 0.25s ease' : 'none',
-        }}
-      >
-        <h1 className={bem(b, 'title')}>{t('title')}</h1>
+      <div className={bem(b, 'content')}>
+        {isLoading && Array.from({ length: 6 }).map((_, i) => <CardSkeleton key={i} />)}
 
-        <div className={bem(b, 'content')}>
-          {isLoading && Array.from({ length: 6 }).map((_, i) => <CardSkeleton key={i} />)}
+        {isError && !isLoading && (
+          <EmptyState icon="⚠️" title={t('error')} className={bem(b, 'empty')} />
+        )}
 
-          {isError && !isLoading && (
-            <EmptyState icon="⚠️" title={t('error')} className={bem(b, 'empty')} />
-          )}
+        {!isLoading && !isError && lessons.length === 0 && (
+          <EmptyState
+            icon="🤍"
+            title={t('empty_title')}
+            description={t('empty_description')}
+            className={bem(b, 'empty')}
+          />
+        )}
 
-          {!isLoading && !isError && lessons.length === 0 && (
-            <EmptyState
-              icon="🤍"
-              title={t('empty_title')}
-              description={t('empty_description')}
-              className={bem(b, 'empty')}
-            />
-          )}
-
-          {!isLoading && !isError && lessons.length > 0 && (
-            <AnimatePresence initial={false}>
-              {lessons.map((lesson) => (
-                <FavoriteCard
-                  key={lesson.id}
-                  lesson={lesson}
-                  onRemove={toggle}
-                  onOpenMaterials={handleOpenMaterials}
-                  isRemoving={pendingId === lesson.id}
-                />
-              ))}
-            </AnimatePresence>
-          )}
-        </div>
+        {!isLoading && !isError && lessons.length > 0 && (
+          <AnimatePresence initial={false}>
+            {lessons.map((lesson) => (
+              <FavoriteCard
+                key={lesson.id}
+                lesson={lesson}
+                onRemove={toggle}
+                onOpenMaterials={handleOpenMaterials}
+                isRemoving={pendingId === lesson.id}
+              />
+            ))}
+          </AnimatePresence>
+        )}
       </div>
     </div>
   )

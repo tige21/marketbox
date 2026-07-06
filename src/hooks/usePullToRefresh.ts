@@ -31,21 +31,17 @@ interface PullToRefreshOptions {
 /**
  * iOS-style pull-to-refresh.
  *
- * Why a custom hook (rather than a library): we have a single nested
- * scroll container (`.app-layout__main`), need a substantial dampening
- * to avoid accidental triggers during normal vertical scrolling, and
- * want to control the indicator's transform from React state instead
- * of mutating a portal element.
+ * Performance note: the pull distance is applied directly to the DOM
+ * (indicator height, content transform, spinner opacity/rotation) inside
+ * the touch handlers — it is NOT React state. Driving a `translateY` from
+ * `useState` re-rendered the entire page subtree (including the framer-motion
+ * `layout` list) on every touchmove frame. Only `isRefreshing` — which flips
+ * at most twice per gesture — lives in state.
  *
- * Anti-accidental-trigger design:
- * 1. Tracking only starts when scrollTop === 0 at touchstart.
- * 2. Dampening 0.5: 160px finger drag → 80px visual (= threshold). On a
- *    typical phone (~7cm tall content area) that's roughly half-screen
- *    of swipe — a deliberate gesture, not a quick scroll past the top.
- * 3. If the user starts scrolling away during the gesture
- *    (scrollTop > 0), tracking aborts and the indicator snaps back.
- * 4. While tracking, touchmove is preventDefault'd so the browser
- *    doesn't rubber-band on top of our visual.
+ * Attach the returned refs:
+ *   - `indicatorRef` → the element whose height grows with the pull
+ *   - `contentRef`   → the element that translates down with the pull
+ *   - `spinnerRef`   → the spinner (opacity + rotation feedback)
  */
 export function usePullToRefresh({
   onRefresh,
@@ -55,8 +51,11 @@ export function usePullToRefresh({
   maxPull = 120,
   enabled = true,
 }: PullToRefreshOptions) {
-  const [pullDistance, setPullDistance] = useState(0)
   const [isRefreshing, setIsRefreshing] = useState(false)
+
+  const indicatorRef = useRef<HTMLDivElement | null>(null)
+  const contentRef = useRef<HTMLDivElement | null>(null)
+  const spinnerRef = useRef<HTMLSpanElement | null>(null)
 
   // Refs so the touch listeners always see the latest callback /
   // disabled state without re-attaching.
@@ -71,17 +70,33 @@ export function usePullToRefresh({
     const scroller = document.querySelector(scrollerSelector) as HTMLElement | null
     if (!scroller) return
 
+    // Write the current pull distance straight to the DOM. `animate`
+    // controls whether the snap-back / park transition runs (off while the
+    // finger tracks 1:1, on for release and settle).
+    const apply = (dist: number, animate: boolean) => {
+      const progress = Math.min(dist / threshold, 1)
+      if (indicatorRef.current) {
+        indicatorRef.current.style.height = `${dist}px`
+      }
+      if (contentRef.current) {
+        contentRef.current.style.transform = `translateY(${dist}px)`
+        contentRef.current.style.transition = animate ? 'transform 0.25s ease' : 'none'
+      }
+      if (spinnerRef.current) {
+        spinnerRef.current.style.opacity = String(progress)
+        // While refreshing, the CSS spin animation owns the transform.
+        spinnerRef.current.style.transform = refreshingRef.current
+          ? ''
+          : `rotate(${progress * 180}deg)`
+      }
+    }
+
     let startY = 0
     let tracking = false
-    // The dampened pull amount we'd display *if* maxPull weren't capping it.
-    // Used to compare against threshold (we trigger on the un-clamped value
-    // to keep the trigger threshold consistent with the visual feedback).
     let pulled = 0
 
     const handleTouchStart = (e: TouchEvent) => {
       if (refreshingRef.current || !enabledRef.current) return
-      // Only engage when the user is at the very top — otherwise this is
-      // a normal scroll gesture, not a pull-to-refresh.
       if (scroller.scrollTop > 0) return
       const touch = e.touches[0]
       if (!touch) return
@@ -92,31 +107,24 @@ export function usePullToRefresh({
 
     const handleTouchMove = (e: TouchEvent) => {
       if (!tracking) return
-      // If the user managed to scroll away during the gesture (e.g. the
-      // OS un-clamped overscroll fires), abort.
       if (scroller.scrollTop > 0) {
         tracking = false
         pulled = 0
-        setPullDistance(0)
+        apply(0, true)
         return
       }
       const touch = e.touches[0]
       if (!touch) return
       const delta = touch.clientY - startY
       if (delta <= 0) {
-        // Moved up or no movement → reset visuals but keep tracking in
-        // case the finger comes back down.
         pulled = 0
-        setPullDistance(0)
+        apply(0, false)
         return
       }
       pulled = delta * dampening
       const visual = Math.min(pulled, maxPull)
-      // Suppress browser rubber-band so our overlay reads cleanly. We
-      // only call this when we are actually pulling (delta > 0) — vertical
-      // swipes that didn't engage tracking still scroll normally.
       if (e.cancelable) e.preventDefault()
-      setPullDistance(visual)
+      apply(visual, false)
     }
 
     const handleTouchEnd = () => {
@@ -127,17 +135,17 @@ export function usePullToRefresh({
         refreshingRef.current = true
         setIsRefreshing(true)
         // Park at threshold height while the refetch is in flight.
-        setPullDistance(threshold)
+        apply(threshold, true)
         Promise.resolve()
           .then(() => onRefreshRef.current())
           .finally(() => {
             refreshingRef.current = false
             setIsRefreshing(false)
-            setPullDistance(0)
+            apply(0, true)
             pulled = 0
           })
       } else {
-        setPullDistance(0)
+        apply(0, true)
         pulled = 0
       }
     }
@@ -155,11 +163,5 @@ export function usePullToRefresh({
     }
   }, [enabled, scrollerSelector, threshold, dampening, maxPull])
 
-  return {
-    pullDistance,
-    isRefreshing,
-    /** 0 → 1 progress towards the trigger threshold. */
-    progress: Math.min(pullDistance / threshold, 1),
-    threshold,
-  }
+  return { indicatorRef, contentRef, spinnerRef, isRefreshing }
 }
