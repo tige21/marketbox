@@ -96,4 +96,55 @@
     color: $color-white;
     opacity: 0.95;
   }
+
+  // ── Locked / "coming soon" placeholder ──────────────────────
+  &--locked {
+    cursor: default;
+
+    .category-card__image {
+      filter: grayscale(0.6) brightness(0.42);
+    }
+    .category-card__image-wrap::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.3);
+    }
+    &:active { transform: none; }
+    &:hover .category-card__image { transform: none; }
+  }
+
+  &__lock {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    pointer-events: none;
+  }
+
+  &__lock-badge {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    color: rgba(255, 255, 255, 0.95);
+  }
+
+  &__lock-text {
+    font-family: $font-gilroy;
+    font-weight: 800;
+    font-size: 13px;
+    letter-spacing: 0.02em;
+    color: $color-white;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+  }
 }

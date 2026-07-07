@@ -34,6 +34,11 @@ export function CategoryList() {
               const title = lang === 'uz' && cat.titleUz ? cat.titleUz : cat.title
               const description =
                 lang === 'uz' && cat.descriptionUz ? cat.descriptionUz : cat.description
+              // The "AI-assistant for sellers" section isn't ready yet — show it
+              // locked ("coming soon"), no navigation. Matched by title so it
+              // survives backend id/type changes (backend currently ships it as
+              // menu id 12 with type `exchange`).
+              const locked = /assist|ассист/i.test(cat.title) || /assist|ассист/i.test(cat.titleUz)
               return (
                 <CategoryCard
                   key={cat.id}
@@ -43,6 +48,7 @@ export function CategoryList() {
                   imageUrl={cat.imageUrl}
                   route={cat.route}
                   isPremium={cat.isPremium}
+                  locked={locked}
                   titleSize={cat.titleSize ?? 'lg'}
                 />
               )

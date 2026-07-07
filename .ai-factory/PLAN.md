@@ -1,9 +1,9 @@
-# План (fast): кнопка «Перейти в канал» на экране «Фабрики»
+# План (fast): заблокировать карточку «Ai ассистент» на главной («Скоро откроется»)
 
 **Branch:** main (без ветки, деплой напрямую на Beget)
-**Создан:** 2026-06-20
-**Тип:** feature (мелкая)
-**Версия после:** 0.6.4
+**Создан:** 2026-07-07
+**Тип:** enhancement (мелкая)
+**Версия после:** 0.7.6
 
 ## Settings
 - **Testing:** no
@@ -11,20 +11,25 @@
 - **Docs:** warn-only
 
 ## Задача
-На экране `FactoriesMain` (список стран Китай/Узбекистан/Россия/Киргизия) добавить кнопку **«Перейти в канал»**, открывающую Telegram-канал `https://t.me/+VbqQ8PJl6glkNzEy` через `Telegram.WebApp.openTelegramLink` (как существующая кнопка чатов). Ссылка — хардкодом (бэк её пока не отдаёт).
+На главной раздел «Ai ассистент для селлеров» **заблокировать замком** и показать надпись **«Скоро откроется»**. Тап по карточке **не должен переходить** никуда (раздел не готов).
 
-## Разведка (факты)
-- `src/features/factories/FactoriesMain.tsx` уже содержит паттерн открытия TG-ссылки: `handleChatTap` → `tg.openTelegramLink(url)` с фолбэком `window.open`. Кнопка чатов (`__chat-btn`) рендерится только если у какой-то фабрики есть `chat_url` — сейчас его нет, поэтому на скрине кнопки нет.
-- Стиль кнопки — `.factories-main__chat-btn` в `src/features/factories/FactoriesPage.scss`.
-- Локали фабрик: `public/locales/{ru,uz}/factories.json` (есть ключ `chats_button`).
+## Разведка (codegraph + live API)
+- Карточки главной рендерит `CategoryList` (`src/features/home/components/CategoryList/CategoryList.tsx`) → `CategoryCard` (`src/components/CategoryCard/CategoryCard.tsx`). Данные из `useCategories` → `/api/menu` → `adapt()`.
+- `CategoryCard` сейчас **всегда** навигирует по `route` (`onClick`/`onKeyDown`); есть только модификатор `--premium`, состояния «locked» нет.
+- Карточка ассистента = пункт меню **id 12, type `exchange`**, title «Ai ассистент для селлеров» (бэк переиспользовал тип; route маппится на `/exchange`). Надёжнее опознавать по **названию** (regex `/assist|ассист/i` по `title`/`titleUz`), а не по id/type.
 
 ## Tasks
-1. **Кнопка + обработчик** — `FactoriesMain.tsx`:
-   - Добавить константу `CHANNEL_URL = 'https://t.me/+VbqQ8PJl6glkNzEy'`.
-   - Вынести открытие TG-ссылки в локальный хелпер `openTelegram(url)` (тот же код, что в `handleChatTap`: `openTelegramLink` → фолбэк `window.open`), переиспользовать в `handleChatTap` и новом `handleChannelTap`.
-   - Отрендерить кнопку «Перейти в канал» **всегда** (ссылка захардкожена), внутри `<>` под `__grid` (рядом с `__chat-btn`, если тот есть). `onClick={handleChannelTap}`, `triggerHaptic('tap')`, текст `t('factories:channel_button')`.
-2. **Локаль** — добавить `channel_button` в `ru/factories.json` («Перейти в канал») и `uz/factories.json` («Kanalga o'tish»).
-3. **SCSS** — `FactoriesPage.scss`: добавить `.factories-main__channel-btn` по образцу `__chat-btn` (фирменный акцент). Проверить отступы под сеткой.
-4. **Сборка + деплой** — `npx tsc -b`; `npm run build`; bump `package.json` → 0.6.4; rsync на Beget + md5-сверка.
+1. **CategoryCard: состояние `locked`** — `CategoryCard.tsx`:
+   - Добавить проп `locked?: boolean` в `CategoryCardProps`.
+   - Когда `locked`: `onClick`/`onKeyDown` **не навигируют** (ранний `return`, без `navigate`); `aria-disabled={true}`; модификатор `--locked`.
+   - В разметку добавить оверлей: иконка-замок + текст `t('home:categories.coming_soon', { defaultValue: 'Скоро откроется' })`. Замок можно инлайн-SVG (как `LockGlyph`/`module-lock` в проекте) или существующий ассет.
+2. **CategoryList: пометить ассистента** — `CategoryList.tsx`: при рендере вычислить `const locked = /assist|ассист/i.test(cat.title) || /assist|ассист/i.test(cat.titleUz)` и передать `locked={locked}` в `CategoryCard`.
+3. **SCSS** — `CategoryCard.scss`: `&--locked` — затемнить арт (`filter`/`opacity`), скрыть шеврон, показать оверлей `__lock` (центр, замок) + `__coming-soon` (плашка с текстом). Курсор `default`.
+4. **Локаль** — `home.json` ru/uz: `categories.coming_soon` = «Скоро откроется» / «Tez orada ochiladi» (defaultValue-страховка в коде уже есть на случай стейл-локали).
+5. **Сборка + деплой** — `npx tsc -b`; `npm run build`; bump `package.json` → 0.7.6; rsync Beget + md5. Затем коммит `feat(no-ref): lock AI-assistant home card (coming soon)` + push (по правилу проекта).
 
-(Меньше 5 задач — отдельный commit-plan не нужен; коммит только по явной просьбе, деплой напрямую с main.)
+(Меньше 5 задач по сути — отдельный commit-plan не нужен.)
+
+## Риски
+- Опознание по названию сломается, если админ переименует карточку. Приемлемо (переименование = вероятно, раздел готов). Альтернатива — фикс по type `exchange`/id 12, но это хрупче семантически.
+- `/exchange` сейчас достижим только через эту карточку — после блокировки экран обмена валют с главной будет недоступен. Если обмен нужен отдельно — вынести отдельной карточкой/тайлом (отдельная задача, если попросят).

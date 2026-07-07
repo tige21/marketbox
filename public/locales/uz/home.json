@@ -34,6 +34,7 @@
   },
   "categories": {
     "title": "Barcha toifalar",
+    "coming_soon": "Tez orada ochiladi",
     "error": "Yuklash xatosi",
     "errorDescription": "Toifalarni yuklab bo'lmadi",
     "courses": "Kurslar",
