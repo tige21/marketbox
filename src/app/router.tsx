@@ -56,7 +56,9 @@ const ChinaGuideRouter = lazyWithReload(() => import('@/features/chinaGuide').th
 const JobsPage = lazyWithReload(() => import('@/features/jobs').then(m => ({ default: m.JobsPage })))
 const DesignServicesPage = lazyWithReload(() => import('@/features/designServices').then(m => ({ default: m.DesignServicesPage })))
 const DocumentsPage = lazyWithReload(() => import('@/features/documents').then(m => ({ default: m.DocumentsPage })))
-const ExchangePage = lazyWithReload(() => import('@/features/exchange').then(m => ({ default: m.ExchangePage })))
+// ExchangePage is intentionally not routed — the "AI assistant" home card that
+// pointed here is locked ("coming soon"), so /exchange is closed off entirely
+// (the route below redirects home). Restore the lazy import + route to reopen.
 const EventsPage = lazyWithReload(() => import('@/features/events').then(m => ({ default: m.EventsPage })))
 const NewsPage = lazyWithReload(() => import('@/features/news').then(m => ({ default: m.NewsPage })))
 const LessonPreviewPage = lazyWithReload(() => import('@/features/courses').then(m => ({ default: m.LessonPreviewPage })))
@@ -93,7 +95,8 @@ export function AppRouter() {
         <Route path="jobs/*" element={<Lazy><JobsPage /></Lazy>} />
         <Route path="design-services/*" element={<Lazy><DesignServicesPage /></Lazy>} />
         <Route path="documents/*" element={<Lazy><DocumentsPage /></Lazy>} />
-        <Route path="exchange" element={<Lazy><ExchangePage /></Lazy>} />
+        {/* Section closed — redirect any direct/back navigation to home. */}
+        <Route path="exchange" element={<Navigate to="/" replace />} />
         <Route path="events/*" element={<Lazy><EventsPage /></Lazy>} />
         <Route path="news/*" element={<Lazy><NewsPage /></Lazy>} />
         <Route path="preview/lesson" element={<Lazy><LessonPreviewPage /></Lazy>} />
