@@ -31,12 +31,16 @@ export function PremiumGate({ open, onRefresh, className }: PremiumGateProps) {
   const [refreshing, setRefreshing] = useState(false)
 
   const handleUpgrade = () => {
+    // [FIX] Diagnostic — confirms the tap actually reaches the handler (vs.
+    // being swallowed by an overlay / pointer-events). Safe to leave in prod.
+    console.log('[FIX] premium-gate: upgrade tap')
     triggerHaptic('tap')
     // Navigate the user into the bot chat where the payment flow lives.
     openTelegramLink(`https://t.me/${BOT_USERNAME}`)
   }
 
   const handleRefresh = () => {
+    console.log('[FIX] premium-gate: refresh tap')
     if (refreshing) return
     triggerHaptic('tap')
     setRefreshing(true)

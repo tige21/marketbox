@@ -14,11 +14,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    pointer-events: none; // backdrop blocks clicks; wrapper passes through
-  }
-
-  &__wrap > * {
-    pointer-events: auto;
+    // Fully interactive wrapper. The gate is non-dismissable (the backdrop has
+    // no click handler), so we do NOT need the old `pointer-events: none` +
+    // child-override trick — that trick left the dialog's buttons unclickable
+    // in the iOS Telegram WebView (taps did nothing). The wrapper now catches
+    // events normally; clicks outside the dialog simply hit dead space.
   }
 
   &__backdrop {
