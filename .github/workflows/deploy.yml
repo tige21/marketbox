@@ -1,8 +1,10 @@
 name: Deploy marketbox (prod)
 
-# Builds the Vite SPA/PWA in the cloud (zero load on the box) and rsyncs dist/ to the nginx webroot
-# on the box. Model B — see personal-assistant/docs/deploy-recipe.md. Every push to main that touches
-# the frontend auto-deploys to https://marketbox-app.duckdns.org.
+# Builds the Vite SPA/PWA in the cloud (Beget shared hosting has no node/npm) and rsyncs dist/ to the
+# Mini App docroot on Beget. Model B — see personal-assistant/docs/deploy-recipe.md. Every push to main
+# that touches the frontend auto-deploys to https://marketandbox.ru/app/ (base '/app/'). The SPA lives
+# under the Laravel app's public/app/ — the rsync target is that dir ONLY (never public_html/public),
+# so --delete can never touch the Laravel backend.
 
 on:
   push:
@@ -24,8 +26,11 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  DEPLOY_HOST: 194.5.65.182
-  WEBROOT: /var/www/marketbox
+  DEPLOY_HOST: kirill5id.beget.tech
+  DEPLOY_USER: kirill5id_mrk
+  # Relative to the SSH login's home (/home/k/kirill5id/marketandbox). SPA docroot only — NOT public_html.
+  WEBROOT: public_html/public/app
+  RSYNC_PATH: /usr/local/bin/rsync   # Beget's rsync is not on the non-interactive PATH
 
 jobs:
   deploy:
@@ -45,13 +50,15 @@ jobs:
       - name: Install dependencies
         run: npm ci --no-audit --no-fund
 
-      - name: Build (production)
+      - name: Build (production, base=/app/)
         run: npm run build
 
       - name: Verify build output
         run: |
           test -d dist && test -n "$(ls -A dist)" || { echo "::error::dist/ empty"; exit 1; }
           test -f dist/index.html || { echo "::error::dist/index.html missing"; exit 1; }
+          test -f dist/.htaccess  || { echo "::error::dist/.htaccess missing (SPA fallback)"; exit 1; }
+          test -f dist/mockServiceWorker.js || { echo "::error::mockServiceWorker.js missing (VITE_USE_MOCKS)"; exit 1; }
           echo "Build: $(du -sh dist | cut -f1), $(find dist -type f | wc -l) files"
 
       - name: Setup SSH key
@@ -61,31 +68,28 @@ jobs:
           chmod 600 ~/.ssh/deploy
           ssh-keyscan -p 22 "$DEPLOY_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
 
-      - name: Backup current webroot (keep last 7)
+      - name: Backup current docroot (keep last 7)
         run: |
           ssh -i ~/.ssh/deploy -p 22 -o StrictHostKeyChecking=accept-new \
-            root@"$DEPLOY_HOST" \
-            "tar czf /var/www/marketbox-backup-\$(date +%Y%m%d-%H%M%S).tar.gz -C /var/www marketbox 2>/dev/null || true; \
-             ls -t /var/www/marketbox-backup-*.tar.gz 2>/dev/null | tail -n +8 | xargs -r rm -f || true"
+            "$DEPLOY_USER@$DEPLOY_HOST" \
+            "tar czf ~/marketbox-app-backup-\$(date +%Y%m%d-%H%M%S).tar.gz -C $(dirname $WEBROOT) $(basename $WEBROOT) 2>/dev/null || true; \
+             ls -t ~/marketbox-app-backup-*.tar.gz 2>/dev/null | tail -n +8 | xargs -r rm -f || true"
 
-      - name: Deploy (rsync dist/ to nginx webroot)
+      - name: Deploy (rsync dist/ to the SPA docroot)
         run: |
           SSH="ssh -i ~/.ssh/deploy -p 22 -o StrictHostKeyChecking=accept-new -o ConnectTimeout=20 -o ServerAliveInterval=10"
           n=0
           until [ "$n" -ge 3 ]; do
-            rsync -avz --delete --timeout=120 -e "$SSH" \
-              dist/ root@"$DEPLOY_HOST":"$WEBROOT"/ && break
+            rsync -avz --delete --timeout=120 --rsync-path="$RSYNC_PATH" -e "$SSH" \
+              dist/ "$DEPLOY_USER@$DEPLOY_HOST:$WEBROOT/" && break
             n=$((n+1)); echo "::warning::rsync attempt $n failed; retrying in 10s..."; sleep 10
           done
           [ "$n" -lt 3 ] || { echo "::error::rsync to $DEPLOY_HOST failed after 3 attempts"; exit 1; }
-          ssh -i ~/.ssh/deploy -p 22 -o StrictHostKeyChecking=accept-new \
-            root@"$DEPLOY_HOST" \
-            "chown -R www-data:www-data $WEBROOT && systemctl reload nginx && echo reloaded"
 
       - name: Smoke test (HTTP)
         run: |
-          code=$(curl -sk -o /dev/null -w '%{http_code}' --max-time 20 https://marketbox-app.duckdns.org/ || echo 000)
-          echo "https://marketbox-app.duckdns.org/ -> $code"
+          code=$(curl -sk -o /dev/null -w '%{http_code}' --max-time 20 https://marketandbox.ru/app/ || echo 000)
+          echo "https://marketandbox.ru/app/ -> $code"
           [ "$code" = "200" ] || echo "::warning::smoke test returned $code (not 200)"
 
       - name: Cleanup
