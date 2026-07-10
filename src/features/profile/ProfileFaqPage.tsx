@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { GlassHeader } from '@/components/GlassHeader'
 import { bem, cn } from '@/utils/cn'
 import { triggerHaptic, openTelegramLink } from '@/utils'
+import { linkifyTelegram } from './linkifyTelegram'
 import './ProfileSubPage.scss'
 import './ProfileFaqPage.scss'
 
@@ -74,7 +75,7 @@ export function ProfileFaqPage() {
 
                 <div className={bem(b, 'body', { open: isOpen })}>
                   <div className={bem(b, 'body-inner')}>
-                    <p className={bem(b, 'answer')}>{item.a}</p>
+                    <p className={bem(b, 'answer')}>{linkifyTelegram(item.a)}</p>
                   </div>
                 </div>
               </div>

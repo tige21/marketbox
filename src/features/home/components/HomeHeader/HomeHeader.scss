@@ -263,12 +263,11 @@
     -webkit-line-clamp: 5;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    // In the narrow ~62px columns, long words ("Наставничество", "Аббосом")
-    // used to overflow and get clipped mid-word. Break/hyphenate them so the
-    // wrap stays readable instead of chopping characters at the column edge.
+    // Narrow ~62px columns: wrap whole words at spaces / the existing hyphen in
+    // compounds ("Бизнес-поездка"). Only genuinely over-wide words fall back to
+    // a hard break — NO auto-hyphenation, which produced ugly "поезд-ка" /
+    // "Аб-босом" / "Мамае-вым" breaks.
     overflow-wrap: break-word;
-    word-break: break-word;
-    hyphens: auto;
   }
 
   &__prizes-empty {

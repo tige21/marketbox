@@ -36,9 +36,6 @@
     border-radius: 16px;
     overflow: hidden;
     transition: background 0.2s ease;
-    @include glass-gradient-border(16px);
-
-    &::before { z-index: 2; }
 
     &--open {
       background: #1c1c1c;
