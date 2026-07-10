@@ -249,15 +249,18 @@
   }
 
   &__prize-text {
-    // Fixed height (= 5 lines at 8px/1.2) so every column reserves the same
+    // Fixed height (= 5 lines at 7px/1.25) so every column reserves the same
     // vertical space regardless of description length — keeps the images and
     // ОТКРЫТО/ЗАКРЫТО badges on one line across all five prizes.
-    height: 48px;
+    // 7px (down from 8px): more chars per line in the narrow ~62px columns, so
+    // words like "Наставничество" fit on one line instead of orphaning a
+    // trailing "о" onto the next row.
+    height: 44px;
     width: 100%;
     font-family: $font-gilroy;
     font-weight: $fw-regular;
-    font-size: 8px;
-    line-height: 1.2;
+    font-size: 7px;
+    line-height: 1.25;
     color: rgba(255, 255, 255, 0.8);
     display: -webkit-box;
     -webkit-line-clamp: 5;
