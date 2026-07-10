@@ -8,7 +8,7 @@ import './ProfileFaqPage.scss'
 
 const b = 'profile-faq'
 
-const SUPPORT_URL = 'https://t.me/cashyou_help'
+const SUPPORT_URL = 'https://t.me/marketbox_asistant_bot'
 
 interface FaqItem {
   q: string

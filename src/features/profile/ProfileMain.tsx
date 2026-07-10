@@ -319,7 +319,7 @@ export function ProfileMain() {
                   isLink
                   onClick={() => {
                     triggerHaptic('tap')
-                    openTelegramLink('https://t.me/cashyou_help')
+                    openTelegramLink('https://t.me/marketbox_asistant_bot')
                   }}
                 />
                 <Row

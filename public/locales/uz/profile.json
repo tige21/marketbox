@@ -74,7 +74,7 @@
       },
       {
         "q": "Qo'llab-quvvatlash xizmati bilan qanday bog'lanish?",
-        "a": "Profil → Ma'lumot → Qo'llab-quvvatlash xizmatini oching. Bu Telegram-botimizga (@cashyou_help) olib boradi — yozing, ish vaqtida javob beramiz."
+        "a": "Profil → Ma'lumot → Qo'llab-quvvatlash xizmatini oching. Bu Telegram-botimizga (@marketbox_asistant_bot) olib boradi — yozing, ish vaqtida javob beramiz."
       },
       {
         "q": "Ilova tilini qanday o'zgartirish?",
@@ -94,11 +94,11 @@
       },
       {
         "q": "Javob topa olmasam — nima qilay?",
-        "a": "Bizga to'g'ridan-to'g'ri Qo'llab-quvvatlash xizmatiga yozing: @cashyou_help. Tushuntirib beramiz yoki savolni jamoaga uzatamiz."
+        "a": "Bizga to'g'ridan-to'g'ri Qo'llab-quvvatlash xizmatiga yozing: @marketbox_asistant_bot. Tushuntirib beramiz yoki savolni jamoaga uzatamiz."
       }
     ]
   },
-  "rules_text": "Jamiyat qoidalari\n\nMuhim qoidalar\nIstalgan vaqtda obunadan chiqishingiz mumkin.\nBuning uchun telegram-botga o'ting, menyudan «Obuna» — «Obunani boshqarish» bandini tanlang va «Obunani bekor qilish» tugmasini bosing.\n*obuna to'xtatilganda, foydalanish 6 oyga cheklanadi, shu muddatdan so'ng sizni yana ko'rishdan xursand bo'lamiz.\n\nMuloqot qoidalari\n🚩 Toksiksiz muloqot\n✅ Mumkin:\n• Konstruktiv muhokamalar\n• Boshqa a'zolarni qo'llab-quvvatlash\n• Hurmat bilan muloqot\n• Halol fikr-mulohaza\n\n❌ Mumkin emas:\n• Shaxsga o'tish, haqorat\n• So'kinish\n• Toksiklik va provokatsiya\n• Siyosat va 18+ kontent\n\n📲 Reklama, lidogeneratsiya, targ'ibot\n✅ Tavsiya etiladi:\n• #tanishuv orqali o'zi haqida aytish\n\n❌ Taqiqlanadi:\n• So'rovsiz xizmatlarni taklif qilish\n• Shaxsiy xabarlarda offerlar yuborish\n\n🔐 Ma'lumotlar maxfiyligi\n✅ Mumkin:\n• O'z nomingizdan ochiq muloqot qilish\n\n❌ Mumkin emas:\n• Shaxsiy ma'lumotlarni yig'ish\n• A'zolarni olib ketish\n\nQoidalarni bajarmaslik oqibatlari:\n1-buzish → Ogohlantirish\n2-buzish → 3-7 kunlik cheklov\n3 va undan ortiq → 1 oylik bloklash\nFirib/spam → Doimiy ban\n\nBarcha savollar bo'yicha: https://t.me/cashyou_help",
+  "rules_text": "Jamiyat qoidalari\n\nMuhim qoidalar\nIstalgan vaqtda obunadan chiqishingiz mumkin.\nBuning uchun telegram-botga o'ting, menyudan «Obuna» — «Obunani boshqarish» bandini tanlang va «Obunani bekor qilish» tugmasini bosing.\n*obuna to'xtatilganda, foydalanish 6 oyga cheklanadi, shu muddatdan so'ng sizni yana ko'rishdan xursand bo'lamiz.\n\nMuloqot qoidalari\n🚩 Toksiksiz muloqot\n✅ Mumkin:\n• Konstruktiv muhokamalar\n• Boshqa a'zolarni qo'llab-quvvatlash\n• Hurmat bilan muloqot\n• Halol fikr-mulohaza\n\n❌ Mumkin emas:\n• Shaxsga o'tish, haqorat\n• So'kinish\n• Toksiklik va provokatsiya\n• Siyosat va 18+ kontent\n\n📲 Reklama, lidogeneratsiya, targ'ibot\n✅ Tavsiya etiladi:\n• #tanishuv orqali o'zi haqida aytish\n\n❌ Taqiqlanadi:\n• So'rovsiz xizmatlarni taklif qilish\n• Shaxsiy xabarlarda offerlar yuborish\n\n🔐 Ma'lumotlar maxfiyligi\n✅ Mumkin:\n• O'z nomingizdan ochiq muloqot qilish\n\n❌ Mumkin emas:\n• Shaxsiy ma'lumotlarni yig'ish\n• A'zolarni olib ketish\n\nQoidalarni bajarmaslik oqibatlari:\n1-buzish → Ogohlantirish\n2-buzish → 3-7 kunlik cheklov\n3 va undan ortiq → 1 oylik bloklash\nFirib/spam → Doimiy ban\n\nBarcha savollar bo'yicha: https://t.me/marketbox_asistant_bot",
   "loading": "Profil yuklanmoqda...",
   "error": "Profilni yuklashda xato"
 }

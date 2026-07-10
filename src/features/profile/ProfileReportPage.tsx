@@ -11,7 +11,7 @@ export function ProfileReportPage() {
 
   const handleReport = () => {
     triggerHaptic('tap')
-    window.open('https://t.me/Cashyou_help_bot', '_blank')
+    window.open('https://t.me/marketbox_asistant_bot', '_blank')
   }
 
   return (
