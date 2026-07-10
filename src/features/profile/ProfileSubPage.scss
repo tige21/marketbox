@@ -283,15 +283,14 @@
   // ── Rules page ─────────────────────────────────────────────────
 
   &__rules-box {
-    position: relative;
-    border-radius: 17px;
-    padding: 20px;
+    // No glass frame — the rules text reads as a plain scrollable document.
+    // (Removed the full-screen glass-gradient-border box the client flagged.)
+    padding: 4px 0 0;
     font-family: $font-manrope;
     font-size: 14px;
     color: rgba(255, 255, 255, 0.8);
     line-height: 1.6;
     white-space: pre-wrap;
     word-break: break-word;
-    @include glass-gradient-border(17px);
   }
 }
