@@ -38,6 +38,22 @@ apiClient.interceptors.request.use(
     if (!('Accept-Language' in config.headers)) {
       config.headers['Accept-Language'] = lang
     }
+
+    // Anti-cache for GET requests. This is the last caching layer not already
+    // neutralised elsewhere: React Query caching is disabled (providers.tsx
+    // DISABLE_CACHE) and the service worker bypasses /api/ entirely — but the
+    // browser's HTTP cache (and any proxy/CDN in front of the API) can still
+    // serve a stale `/api/*` GET, so data freshly added to the DB never shows
+    // up. Bust it with a per-request timestamp param + no-cache headers so the
+    // URL/response is always considered fresh. Mutations (POST/PUT/DELETE) are
+    // left untouched. Paginated sub-requests re-enter this interceptor and get
+    // their own fresh `_`, overwriting the inherited one.
+    if (config.method?.toLowerCase() === 'get') {
+      config.params = { ...config.params, _: Date.now() }
+      config.headers['Cache-Control'] = 'no-cache'
+      config.headers['Pragma'] = 'no-cache'
+    }
+
     return config
   },
   (error: unknown) => Promise.reject(error),
