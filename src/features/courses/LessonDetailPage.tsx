@@ -46,12 +46,23 @@ function DownloadIcon() {
   )
 }
 
+function PlayIcon() {
+  return (
+    <svg width="20" height="22" viewBox="0 0 20 22" fill="none" aria-hidden="true">
+      <path d="M19 9.27a2 2 0 0 1 0 3.46L3 21.6A2 2 0 0 1 0 19.87V2.13A2 2 0 0 1 3 .4L19 9.27Z" fill="currentColor" />
+    </svg>
+  )
+}
+
 export function LessonDetailPage() {
   const lang = useLang()
   const { id = '' } = useParams()
   const lessonId = Number(id)
   const enabled = Number.isFinite(lessonId) && lessonId > 0
   const [liked, setLiked] = useState(false)
+  // Click-to-play facade: show the uploaded cover first, mount the Kinescope
+  // iframe (with autoplay) only after the user taps play.
+  const [playing, setPlaying] = useState(false)
 
   const { data: lesson, isLoading, error } = useQuery({
     queryKey: ['lesson', lessonId, lang],
@@ -131,10 +142,33 @@ export function LessonDetailPage() {
 
       <div className={bem(b, 'content')}>
         <div className={bem(b, 'player')}>
-          {embedSrc ? (
+          {embedSrc && !playing && posterImg ? (
+            // Uploaded cover as poster + play button. Tapping mounts the
+            // iframe (below) with autoplay so the video starts in one tap.
+            <button
+              type="button"
+              className={bem(b, 'poster')}
+              onClick={() => {
+                triggerHaptic('tap')
+                setPlaying(true)
+              }}
+              aria-label="Воспроизвести"
+            >
+              <BackendImage
+                src={posterImg}
+                alt=""
+                className={bem(b, 'poster-img')}
+              />
+              <span className={bem(b, 'poster-play')} aria-hidden="true">
+                <span className={bem(b, 'poster-play-badge')}>
+                  <PlayIcon />
+                </span>
+              </span>
+            </button>
+          ) : embedSrc ? (
             <iframe
               className={bem(b, 'iframe')}
-              src={embedSrc}
+              src={playing ? `${embedSrc}?autoplay=1` : embedSrc}
               title={title}
               allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
               allowFullScreen

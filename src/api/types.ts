@@ -194,6 +194,9 @@ export interface BackendCourseLesson {
   description?: Localized
   // Video player fields — backend will start sending these:
   video_url?: string | null
+  /** Poster/thumbnail image shown before video plays (added May 2026).
+   * Mirrors BackendLesson.video_preview — the uploaded video cover. */
+  video_preview?: string | null
   embed_html?: string | null
   duration?: string | null
   // Legacy: prior `materials` array. New backend ships a flat `documents`

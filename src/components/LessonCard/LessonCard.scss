@@ -116,6 +116,21 @@
     transition: transform 0.18s ease;
   }
 
+  &__play-badge {
+    width: 54px;
+    height: 54px;
+    border-radius: $radius-full;
+    background: rgba(0, 0, 0, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $color-white;
+
+    svg {
+      margin-left: 3px;
+    }
+  }
+
   &__poster:active &__play {
     transform: scale(0.92);
   }

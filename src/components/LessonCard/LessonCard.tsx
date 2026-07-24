@@ -1,4 +1,4 @@
-import { type ReactNode, memo } from 'react'
+import { type ReactNode, memo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { BackendImage } from '@/components/BackendImage'
 import { pickLocale, pickLocaleStr, useLang, type Localized } from '@/api/locale'
@@ -16,6 +16,9 @@ export interface LessonCardLesson {
   id: number | string
   title: Localized
   image: Localized | null | undefined
+  /** Uploaded video cover, shown as the poster before playback. Preferred
+   * over `image` for the video thumbnail. */
+  video_preview?: string | null
   video_url?: string | null
   embed_html?: string | null
 }
@@ -42,6 +45,14 @@ function LockGlyph() {
     <svg width="34" height="34" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <rect x="4" y="10" width="16" height="11" rx="2.5" fill="rgba(255,255,255,0.92)" />
       <path d="M8 10V7a4 4 0 0 1 8 0v3" stroke="rgba(255,255,255,0.92)" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  )
+}
+
+function PlayIcon() {
+  return (
+    <svg width="20" height="22" viewBox="0 0 20 22" fill="none" aria-hidden="true">
+      <path d="M19 9.27a2 2 0 0 1 0 3.46L3 21.6A2 2 0 0 1 0 19.87V2.13A2 2 0 0 1 3 .4L19 9.27Z" fill="currentColor" />
     </svg>
   )
 }
@@ -111,9 +122,13 @@ export const LessonCard = memo(function LessonCard({
 }: LessonCardProps) {
   const { t } = useTranslation('courses')
   const lang = useLang()
+  // Click-to-play facade: show the uploaded cover first, mount the Kinescope
+  // iframe (with autoplay) only after the user taps play.
+  const [playing, setPlaying] = useState(false)
 
   const title = pickLocaleStr(lesson.title, lang)
-  const thumbnail = pickLocale(lesson.image, lang)
+  // Prefer the dedicated video cover; fall back to the localized image.
+  const thumbnail = lesson.video_preview ?? pickLocale(lesson.image, lang)
   const videoUrl = lesson.video_url ?? ''
   const kinescopeId = videoUrl ? extractKinescopeId(videoUrl) : null
   // No `?autoplay=1`: cross-origin iframe autoplay is blocked in the iOS
@@ -173,10 +188,29 @@ export const LessonCard = memo(function LessonCard({
                 <span className={bem(b, 'lock-text')}>{t('lesson_locked_short')}</span>
               </span>
             </div>
+          ) : embedSrc && !playing && thumbnail ? (
+            // Uploaded cover as poster + play button. Tapping mounts the
+            // iframe (below) with autoplay so the video starts in one tap.
+            <button
+              type="button"
+              className={bem(b, 'poster')}
+              onClick={() => {
+                triggerHaptic('tap')
+                setPlaying(true)
+              }}
+              aria-label={t('lesson_play', { defaultValue: 'Воспроизвести' })}
+            >
+              <BackendImage src={thumbnail} alt="" className={bem(b, 'thumb')} />
+              <span className={bem(b, 'play')} aria-hidden="true">
+                <span className={bem(b, 'play-badge')}>
+                  <PlayIcon />
+                </span>
+              </span>
+            </button>
           ) : embedSrc ? (
             <iframe
               className={bem(b, 'iframe')}
-              src={embedSrc}
+              src={playing ? `${embedSrc}?autoplay=1` : embedSrc}
               title={title}
               allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
               allowFullScreen
